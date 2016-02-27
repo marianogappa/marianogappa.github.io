@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mariano Gappa&#39;s Blog</title>
+    <description>Blog about Software Engineering and Music Production.</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Fixing syntax highlighting issues in Sublime Text 3</title>
+        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;My two main IDEs nowadays are &lt;a href=&quot;https://www.jetbrains.com/idea/&quot;&gt;Intellij Idea&lt;/a&gt; and &lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text&lt;/a&gt;. I basically like to use IDEA for strongly-typed languages and Sublime for weakly-typed languages. However, not long ago I found a bug on Sublime!&lt;/p&gt;
+
+&lt;p&gt;In version 5.4 of PHP, they &lt;a href=&quot;http://php.net/manual/en/migration54.new-features.php&quot;&gt;introduced a new syntax for arrays&lt;/a&gt; that is reminiscent of the JSON notation:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Old PHP Array syntax
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// New PHP Array syntax
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I&amp;rsquo;ve found a case where it&amp;rsquo;s not. This case was probably not discovered because PHP people don&amp;rsquo;t like type-hinting!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;now-here-39-s-how-to-fix-it&quot;&gt;Now, here&amp;rsquo;s how to fix it&lt;/h2&gt;
+
+&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;This is the Language file for PHP&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The syntax highlighting feature uses the &lt;a href=&quot;https://en.wikipedia.org/wiki/Oniguruma&quot;&gt;Oniguruma regular expression library&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;I recommend &lt;a href=&quot;https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;amp;ia=cheatsheet&amp;amp;iax=1&quot;&gt;this DuckDuckGo regex cheatsheet&lt;/a&gt; if you need a quick reference; it&amp;rsquo;s very good!&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Also, I recommend using &lt;a href=&quot;http://rubular.com/&quot;&gt;this online regex parser&lt;/a&gt; when you get into the regex hacking part. It&amp;rsquo;s not my favourite one but it&amp;rsquo;s Ruby-based.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Before we begin, you should skim through &lt;a href=&quot;http://www.sublimetext.com/docs/3/syntax.html&quot;&gt;this syntax guide&lt;/a&gt; to familiarise yourself with the code we&amp;rsquo;ll be editing.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Optionally, you might want to read &lt;a href=&quot;http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition&quot;&gt;this StackOverflow question&lt;/a&gt;, as it was very insightful to understand the process.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;opening-the-language-file&quot;&gt;Opening the language file&lt;/h3&gt;
+
+&lt;p&gt;The first thing we need to do is to open the Language package (in this case the PHP one). For this, we need to &lt;a href=&quot;https://packagecontrol.io/packages/PackageResourceViewer&quot;&gt;install the PackageResourceViewer plugin&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Within Sublime&amp;rsquo;s Command Palette, type:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PackageResouceViewer: Open Resource
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then select the &lt;code&gt;PHP&lt;/code&gt; resource and then finally &lt;code&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ll find a very scary xml file. This is the annoying part. The guides recommend that you use &lt;a href=&quot;https://packagecontrol.io/packages/AAAPackageDev&quot;&gt;the AAAPackageDev package&lt;/a&gt; to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn&amp;rsquo;t convert perfectly, and this defeats the purpose of using it! I did something different.&lt;/p&gt;
+
+&lt;h3 id=&quot;editing-the-language-file&quot;&gt;Editing the language file&lt;/h3&gt;
+
+&lt;p&gt;This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!&lt;/p&gt;
+
+&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you&amp;rsquo;re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
+Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.&lt;/p&gt;
+
+&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code&gt;array&lt;/code&gt; and &lt;code&gt;(&lt;/code&gt;) or 1 group (&lt;code&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code&gt;(a|b)&lt;/code&gt;) that wasn&amp;rsquo;t actually capturing anything per se. The solution to this was &lt;code&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you&amp;rsquo;ll understand why.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
+
+&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code&gt;?&amp;lt;=&lt;/code&gt;). When it didn&amp;rsquo;t work I facepalmed: &amp;ldquo;of course! it&amp;rsquo;s xml; I have to escape it (i.e. &lt;code&gt;&amp;amp;lt;&lt;/code&gt;)&amp;rdquo;. When it didn&amp;rsquo;t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn&amp;rsquo;t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;lastly&quot;&gt;Lastly&lt;/h2&gt;
+
+&lt;p&gt;Once you are done and you&amp;rsquo;re sure it works properly, share your contribution to the World!
+&lt;a href=&quot;https://github.com/sublimehq/Packages/issues/98&quot;&gt;This&lt;/a&gt; was my Github issue for the PHP syntax fix.&lt;/p&gt;
+
+&lt;p&gt;Happy open sourcing!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 27 Feb 2016 00:00:00 +1300</pubDate>
+        <link>http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
+      </item>
+    
+  </channel>
+</rss>
