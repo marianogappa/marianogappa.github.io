@@ -4,7 +4,7 @@ email:       mariano.gappa@gmail.com
 author:      Mariano Gappa
 description: "Blog about Software Engineering and Music Production."
 baseurl:     ""
-url:         "http://localhost:4000"
+url:         "http://marianogappa.github.io"
 date_format: "%b %-d, %Y"
 
 # Google services
