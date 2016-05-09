@@ -19,7 +19,7 @@ show_social_icons:  true
 
 # Disqus post comments
 # (leave blank to disable Disqus)
-disqus_shortname:
+disqus_shortname: marianogappasblog
 
 # Social icons
 github_username: MarianoGappa
