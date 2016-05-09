@@ -8,11 +8,11 @@
     <meta name="description" content="A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found.">
     <meta name="author" content="Mariano Gappa">
     <meta name="keywords" content="software">
-    <link rel="canonical" href="http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/">
+    <link rel="canonical" href="http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201602271824" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201605100011" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -30,7 +30,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="Fixing syntax highlighting issues in Sublime Text 3">
     <meta property="og:description" content="Blog about Software Engineering and Music Production.">
-    <meta property="og:url" content="http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/">
+    <meta property="og:url" content="http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/">
     <meta property="og:site_name" content="Mariano Gappa&#39;s Blog">
 
     <!-- Twitter Card -->
@@ -40,7 +40,7 @@
     
     <meta name="twitter:title" content="Fixing syntax highlighting issues in Sublime Text 3" />
     <meta name="twitter:description" content="A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found." />
-    <meta name="twitter:url" content="http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" />
+    <meta name="twitter:url" content="http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" />
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -78,7 +78,7 @@
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
-      <a href="http://localhost:4000" class="site-title">Mariano Gappa's Blog</a>
+      <a href="http://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
       <nav class="site-nav">
         <a href="/about/">About</a>
 <a href="/contact/">Contact</a>
@@ -152,7 +152,7 @@
 </code></pre></div>
 <p>Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I&rsquo;ve found a case where it&rsquo;s not. This case was probably not discovered because PHP people don&rsquo;t like type-hinting!</p>
 
-<p><img src="http://localhost:4000/images/sublime-highlighting-before.png" alt="Highlighting Issue - Before"></p>
+<p><img src="http://marianogappa.github.io/images/sublime-highlighting-before.png" alt="Highlighting Issue - Before"></p>
 
 <h2 id="now-here-39-s-how-to-fix-it">Now, here&rsquo;s how to fix it</h2>
 
@@ -187,7 +187,7 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 <p>After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (<code>array</code> and <code>(</code>) or 1 group (<code>[</code>), so I needed a wrapping group with two cases (i.e. <code>(a|b)</code>) that wasn&rsquo;t actually capturing anything per se. The solution to this was <code>Passive (non-capturing) groups</code> (i.e. <code>(?:...)</code>). I mention this because you might need it; when you see how the classes are picked you&rsquo;ll understand why.</p>
 
-<p><img src="http://localhost:4000/images/sublime-highlighting-after.png" alt="Highlighting Issue - Before"></p>
+<p><img src="http://marianogappa.github.io/images/sublime-highlighting-after.png" alt="Highlighting Issue - Before"></p>
 
 <h2 id="fun-fact">Fun fact</h2>
 
@@ -208,39 +208,39 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
   <div class="share-links">
     
-      <a class = "fa fa-facebook" href="https://facebook.com/sharer.php?u=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Facebook"></a>
+      <a class = "fa fa-facebook" href="https://facebook.com/sharer.php?u=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Facebook"></a>
     
 
     
-      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Fixing syntax highlighting issues in Sublime Text 3&url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Fixing syntax highlighting issues in Sublime Text 3&url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
     
 
     
-      <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Google+"></a>
+      <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/" rel="nofollow" target="_blank" title="Share on Google+"></a>
     
 
     
-      <a class="fa fa-linkedin" href="http://www.linkedin.com/shareArticle?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on LinkedIn"></a>
+      <a class="fa fa-linkedin" href="http://www.linkedin.com/shareArticle?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on LinkedIn"></a>
     
 
     
-      <a class="fa fa-digg" href="http://digg.com/submit?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Digg"></a>
+      <a class="fa fa-digg" href="http://digg.com/submit?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Digg"></a>
     
 
     
-      <a class="fa fa-tumblr" href="http://www.tumblr.com/share/link?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&name=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Tumblr"></a>
+      <a class="fa fa-tumblr" href="http://www.tumblr.com/share/link?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&name=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Tumblr"></a>
     
 
     
-      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Reddit"></a>
     
 
     
-      <a class="fa fa-stumbleupon" href="http://www.stumbleupon.com/submit?url=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on StumbleUpon"></a>
+      <a class="fa fa-stumbleupon" href="http://www.stumbleupon.com/submit?url=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&title=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on StumbleUpon"></a>
     
 
     
-      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&t=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/&t=Fixing syntax highlighting issues in Sublime Text 3" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
     
 
 
@@ -251,6 +251,20 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 
 
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'marianogappasblog';
+    var disqus_identifier = '/software/2016/02/27/fixing-syntax-highlighting-in-sublime3';
+    var disqus_title      = '';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
 

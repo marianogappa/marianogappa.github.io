@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>jira-cli: a lightweight bash script for easily querying JIRA &#8211; Mariano Gappa's Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use.">
+    <meta name="author" content="Mariano Gappa">
+    <meta name="keywords" content="software">
+    <link rel="canonical" href="http://marianogappa.github.io/software/2016/05/10/jira-cli/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201605100011" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    
+
+    <!-- Verifications -->
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="jira-cli: a lightweight bash script for easily querying JIRA">
+    <meta property="og:description" content="Blog about Software Engineering and Music Production.">
+    <meta property="og:url" content="http://marianogappa.github.io/software/2016/05/10/jira-cli/">
+    <meta property="og:site_name" content="Mariano Gappa&#39;s Blog">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+        <meta name="twitter:site" content="@MarianoGappa" />
+    
+    <meta name="twitter:title" content="jira-cli: a lightweight bash script for easily querying JIRA" />
+    <meta name="twitter:description" content="Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use." />
+    <meta name="twitter:url" content="http://marianogappa.github.io/software/2016/05/10/jira-cli/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    <!-- Added by Mariano for syntax highlighting -->
+    <link href="/css/syntax.css" rel="stylesheet">
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58930438-4', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body class="site animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
+      <nav class="site-nav">
+        <a href="/about/">About</a>
+<a href="/contact/">Contact</a>
+<a href="http://www.gappamixing.com">Mixing</a>
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-github" href="https://github.com/MarianoGappa"></a>
+    
+    
+    
+    <a class="fa fa-rss" href="/feed.xml"></a>
+    
+      <a class="fa fa-twitter" href="https://twitter.com/MarianoGappa"></a>
+    
+    
+    
+      <a class="fa fa-envelope" href="mailto:mariano.gappa@gmail.com"></a>
+    
+    
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>jira-cli: a lightweight bash script for easily querying JIRA</h1>
+  <span class="post-meta">May 10, 2016</span><br>
+  
+  <span class="post-meta small">
+  
+    3 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <h2 id="get-jira-cli-at">Get jira-cli at</h2>
+
+<p><a href="https://github.com/MarianoGappa/jira-cli">https://github.com/MarianoGappa/jira-cli</a></p>
+
+<h2 id="why">Why?</h2>
+
+<p>JIRA is cool. But it&rsquo;s slow! And it&rsquo;s not composable. And devs/ops love the terminal.</p>
+
+<h2 id="use-cases">Use cases</h2>
+
+<ul>
+<li><p>Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a <code>git diff ... | grep ... | sort | uniq</code> between deploy tags was kind of enough to get them&hellip;only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!</p></li>
+<li><p>Then there&rsquo;s looking for tickets. It&rsquo;s easy enough on JIRA, with JQL and the UI tools. But it&rsquo;s slow!</p></li>
+<li><p>Then there&rsquo;s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to &ldquo;pipe it to something&rdquo;). For example, boss comes in: &ldquo;can you do this?&rdquo;. You: &ldquo;I have these 3 tickets already. What&rsquo;s the priority?&rdquo;. What&rsquo;s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?</p></li>
+<li><p>Say you have a list of say 5 tickets you&rsquo;re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?</p></li>
+</ul>
+
+<h2 id="quick-start">Quick start</h2>
+
+<p>Please follow the instructions <a href="https://github.com/MarianoGappa/jira-cli/blob/master/README.md">in the readme</a>.</p>
+
+<p>Note that jira-cli requires the awesome <a href="https://stedolan.github.io/jq/">jq</a> tool, which if you don&rsquo;t have installed, you really should! jira-cli will remind you to install it if it doesn&rsquo;t find it.</p>
+
+<p>When you first run <code>jira</code>, it&rsquo;ll open <code>~/.jiraconfig</code> on your default editor:</p>
+
+<p><img src="http://marianogappa.github.io/images/jira-cli-first-run.png" alt="Running jira-cli for the first time"></p>
+
+<p>After you configure your credentials you should be good to go. Try <code>jira ok</code> one last time to double-check:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>jira ok
+OK
+</code></pre></div>
+<h2 id="tweaking-and-examples">Tweaking and examples</h2>
+
+<p>Personally, I like to go all the way with the tools I use the most, so I like these aliases:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span><span class="nv">g</span><span class="o">=</span><span class="s1">'git'</span>
+<span class="nb">alias </span><span class="nv">s</span><span class="o">=</span><span class="s1">'subl .'</span>
+<span class="nb">alias </span><span class="nv">d</span><span class="o">=</span><span class="s1">'docker'</span>
+<span class="nb">alias </span><span class="nv">k</span><span class="o">=</span><span class="s1">'kubectl'</span>
+<span class="nb">alias </span><span class="nv">j</span><span class="o">=</span><span class="s1">'jira'</span>
+</code></pre></div>
+<p>So if one morning I feel energetic enough to finish up all my backlog, I open all my assigned tickets in Chrome in one go!</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j me | j o
+</code></pre></div>
+<p>Which translates to:</p>
+
+<blockquote>
+<p>jira &ldquo;output all ticket numbers assigned to me&rdquo; | jira &ldquo;open all tickets from STDIN on browser&rdquo;)</p>
+</blockquote>
+
+<p>(To clarify: you don&rsquo;t have to be so hacker: <code>jira me | jira open</code> works just as well.
+For more info just type: <code>jira</code>.)</p>
+
+<p>If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j me | j t
+ABC-123     Do some work
+DEF-456     Do some more work
+GHI-789     Do very urgent work
+</code></pre></div>
+<p>When I can&rsquo;t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL&rsquo;s <code>text</code> filter, all bound to the projects you configured on <code>~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code>| j o 3</code>:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j s cat
+JKL-012     Feed the cat
+MNO-345     Buy a new cat
+PQR-678     Take the cat shopping
+
+~ <span class="nv">$ </span>j s cat | j o 3
+</code></pre></div>
+<h2 id="in-closing">In closing</h2>
+
+<p>Try it, it&rsquo;s free and open source! It&rsquo;s not the new <code>grep</code>, but it can be pretty useful once or twice a day. It&rsquo;s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!</p>
+
+</article>
+
+
+  <div class="share-page">
+  
+
+  <div class="share-links">
+    
+      <a class = "fa fa-facebook" href="https://facebook.com/sharer.php?u=http://marianogappa.github.io/software/2016/05/10/jira-cli/" rel="nofollow" target="_blank" title="Share on Facebook"></a>
+    
+
+    
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=jira-cli: a lightweight bash script for easily querying JIRA&url=http://marianogappa.github.io/software/2016/05/10/jira-cli/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+    
+
+    
+      <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/" rel="nofollow" target="_blank" title="Share on Google+"></a>
+    
+
+    
+      <a class="fa fa-linkedin" href="http://www.linkedin.com/shareArticle?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/&title=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on LinkedIn"></a>
+    
+
+    
+      <a class="fa fa-digg" href="http://digg.com/submit?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/&title=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on Digg"></a>
+    
+
+    
+      <a class="fa fa-tumblr" href="http://www.tumblr.com/share/link?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/&name=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on Tumblr"></a>
+    
+
+    
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/&title=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+    
+
+    
+      <a class="fa fa-stumbleupon" href="http://www.stumbleupon.com/submit?url=http://marianogappa.github.io/software/2016/05/10/jira-cli/&title=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on StumbleUpon"></a>
+    
+
+    
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://marianogappa.github.io/software/2016/05/10/jira-cli/&t=jira-cli: a lightweight bash script for easily querying JIRA" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'marianogappasblog';
+    var disqus_identifier = '/software/2016/05/10/jira-cli';
+    var disqus_title      = '';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>
