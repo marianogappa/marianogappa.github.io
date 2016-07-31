@@ -1,6 +1,5 @@
-/* Added by Mariano for syntax highlighting */
-
-.highlight .hll { background-color: #49483e }
+.highlight pre { background-color: #272822; }
+.highlight .hll { background-color: #272822; }
 .highlight .c { color: #75715e } /* Comment */
 .highlight .err { color: #960050; background-color: #1e0010 } /* Error */
 .highlight .k { color: #66d9ef } /* Keyword */
@@ -64,8 +63,3 @@
 .highlight .gu { color: #75715e; } /* Generic.Subheading & Diff Unified/Comment? */
 .highlight .gd { color: #f92672; } /* Generic.Deleted & Diff Deleted */
 .highlight .gi { color: #a6e22e; } /* Generic.Inserted & Diff Inserted */
-
-/* Make line numbers unselectable: excludes line numbers from copy-paste user ops */
-.highlight .lineno {-webkit-user-select: none;-moz-user-select: none; -o-user-select: none;} 
-.lineno::-moz-selection {background-color: transparent;} /* Mozilla specific */
-.lineno::selection {background-color: transparent;} /* Other major browsers */

@@ -7,6 +7,251 @@
     <atom:link href="http://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Diffing streams on the terminal</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I’ve developed, &lt;a href=&quot;https://github.com/MarianoGappa/sd&quot;&gt;sd&lt;/a&gt;, to address some of these limitations.&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Recently, I had this situation at work where I had to come up with a list of unprocessed transactions, identified by some &lt;a href=&quot;https://en.wikipedia.org/wiki/Universally_unique_identifier&quot;&gt;UUID&lt;/a&gt;. I had the transaction queue somewhere, and the transaction results somewhere else. Just a “set diff”, right? Well, my case was not so straightforward.&lt;/p&gt;
+
+&lt;h2 id=&quot;basic-stream-diffing&quot;&gt;Basic stream diffing&lt;/h2&gt;
+
+&lt;p&gt;The most common way to do “set diffs” on the terminal is using &lt;a href=&quot;https://en.wikipedia.org/wiki/Comm&quot;&gt;comm&lt;/a&gt;; and it’s also the fastest tool I’ve found. Just remember that the streams need to be sorted.&lt;/p&gt;
+
+&lt;p&gt;Diffing with comm&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;comm -23 &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 100 | sort&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 6 100 | sort&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;user@linuxbox imx-bootlets-src-10.05.02]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make &lt;span class=&quot;nv&quot;&gt;CROSS_COMPILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;arm-none-eabi-  clean
+rm -rf &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.sb
+rm -f sd_mmc_bootstream.raw
+rm -f linux_prep/board/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.o
+...
+Files:
+rm -f power_prep.o eabi.o
+Build output:
+make[1]: Leaving directory &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/home/...&lt;span class=&quot;s1&quot;&gt;&#39;
+[user@linuxbox imx-bootlets-src-10.05.02]$ make CROSS_COMPILE=arm-none-eabi-
+make[1]: Entering directory `/home/...&#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Another (slower but nevertheless popular) way to accomplish the same task is with &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).&lt;/p&gt;
+
+&lt;p&gt;Diffing with grep&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grep -Fxvf &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 6 100&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 100&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I discourage the use of &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt; for two good reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;It’s slower; maybe not on these examples but it is on real-life examples.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It doesn’t seem to work properly on the version of grep that comes with OS X  (at least on Yosemite) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Alpine (&lt;code class=&quot;highlighter-rouge&quot;&gt;grep 2.25-r0&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;seq 20 &amp;gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; seq 6 20 &amp;gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; grep -Fxvf b a
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;OS X (&lt;code class=&quot;highlighter-rouge&quot;&gt;grep (BSD grep) 2.5.1-FreeBSD&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;seq 20 &amp;gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; seq 6 20 &amp;gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; grep -Fxvf b a
+1
+2
+3
+4
+5
+16
+17
+18
+19
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;what-about-infinite-streams&quot;&gt;What about infinite streams?&lt;/h2&gt;
+
+&lt;p&gt;The tools mentioned above work with streams that finish, like:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;files&lt;/li&gt;
+  &lt;li&gt;commands (provided they finish)&lt;/li&gt;
+  &lt;li&gt;sql queries&lt;/li&gt;
+  &lt;li&gt;curl requests (provided they finish or timeout)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Infinite streams are ok on the left side stream of the diff, but you can’t start diffing until the right side stream finishes.&lt;/p&gt;
+
+&lt;p&gt;Note that you can’t &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; an infinite stream, so if you plan to diff an infinite stream on the left side, &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; is not an option; you have to use &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Moreover, if you diff with an infinite stream on the left side, your diff will work but will still never finish. This is fine, unless you want your diff to be part of a script.&lt;/p&gt;
+
+&lt;h2 id=&quot;common-strategies-for-diffing-infinite-streams&quot;&gt;Common strategies for diffing infinite streams&lt;/h2&gt;
+
+&lt;p&gt;The two intuitive approaches are:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;to take the first &lt;em&gt;n&lt;/em&gt; items from the infinite stream&lt;/li&gt;
+  &lt;li&gt;to timeout the stream after some time.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Taking the first 10 lines from two “infinite” seqs&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;comm -23 &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 10000000000 | head -n 10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;            &lt;/span&gt;&amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seq 6 10000000000 | head -n 10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;(for brevity, let’s assume that &lt;code class=&quot;highlighter-rouge&quot;&gt;seq 10000000000&lt;/code&gt; takes infinite time; to be fair it does take an impractical amount of time)&lt;/p&gt;
+
+&lt;p&gt;Then there is &lt;a href=&quot;http://man7.org/linux/man-pages/man1/timeout.1.html&quot;&gt;timeout&lt;/a&gt; in the Linux coreutils package for timing out a command after a specified duration. Note that it doesn’t come installed in OS X.&lt;/p&gt;
+
+&lt;p&gt;The following example is illustrative, because the command varies between systems&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;comm -23 &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;timeout 1s seq 10000000000&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;            &lt;/span&gt;&amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;timeout 1s seq 6 10000000000&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you want &lt;code class=&quot;highlighter-rouge&quot;&gt;timeout&lt;/code&gt; on OS X, your best bet is to install coreutils from Homebrew, with:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install coreutils
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;and then all coreutils commands are available, with a &lt;code class=&quot;highlighter-rouge&quot;&gt;g&lt;/code&gt; prepended to their names (e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;gtimeout&lt;/code&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;the-problem-with-these-strategies&quot;&gt;The problem with these strategies&lt;/h2&gt;
+
+&lt;p&gt;Both approaches share a common defect: they don’t react to stream output.&lt;/p&gt;
+
+&lt;p&gt;There’s no way to express the following:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;time out after some time has passed with no received lines&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;As it turns out, it’s quite common to use tools that poll forever, stuck in some form of receive loop.&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A Kafka console consumer, like &lt;a href=&quot;https://github.com/fgeller/kt&quot;&gt;kt&lt;/a&gt; (my originating use case)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail -f&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Any poll-forever scheme, e.g.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; TRUE &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;; &lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;curl https://status.github.com/api/status.json
+  sleep 10
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;my-current-solution-sd-stream-differ&quot;&gt;My current solution: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; (stream differ)&lt;/h2&gt;
+
+&lt;p&gt;I developed a very simple, well-tested, modern and efficient tool for diffing two newline-separated streams, timing them out if necessary. It’s written in &lt;a href=&quot;https://golang.org/&quot;&gt;Go&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/sd&quot;&gt;sd repo @ Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The initial example, with &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd &lt;span class=&quot;s1&quot;&gt;&#39;seq 6 100&#39;&lt;/span&gt;
+2
+1
+3
+5
+4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd -h 1 &lt;span class=&quot;s1&quot;&gt;&#39;tail -fn 100 &amp;lt;(seq 6 100)&#39;&lt;/span&gt;
+1
+2
+3
+4
+5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--timeout&lt;/code&gt; to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -t 10 &lt;span class=&quot;s1&quot;&gt;&#39;./kafka-consumer.sh uuids_topic&#39;&lt;/span&gt;
+a5aff766-564a-11e6-beb8-9e71128cae77
+a5affbd0-564a-11e6-beb8-9e71128cae77
+a5afff2c-564a-11e6-beb8-9e71128cae77
+a5b00328-564a-11e6-beb8-9e71128cae77
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Usually, tools like &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--patience&lt;/code&gt; for this.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -p 20 -t 10 &lt;span class=&quot;s1&quot;&gt;&#39;./kafka-consumer.sh uuids_topic&#39;&lt;/span&gt;
+a5aff766-564a-11e6-beb8-9e71128cae77
+a5affbd0-564a-11e6-beb8-9e71128cae77
+a5afff2c-564a-11e6-beb8-9e71128cae77
+a5b00328-564a-11e6-beb8-9e71128cae77
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-p 0&lt;/code&gt; for waiting indefinitely for the initial message.&lt;/p&gt;
+
+&lt;p&gt;If you’re sure the second stream will finish, use &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--infinite&lt;/code&gt;; this way you can be confident that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; will wait until the second stream finishes to start diffing.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt.&lt;/p&gt;
+
+&lt;p&gt;It’s not perfect: I wouldn’t choose it over &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; for streams that finish, because even though &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is fast, it does have to check every line of &lt;code class=&quot;highlighter-rouge&quot;&gt;STDIN&lt;/code&gt; against every line of the second stream where &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; can’t be used.&lt;/p&gt;
+
+&lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 30 Jul 2016 00:00:00 +1200</pubDate>
+        <link>http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
+      </item>
+    
+      <item>
         <title>jira-cli: a lightweight bash script for easily querying JIRA</title>
         <description>&lt;h2 id=&quot;get-jira-cli-at&quot;&gt;Get jira-cli at&lt;/h2&gt;
 
@@ -14,69 +259,88 @@
 
 &lt;h2 id=&quot;why&quot;&gt;Why?&lt;/h2&gt;
 
-&lt;p&gt;JIRA is cool. But it&amp;rsquo;s slow! And it&amp;rsquo;s not composable. And devs/ops love the terminal.&lt;/p&gt;
+&lt;p&gt;JIRA is cool. But it’s slow! And it’s not composable. And devs/ops love the terminal.&lt;/p&gt;
 
 &lt;h2 id=&quot;use-cases&quot;&gt;Use cases&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a &lt;code&gt;git diff ... | grep ... | sort | uniq&lt;/code&gt; between deploy tags was kind of enough to get them&amp;hellip;only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Then there&amp;rsquo;s looking for tickets. It&amp;rsquo;s easy enough on JIRA, with JQL and the UI tools. But it&amp;rsquo;s slow!&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Then there&amp;rsquo;s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to &amp;ldquo;pipe it to something&amp;rdquo;). For example, boss comes in: &amp;ldquo;can you do this?&amp;rdquo;. You: &amp;ldquo;I have these 3 tickets already. What&amp;rsquo;s the priority?&amp;rdquo;. What&amp;rsquo;s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Say you have a list of say 5 tickets you&amp;rsquo;re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a &lt;code class=&quot;highlighter-rouge&quot;&gt;git diff ... | grep ... | sort | uniq&lt;/code&gt; between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Then there’s looking for tickets. It’s easy enough on JIRA, with JQL and the UI tools. But it’s slow!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Then there’s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to “pipe it to something”). For example, boss comes in: “can you do this?”. You: “I have these 3 tickets already. What’s the priority?”. What’s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Say you have a list of say 5 tickets you’re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;quick-start&quot;&gt;Quick start&lt;/h2&gt;
 
 &lt;p&gt;Please follow the instructions &lt;a href=&quot;https://github.com/MarianoGappa/jira-cli/blob/master/README.md&quot;&gt;in the readme&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Note that jira-cli requires the awesome &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; tool, which if you don&amp;rsquo;t have installed, you really should! jira-cli will remind you to install it if it doesn&amp;rsquo;t find it.&lt;/p&gt;
+&lt;p&gt;Note that jira-cli requires the awesome &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; tool, which if you don’t have installed, you really should! jira-cli will remind you to install it if it doesn’t find it.&lt;/p&gt;
 
-&lt;p&gt;When you first run &lt;code&gt;jira&lt;/code&gt;, it&amp;rsquo;ll open &lt;code&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
+&lt;p&gt;When you first run &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jira ok
+&lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jira ok
 OK
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
 &lt;h2 id=&quot;tweaking-and-examples&quot;&gt;Tweaking and examples&lt;/h2&gt;
 
 &lt;p&gt;Personally, I like to go all the way with the tools I use the most, so I like these aliases:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;git&#39;&lt;/span&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;git&#39;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;subl .&#39;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;docker&#39;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;kubectl&#39;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;jira&#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
 &lt;p&gt;So if one morning I feel energetic enough to finish up all my backlog, I open all my assigned tickets in Chrome in one go!&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j o
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Which translates to:&lt;/p&gt;
 
-&lt;blockquote&gt;
-&lt;p&gt;jira &amp;ldquo;output all ticket numbers assigned to me&amp;rdquo; | jira &amp;ldquo;open all tickets from STDIN on browser&amp;rdquo;)&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j o
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Which translates to:&lt;br /&gt;
+&amp;gt;jira “output all ticket numbers assigned to me” | jira “open all tickets from STDIN on browser”)&lt;/p&gt;
 
-&lt;p&gt;(To clarify: you don&amp;rsquo;t have to be so hacker: &lt;code&gt;jira me | jira open&lt;/code&gt; works just as well.
-For more info just type: &lt;code&gt;jira&lt;/code&gt;.)&lt;/p&gt;
+&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.&lt;br /&gt;
+For more info just type: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;.)&lt;/p&gt;
 
 &lt;p&gt;If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j t
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j t
 ABC-123     Do some work
 DEF-456     Do some more work
 GHI-789     Do very urgent work
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;When I can&amp;rsquo;t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL&amp;rsquo;s &lt;code&gt;text&lt;/code&gt; filter, all bound to the projects you configured on &lt;code&gt;~/.jiraconfig&lt;/code&gt;. You can then choose to open one by adding e.g. &lt;code&gt;| j o 3&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s cat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s &lt;code class=&quot;highlighter-rouge&quot;&gt;text&lt;/code&gt; filter, all bound to the projects you configured on &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt;. You can then choose to open one by adding e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;| j o 3&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s cat
 JKL-012     Feed the cat
 MNO-345     Buy a new cat
 PQR-678     Take the cat shopping
 
 ~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s cat | j o 3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
 &lt;h2 id=&quot;in-closing&quot;&gt;In closing&lt;/h2&gt;
 
-&lt;p&gt;Try it, it&amp;rsquo;s free and open source! It&amp;rsquo;s not the new &lt;code&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It&amp;rsquo;s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
+&lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 May 2016 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
@@ -90,63 +354,82 @@ PQR-678     Take the cat shopping
 &lt;p&gt;My two main IDEs nowadays are &lt;a href=&quot;https://www.jetbrains.com/idea/&quot;&gt;Intellij Idea&lt;/a&gt; and &lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text&lt;/a&gt;. I basically like to use IDEA for strongly-typed languages and Sublime for weakly-typed languages. However, not long ago I found a bug on Sublime!&lt;/p&gt;
 
 &lt;p&gt;In version 5.4 of PHP, they &lt;a href=&quot;http://php.net/manual/en/migration54.new-features.php&quot;&gt;introduced a new syntax for arrays&lt;/a&gt; that is reminiscent of the JSON notation:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;// Old PHP Array syntax
 &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;// New PHP Array syntax
 &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I&amp;rsquo;ve found a case where it&amp;rsquo;s not. This case was probably not discovered because PHP people don&amp;rsquo;t like type-hinting!&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!&lt;/p&gt;
 
-&lt;h2 id=&quot;now-here-39-s-how-to-fix-it&quot;&gt;Now, here&amp;rsquo;s how to fix it&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;now-heres-how-to-fix-it&quot;&gt;Now, here’s how to fix it&lt;/h2&gt;
 
 &lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;This is the Language file for PHP&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The syntax highlighting feature uses the &lt;a href=&quot;https://en.wikipedia.org/wiki/Oniguruma&quot;&gt;Oniguruma regular expression library&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;I recommend &lt;a href=&quot;https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;amp;ia=cheatsheet&amp;amp;iax=1&quot;&gt;this DuckDuckGo regex cheatsheet&lt;/a&gt; if you need a quick reference; it&amp;rsquo;s very good!&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Also, I recommend using &lt;a href=&quot;http://rubular.com/&quot;&gt;this online regex parser&lt;/a&gt; when you get into the regex hacking part. It&amp;rsquo;s not my favourite one but it&amp;rsquo;s Ruby-based.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Before we begin, you should skim through &lt;a href=&quot;http://www.sublimetext.com/docs/3/syntax.html&quot;&gt;this syntax guide&lt;/a&gt; to familiarise yourself with the code we&amp;rsquo;ll be editing.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Optionally, you might want to read &lt;a href=&quot;http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition&quot;&gt;this StackOverflow question&lt;/a&gt;, as it was very insightful to understand the process.&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;This is the Language file for PHP&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The syntax highlighting feature uses the &lt;a href=&quot;https://en.wikipedia.org/wiki/Oniguruma&quot;&gt;Oniguruma regular expression library&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;I recommend &lt;a href=&quot;https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;amp;ia=cheatsheet&amp;amp;iax=1&quot;&gt;this DuckDuckGo regex cheatsheet&lt;/a&gt; if you need a quick reference; it’s very good!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Also, I recommend using &lt;a href=&quot;http://rubular.com/&quot;&gt;this online regex parser&lt;/a&gt; when you get into the regex hacking part. It’s not my favourite one but it’s Ruby-based.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Before we begin, you should skim through &lt;a href=&quot;http://www.sublimetext.com/docs/3/syntax.html&quot;&gt;this syntax guide&lt;/a&gt; to familiarise yourself with the code we’ll be editing.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Optionally, you might want to read &lt;a href=&quot;http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition&quot;&gt;this StackOverflow question&lt;/a&gt;, as it was very insightful to understand the process.&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;opening-the-language-file&quot;&gt;Opening the language file&lt;/h3&gt;
 
 &lt;p&gt;The first thing we need to do is to open the Language package (in this case the PHP one). For this, we need to &lt;a href=&quot;https://packagecontrol.io/packages/PackageResourceViewer&quot;&gt;install the PackageResourceViewer plugin&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Within Sublime&amp;rsquo;s Command Palette, type:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PackageResouceViewer: Open Resource
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Then select the &lt;code&gt;PHP&lt;/code&gt; resource and then finally &lt;code&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Within Sublime’s Command Palette, type:&lt;/p&gt;
 
-&lt;p&gt;You&amp;rsquo;ll find a very scary xml file. This is the annoying part. The guides recommend that you use &lt;a href=&quot;https://packagecontrol.io/packages/AAAPackageDev&quot;&gt;the AAAPackageDev package&lt;/a&gt; to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn&amp;rsquo;t convert perfectly, and this defeats the purpose of using it! I did something different.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PackageResouceViewer: Open Resource
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then select the &lt;code class=&quot;highlighter-rouge&quot;&gt;PHP&lt;/code&gt; resource and then finally &lt;code class=&quot;highlighter-rouge&quot;&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You’ll find a very scary xml file. This is the annoying part. The guides recommend that you use &lt;a href=&quot;https://packagecontrol.io/packages/AAAPackageDev&quot;&gt;the AAAPackageDev package&lt;/a&gt; to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn’t convert perfectly, and this defeats the purpose of using it! I did something different.&lt;/p&gt;
 
 &lt;h3 id=&quot;editing-the-language-file&quot;&gt;Editing the language file&lt;/h3&gt;
 
 &lt;p&gt;This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!&lt;/p&gt;
 
-&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you&amp;rsquo;re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
+&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.&lt;br /&gt;
 Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.&lt;/p&gt;
 
-&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code&gt;array&lt;/code&gt; and &lt;code&gt;(&lt;/code&gt;) or 1 group (&lt;code&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code&gt;(a|b)&lt;/code&gt;) that wasn&amp;rsquo;t actually capturing anything per se. The solution to this was &lt;code&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you&amp;rsquo;ll understand why.&lt;/p&gt;
+&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
 
-&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code&gt;?&amp;lt;=&lt;/code&gt;). When it didn&amp;rsquo;t work I facepalmed: &amp;ldquo;of course! it&amp;rsquo;s xml; I have to escape it (i.e. &lt;code&gt;&amp;amp;lt;&lt;/code&gt;)&amp;rdquo;. When it didn&amp;rsquo;t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn&amp;rsquo;t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;?&amp;lt;=&lt;/code&gt;). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lt;&lt;/code&gt;)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
 
 &lt;h2 id=&quot;lastly&quot;&gt;Lastly&lt;/h2&gt;
 
-&lt;p&gt;Once you are done and you&amp;rsquo;re sure it works properly, share your contribution to the World!
+&lt;p&gt;Once you are done and you’re sure it works properly, share your contribution to the World!&lt;br /&gt;
 &lt;a href=&quot;https://github.com/sublimehq/Packages/issues/98&quot;&gt;This&lt;/a&gt; was my Github issue for the PHP syntax fix.&lt;/p&gt;
 
 &lt;p&gt;Happy open sourcing!&lt;/p&gt;
+
 </description>
         <pubDate>Sat, 27 Feb 2016 00:00:00 +1300</pubDate>
         <link>http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>

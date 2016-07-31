@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201605100011" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201607311659" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -143,69 +143,88 @@
 
 <h2 id="why">Why?</h2>
 
-<p>JIRA is cool. But it&rsquo;s slow! And it&rsquo;s not composable. And devs/ops love the terminal.</p>
+<p>JIRA is cool. But it’s slow! And it’s not composable. And devs/ops love the terminal.</p>
 
 <h2 id="use-cases">Use cases</h2>
 
 <ul>
-<li><p>Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a <code>git diff ... | grep ... | sort | uniq</code> between deploy tags was kind of enough to get them&hellip;only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!</p></li>
-<li><p>Then there&rsquo;s looking for tickets. It&rsquo;s easy enough on JIRA, with JQL and the UI tools. But it&rsquo;s slow!</p></li>
-<li><p>Then there&rsquo;s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to &ldquo;pipe it to something&rdquo;). For example, boss comes in: &ldquo;can you do this?&rdquo;. You: &ldquo;I have these 3 tickets already. What&rsquo;s the priority?&rdquo;. What&rsquo;s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?</p></li>
-<li><p>Say you have a list of say 5 tickets you&rsquo;re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?</p></li>
+  <li>
+    <p>Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a <code class="highlighter-rouge">git diff ... | grep ... | sort | uniq</code> between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!</p>
+  </li>
+  <li>
+    <p>Then there’s looking for tickets. It’s easy enough on JIRA, with JQL and the UI tools. But it’s slow!</p>
+  </li>
+  <li>
+    <p>Then there’s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to “pipe it to something”). For example, boss comes in: “can you do this?”. You: “I have these 3 tickets already. What’s the priority?”. What’s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?</p>
+  </li>
+  <li>
+    <p>Say you have a list of say 5 tickets you’re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?</p>
+  </li>
 </ul>
 
 <h2 id="quick-start">Quick start</h2>
 
 <p>Please follow the instructions <a href="https://github.com/MarianoGappa/jira-cli/blob/master/README.md">in the readme</a>.</p>
 
-<p>Note that jira-cli requires the awesome <a href="https://stedolan.github.io/jq/">jq</a> tool, which if you don&rsquo;t have installed, you really should! jira-cli will remind you to install it if it doesn&rsquo;t find it.</p>
+<p>Note that jira-cli requires the awesome <a href="https://stedolan.github.io/jq/">jq</a> tool, which if you don’t have installed, you really should! jira-cli will remind you to install it if it doesn’t find it.</p>
 
-<p>When you first run <code>jira</code>, it&rsquo;ll open <code>~/.jiraconfig</code> on your default editor:</p>
+<p>When you first run <code class="highlighter-rouge">jira</code>, it’ll open <code class="highlighter-rouge">~/.jiraconfig</code> on your default editor:</p>
 
-<p><img src="http://marianogappa.github.io/images/jira-cli-first-run.png" alt="Running jira-cli for the first time"></p>
+<p><img src="http://marianogappa.github.io/images/jira-cli-first-run.png" alt="Running jira-cli for the first time" /></p>
 
-<p>After you configure your credentials you should be good to go. Try <code>jira ok</code> one last time to double-check:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>jira ok
+<p>After you configure your credentials you should be good to go. Try <code class="highlighter-rouge">jira ok</code> one last time to double-check:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>jira ok
 OK
-</code></pre></div>
+</code></pre>
+</div>
+
 <h2 id="tweaking-and-examples">Tweaking and examples</h2>
 
 <p>Personally, I like to go all the way with the tools I use the most, so I like these aliases:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span><span class="nv">g</span><span class="o">=</span><span class="s1">'git'</span>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">g</span><span class="o">=</span><span class="s1">'git'</span>
 <span class="nb">alias </span><span class="nv">s</span><span class="o">=</span><span class="s1">'subl .'</span>
 <span class="nb">alias </span><span class="nv">d</span><span class="o">=</span><span class="s1">'docker'</span>
 <span class="nb">alias </span><span class="nv">k</span><span class="o">=</span><span class="s1">'kubectl'</span>
 <span class="nb">alias </span><span class="nv">j</span><span class="o">=</span><span class="s1">'jira'</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>So if one morning I feel energetic enough to finish up all my backlog, I open all my assigned tickets in Chrome in one go!</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j me | j o
-</code></pre></div>
-<p>Which translates to:</p>
 
-<blockquote>
-<p>jira &ldquo;output all ticket numbers assigned to me&rdquo; | jira &ldquo;open all tickets from STDIN on browser&rdquo;)</p>
-</blockquote>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j o
+</code></pre>
+</div>
+<p>Which translates to:<br />
+&gt;jira “output all ticket numbers assigned to me” | jira “open all tickets from STDIN on browser”)</p>
 
-<p>(To clarify: you don&rsquo;t have to be so hacker: <code>jira me | jira open</code> works just as well.
-For more info just type: <code>jira</code>.)</p>
+<p>(To clarify: you don’t have to be so hacker: <code class="highlighter-rouge">jira me | jira open</code> works just as well.<br />
+For more info just type: <code class="highlighter-rouge">jira</code>.)</p>
 
 <p>If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j me | j t
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j t
 ABC-123     Do some work
 DEF-456     Do some more work
 GHI-789     Do very urgent work
-</code></pre></div>
-<p>When I can&rsquo;t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL&rsquo;s <code>text</code> filter, all bound to the projects you configured on <code>~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code>| j o 3</code>:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ </span>j s cat
+</code></pre>
+</div>
+
+<p>When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s <code class="highlighter-rouge">text</code> filter, all bound to the projects you configured on <code class="highlighter-rouge">~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code class="highlighter-rouge">| j o 3</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j s cat
 JKL-012     Feed the cat
 MNO-345     Buy a new cat
 PQR-678     Take the cat shopping
 
 ~ <span class="nv">$ </span>j s cat | j o 3
-</code></pre></div>
+</code></pre>
+</div>
+
 <h2 id="in-closing">In closing</h2>
 
-<p>Try it, it&rsquo;s free and open source! It&rsquo;s not the new <code>grep</code>, but it can be pretty useful once or twice a day. It&rsquo;s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!</p>
+<p>Try it, it’s free and open source! It’s not the new <code class="highlighter-rouge">grep</code>, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!</p>
 
 </article>
 
