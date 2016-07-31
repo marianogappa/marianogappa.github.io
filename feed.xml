@@ -31,20 +31,6 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;user@linuxbox imx-bootlets-src-10.05.02]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make &lt;span class=&quot;nv&quot;&gt;CROSS_COMPILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;arm-none-eabi-  clean
-rm -rf &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.sb
-rm -f sd_mmc_bootstream.raw
-rm -f linux_prep/board/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.o
-...
-Files:
-rm -f power_prep.o eabi.o
-Build output:
-make[1]: Leaving directory &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/home/...&lt;span class=&quot;s1&quot;&gt;&#39;
-[user@linuxbox imx-bootlets-src-10.05.02]$ make CROSS_COMPILE=arm-none-eabi-
-make[1]: Entering directory `/home/...&#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
 &lt;p&gt;Another (slower but nevertheless popular) way to accomplish the same task is with &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).&lt;/p&gt;
 
 &lt;p&gt;Diffing with grep&lt;/p&gt;
