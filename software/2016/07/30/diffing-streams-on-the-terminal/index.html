@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201607311711" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201608012101" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -131,7 +131,7 @@
   
   <span class="post-meta small">
   
-    5 minute read
+    6 minute read
   
   </span>
 </div>
@@ -180,7 +180,7 @@
     <p>It’s slower; maybe not on these examples but it is on real-life examples.</p>
   </li>
   <li>
-    <p>It doesn’t seem to work properly on the version of grep that comes with OS X  (at least on Yosemite) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.</p>
+    <p>It doesn’t seem to work properly on the version of grep that comes with OS X  (BSD) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.</p>
   </li>
 </ul>
 
@@ -314,7 +314,9 @@
 </code></pre>
 </div>
 
-<p>Note that <code class="highlighter-rouge">sd</code> does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add <code class="highlighter-rouge">| sort</code>.</p>
+<p>Note that <code class="highlighter-rouge">sd</code> does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add <code class="highlighter-rouge">| sort</code> at the end.</p>
+
+<p>If you do add <code class="highlighter-rouge">| sort</code> at the end, even though <code class="highlighter-rouge">sd</code> will diff right away, you won’t see results until <code class="highlighter-rouge">sd</code> has finished; this is just how sorting works. Also, <code class="highlighter-rouge">sort</code> will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.</p>
 
 <p>Use <code class="highlighter-rouge">-h</code> or <code class="highlighter-rouge">--hard-timeout</code> to timeout after a number of seconds</p>
 
@@ -355,7 +357,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p><code class="highlighter-rouge">sd</code> is a nifty tool, and a useful addition for a dev’s toolbelt.</p>
+<p><code class="highlighter-rouge">sd</code> is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.</p>
 
 <p>It’s not perfect: I wouldn’t choose it over <code class="highlighter-rouge">comm</code> for streams that finish, because even though <code class="highlighter-rouge">sd</code> is fast, it does have to check every line of <code class="highlighter-rouge">STDIN</code> against every line of the second stream where <code class="highlighter-rouge">comm</code> does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, <code class="highlighter-rouge">sd</code> can’t be used.</p>
 

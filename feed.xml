@@ -51,7 +51,7 @@
     &lt;p&gt;It’s slower; maybe not on these examples but it is on real-life examples.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;It doesn’t seem to work properly on the version of grep that comes with OS X  (at least on Yosemite) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.&lt;/p&gt;
+    &lt;p&gt;It doesn’t seem to work properly on the version of grep that comes with OS X  (BSD) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -185,7 +185,9 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end.&lt;/p&gt;
+
+&lt;p&gt;If you do add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end, even though &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; will diff right away, you won’t see results until &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; has finished; this is just how sorting works. Also, &lt;code class=&quot;highlighter-rouge&quot;&gt;sort&lt;/code&gt; will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.&lt;/p&gt;
 
 &lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
 
@@ -226,7 +228,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.&lt;/p&gt;
 
 &lt;p&gt;It’s not perfect: I wouldn’t choose it over &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; for streams that finish, because even though &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is fast, it does have to check every line of &lt;code class=&quot;highlighter-rouge&quot;&gt;STDIN&lt;/code&gt; against every line of the second stream where &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; can’t be used.&lt;/p&gt;
 
