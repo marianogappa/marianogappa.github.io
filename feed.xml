@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mariano Gappa&#39;s Blog</title>
+    <title>Mariano Gappa's Blog</title>
     <description>Blog about Software Engineering and Music Production.</description>
-    <link>http://marianogappa.github.io/</link>
-    <atom:link href="http://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Making the move from Scala to Go, and why we’re not going back</title>
+        <description>&lt;p&gt;I’ve written a blogpost for Movio about our squad’s decision to migrate part of our Scala codebase to Go. The actual blogpost is on the Movio blog:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;https://movio.co/blog/migrate-Scala-to-Go/&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 25 Jan 2017 00:00:00 +1300</pubDate>
+        <link>http://localhost:4000/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
+      </item>
     
       <item>
         <title>Diffing streams on the terminal</title>
@@ -176,7 +187,7 @@
 
 &lt;p&gt;The initial example, with &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt;&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd &lt;span class=&quot;s1&quot;&gt;&#39;seq 6 100&#39;&lt;/span&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd &lt;span class=&quot;s1&quot;&gt;'seq 6 100'&lt;/span&gt;
 2
 1
 3
@@ -191,7 +202,7 @@
 
 &lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd -h 1 &lt;span class=&quot;s1&quot;&gt;&#39;tail -fn 100 &amp;lt;(seq 6 100)&#39;&lt;/span&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;seq 100 | sd -h 1 &lt;span class=&quot;s1&quot;&gt;'tail -fn 100 &amp;lt;(seq 6 100)'&lt;/span&gt;
 1
 2
 3
@@ -202,7 +213,7 @@
 
 &lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--timeout&lt;/code&gt; to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -t 10 &lt;span class=&quot;s1&quot;&gt;&#39;./kafka-consumer.sh uuids_topic&#39;&lt;/span&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -t 10 &lt;span class=&quot;s1&quot;&gt;'./kafka-consumer.sh uuids_topic'&lt;/span&gt;
 a5aff766-564a-11e6-beb8-9e71128cae77
 a5affbd0-564a-11e6-beb8-9e71128cae77
 a5afff2c-564a-11e6-beb8-9e71128cae77
@@ -213,7 +224,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;Usually, tools like &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--patience&lt;/code&gt; for this.&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -p 20 -t 10 &lt;span class=&quot;s1&quot;&gt;&#39;./kafka-consumer.sh uuids_topic&#39;&lt;/span&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat uuids.txt | sd -p 20 -t 10 &lt;span class=&quot;s1&quot;&gt;'./kafka-consumer.sh uuids_topic'&lt;/span&gt;
 a5aff766-564a-11e6-beb8-9e71128cae77
 a5affbd0-564a-11e6-beb8-9e71128cae77
 a5afff2c-564a-11e6-beb8-9e71128cae77
@@ -235,8 +246,8 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 &lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Sat, 30 Jul 2016 00:00:00 +1200</pubDate>
-        <link>http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
+        <link>http://localhost:4000/software/2016/07/30/diffing-streams-on-the-terminal/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
       </item>
     
       <item>
@@ -274,7 +285,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;When you first run &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
 
@@ -287,11 +298,11 @@ OK
 
 &lt;p&gt;Personally, I like to go all the way with the tools I use the most, so I like these aliases:&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;git&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;subl .&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;docker&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;kubectl&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;jira&#39;&lt;/span&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'git'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'subl .'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'docker'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'kubectl'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'jira'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -300,10 +311,10 @@ OK
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j o
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;Which translates to:&lt;br /&gt;
+&lt;p&gt;Which translates to:
 &amp;gt;jira “output all ticket numbers assigned to me” | jira “open all tickets from STDIN on browser”)&lt;/p&gt;
 
-&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.&lt;br /&gt;
+&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.
 For more info just type: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;.)&lt;/p&gt;
 
 &lt;p&gt;If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:&lt;/p&gt;
@@ -331,8 +342,8 @@ PQR-678     Take the cat shopping
 &lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 May 2016 00:00:00 +1200</pubDate>
-        <link>http://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
+        <link>http://localhost:4000/software/2016/05/10/jira-cli/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2016/05/10/jira-cli/</guid>
       </item>
     
       <item>
@@ -355,7 +366,7 @@ PQR-678     Take the cat shopping
 
 &lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;now-heres-how-to-fix-it&quot;&gt;Now, here’s how to fix it&lt;/h2&gt;
 
@@ -400,12 +411,12 @@ PQR-678     Take the cat shopping
 
 &lt;p&gt;This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!&lt;/p&gt;
 
-&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.&lt;br /&gt;
+&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
 Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.&lt;/p&gt;
 
 &lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
 
@@ -413,15 +424,15 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 &lt;h2 id=&quot;lastly&quot;&gt;Lastly&lt;/h2&gt;
 
-&lt;p&gt;Once you are done and you’re sure it works properly, share your contribution to the World!&lt;br /&gt;
+&lt;p&gt;Once you are done and you’re sure it works properly, share your contribution to the World!
 &lt;a href=&quot;https://github.com/sublimehq/Packages/issues/98&quot;&gt;This&lt;/a&gt; was my Github issue for the PHP syntax fix.&lt;/p&gt;
 
 &lt;p&gt;Happy open sourcing!&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 27 Feb 2016 00:00:00 +1300</pubDate>
-        <link>http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
+        <link>http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
       </item>
     
   </channel>
