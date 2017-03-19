@@ -7,6 +7,478 @@
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;In this blogpost, I introduce the ostinato project; a Chess engine written in Scala.&lt;/p&gt;
+
+&lt;p&gt;It’s not the fastest engine around, nor the hardest AI to beat. However, it enables some use cases that I haven’t found good free online sources for, like parsing notations into matches, converting between notations, playing against the AI from a given step in a parsed match, as well as the ability to solve chess puzzles and problems via elegant one-liners on the Scala REPL.&lt;/p&gt;
+
+&lt;p&gt;By &lt;a href=&quot;https://www.scala-js.org/doc/project/cross-build.html&quot;&gt;cross-compiling&lt;/a&gt; into JS using &lt;a href=&quot;https://www.scala-js.org/&quot;&gt;ScalaJS&lt;/a&gt;, the same Scala code can run in the browser as a javascript library, which is great for two reasons:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;the tools can be available online for free with Github service quality&lt;/li&gt;
+  &lt;li&gt;JS devs can use the library without any Scala knowledge&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is an &lt;a href=&quot;https://hub.docker.com/r/marianogappa/ostinato/&quot;&gt;ostinato docker image&lt;/a&gt; available on Docker Hub (or it can be built locally) which exposes the same API as the JS library via an &lt;a href=&quot;http://doc.akka.io/docs/akka-http/current/scala.html&quot;&gt;Akka HTTP&lt;/a&gt; server.&lt;/p&gt;
+
+&lt;p&gt;Because ostinato is 100% &lt;a href=&quot;https://en.wikipedia.org/wiki/Stateless_protocol&quot;&gt;stateless&lt;/a&gt;, it’s a perfect candidate for &lt;a href=&quot;https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment&quot;&gt;Kubernetes deployments&lt;/a&gt;: each individual API request (e.g. an AI move) can be load balanced over a set of pods, and pod count can be &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/&quot;&gt;auto-scaled&lt;/a&gt; based on cpu load average. This makes it attractive for AI research and as a backend for chess sites.&lt;/p&gt;
+
+&lt;h2 id=&quot;project-links&quot;&gt;Project links&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/marianogappa/ostinato&quot;&gt;Repository&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/&quot;&gt;Scaladoc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;demos&quot;&gt;Demos&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play&quot;&gt;Chess Game&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/parser&quot;&gt;Game Parser&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://marianogappa.github.io/ostinato-examples/convert&quot;&gt;Notation Converter&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/autoplay&quot;&gt;Auto-play&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;meta&quot;&gt;Meta&lt;/h2&gt;
+
+&lt;p&gt;I’ve recently upset some good people of the Scala community with &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;this blogpost&lt;/a&gt; that &lt;a href=&quot;https://news.ycombinator.com/item?id=13476988&quot;&gt;became a language war&lt;/a&gt;. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular a few that Golang can’t do: (1) running server code on the front-end; (2) solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.&lt;/p&gt;
+
+&lt;h2 id=&quot;solving-puzzles-in-the-repl&quot;&gt;Solving puzzles in the REPL&lt;/h2&gt;
+
+&lt;p&gt;A quite unique feature of ostinato is that it leverages the Scala differentials in terms of succintness and elegance for actually solving problems. As a result, it becomes feasible to solve chess brain teasers directly in the REPL with only a few one-liners.&lt;/p&gt;
+
+&lt;p&gt;Let’s try a check mate in two moves. Here’s an &lt;a href=&quot;http://chesspuzzlesonline.com/solution/ps44/&quot;&gt;example puzzle&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/ostinato-mate-in-two.png&quot; alt=&quot;Example: mate in two moves&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;White moves first and it should make check mate in the second move.&lt;/p&gt;
+
+&lt;h3 id=&quot;lets-solve-it&quot;&gt;Let’s solve it!&lt;/h3&gt;
+
+&lt;p&gt;First, we need to compile the jar so we can play with it in the REPL; this should be easy:
+(alternatively, just download the latest jar from &lt;a href=&quot;https://github.com/marianogappa/ostinato/releases&quot;&gt;Releases&lt;/a&gt;)&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sbt pack
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; the folder and find the ostinato_2.12-*.jar):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;scala -cp target/pack/lib/ostinato_2.12-1.0.2.jar
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Import the core, so we can use the chess classes:&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ostinato.chess.core._&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ostinato.chess.core._&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;OK; let’s generate a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; identical to the one in the puzzle:&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChessGame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromGridString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;........
+     |....♕...
+     |.♟..♟.♟♚
+     |♟.....♘♛
+     |...♙♟...
+     |.♙....♙.
+     |♙....♙♔.
+     |........&quot;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stripMargin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;turn&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;WhiteChessPlayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessBoard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;....♕...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♟..♟.♟♚&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♟.....♘♛&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...♙♟...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♙....♙.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♙....♙♔.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;All the &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame.from...&lt;/code&gt; &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString&quot;&gt;methods&lt;/a&gt; return a &lt;code class=&quot;highlighter-rouge&quot;&gt;Try[ChessGame]&lt;/code&gt;, because parsing could fail. In this case, I know it’ll work so I just &lt;code class=&quot;highlighter-rouge&quot;&gt;.get&lt;/code&gt;, and get the board from it.&lt;/p&gt;
+
+&lt;p&gt;Note that the Unicode symbols were made with the assumption of black foreground and white background. In the REPL, this is often times backwards. This might confuse you as to which colour is which. Use &lt;a href=&quot;https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode&quot;&gt;this&lt;/a&gt; as a safe copy-paste.&lt;/p&gt;
+
+&lt;p&gt;We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include &lt;code class=&quot;highlighter-rouge&quot;&gt;White resigns&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;White claims draw&lt;/code&gt;, which we’re not interested in. Same will apply for the next moves. Let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessOptimisations&lt;/code&gt; instance and pass it around:&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChessOptimisations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beOptimistic&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here’s the meaty part. We need to express the following statement in code:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Find the actions such that for whichever following action, there’s at least one follow-up check mate”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If the puzzle was constructed properly, there should be only one action that satisfies those conditions:&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAllActions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAllActions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAllActions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isLossFor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;BlackChessPlayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;res1&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;scala.collection.immutable.Set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessBoard&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(.....♕..&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♟..♟.♟♚&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♟.....♘♛&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...♙♟...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♙....♙.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♙....♙♔.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Yes! There’s exactly one &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; in the resulting &lt;code class=&quot;highlighter-rouge&quot;&gt;Set&lt;/code&gt;!&lt;/p&gt;
+
+&lt;p&gt;Let’s extract the action so we can apply it to our &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt;. That can be accomplished by appending &lt;code class=&quot;highlighter-rouge&quot;&gt;.head.history.head.action.get&lt;/code&gt; to our previous line (i.e. getting the first action in the history).&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; has a nice &lt;code class=&quot;highlighter-rouge&quot;&gt;toString&lt;/code&gt; implementation.&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;history&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessAction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;White&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Queen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f8&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let’s apply the action on the board. Not all actions can be applied on a board, so &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction&quot;&gt;doAction&lt;/a&gt; returns an &lt;code class=&quot;highlighter-rouge&quot;&gt;Option[ChessBoard]&lt;/code&gt;. For brevity we’ll just &lt;code class=&quot;highlighter-rouge&quot;&gt;.get&lt;/code&gt; it here:&lt;/p&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessBoard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.....♕..&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♟..♟.♟♚&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♟.....♘♛&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...♙♟...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.♙....♙.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;♙....♙♔.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lastly, let’s see the full action history.&lt;/p&gt;
+
+&lt;p&gt;We’ll have to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pick any black action (&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; in this case)&lt;/li&gt;
+  &lt;li&gt;filter the white checkmate action&lt;/li&gt;
+  &lt;li&gt;retrieve the action history&lt;/li&gt;
+  &lt;li&gt;history is stored backwards so we’ll have to reverse it to read it properly&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAllActions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doAllActions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isLossFor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;BlackChessPlayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;history&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;res5&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; 
+&lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;White&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Queen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;nc&quot;&gt;Black&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;King&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;captures&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;White&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Knight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;nc&quot;&gt;White&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Queen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f4&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Profit! Do compare with the puzzle site, but the solutions match.&lt;/p&gt;
+
+&lt;p&gt;Within the REPL, ostinato becomes a swiss-army knife for chess-related queries.&lt;/p&gt;
+
+&lt;h3 id=&quot;taking-the-red-pillhttpsenwikipediaorgwikiredpillandbluepill&quot;&gt;Taking the &lt;a href=&quot;https://en.wikipedia.org/wiki/Red_pill_and_blue_pill&quot;&gt;red pill&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/&quot;&gt;Scaladoc&lt;/a&gt; and the &lt;a href=&quot;https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato&quot;&gt;hundreds of tests&lt;/a&gt; are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61&quot;&gt;voodoo code&lt;/a&gt; overall, and I’m not proud of it (anymore, that is).&lt;/p&gt;
+
+&lt;h2 id=&quot;in-the-browser-ostinatojs&quot;&gt;In the browser: ostinato.js&lt;/h2&gt;
+
+&lt;p&gt;Although ~97% of the ostinato codebase is written in Scala, it leverages ScalaJS as a facade to enable JS use cases. By cross-compiling the code, ScalaJS produces an &lt;a href=&quot;https://github.com/marianogappa/ostinato/releases&quot;&gt;ostinato.js file&lt;/a&gt;. This strategy makes all the free tools feasible.&lt;/p&gt;
+
+&lt;p&gt;Most of the demos also leverage the popular and solid &lt;a href=&quot;http://chessboardjs.com/&quot;&gt;ChessboardJS&lt;/a&gt; library for UI. Because ChessboardJS’ notation conventions make a lot of sense, ostinato’s API was exposed in a way that is compatible with it.&lt;/p&gt;
+
+&lt;p&gt;The best part of JS support is that JS developers can use the chess engine without any Scala knowledge.&lt;/p&gt;
+
+&lt;p&gt;Just download the latest js file in the &lt;a href=&quot;https://github.com/marianogappa/ostinato/releases&quot;&gt;releases section&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Using ostinato.js is really simple and easy. For a great working intro, check the &lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/autoplay&quot;&gt;auto-play demo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here’s the meaty part. You’ll have to pardon my js, but I think it should be quite clear:&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;boardUi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;initialBoard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;initialBoard&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;aiMove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ostinato&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;chess&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;randomAiMove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;aiMove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aiMove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isCheckMate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;
+          &lt;span class=&quot;nx&quot;&gt;aiMove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isDraw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;initialBoard&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aiMove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;board&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;boardUi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;boardUi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ChessBoard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'board'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;moveSpeed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'fast'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;boardUi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The only ostinato line in there is &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato.chess.js.Js().randomAiMove(board)&lt;/code&gt;. The rest is ChessboardJS and plain javascript.&lt;/p&gt;
+
+&lt;p&gt;Here’s what’s available at the moment from javascript: &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala&quot;&gt;Js.scala&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;From here, you should be able to go to the other examples. If you’re interested in developing an advanced use case, I’d be happy to help you on my spare time. Find my contact details at the top of this page.&lt;/p&gt;
+
+&lt;h2 id=&quot;server-side&quot;&gt;Server-side&lt;/h2&gt;
+
+&lt;p&gt;Running ostinato on the JVM has several pros:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It runs faster than its ScalaJS counterpart&lt;/li&gt;
+  &lt;li&gt;Because ostinato is 100% stateless, one server can play several games at a time&lt;/li&gt;
+  &lt;li&gt;No high CPU usage on the client; responsiveness is up to the server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;via-sbt&quot;&gt;Via SBT&lt;/h2&gt;
+
+&lt;p&gt;Try starting the server via sbt:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sbt ostinatoJVM/run
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can check if it’s working by trying the healthcheck:&lt;/p&gt;
+
+&lt;p&gt;(which could be used as a &lt;code class=&quot;highlighter-rouge&quot;&gt;livenessProbe&lt;/code&gt; on a Kubernetes deployment)&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/healthcheck
+OK!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Or get an initial board to start playing from:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/initialBoard
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;board&quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&quot;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then make the computer play from it:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/randomAiMove -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;'{&quot;board&quot;:&quot;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&quot;}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-H &lt;span class=&quot;s2&quot;&gt;&quot;Content-type: application/json&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;success&quot;&lt;/span&gt;:true,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isCheck&quot;&lt;/span&gt;:false,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isDraw&quot;&lt;/span&gt;:false,
+  &lt;span class=&quot;s2&quot;&gt;&quot;board&quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&quot;rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1 7163&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isCheckmate&quot;&lt;/span&gt;:false,
+  &lt;span class=&quot;s2&quot;&gt;&quot;action&quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&quot;Nf3&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;lets-try-something-more-fun&quot;&gt;Let’s try something more fun&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.chesspuzzles.com/mate-in-one&quot;&gt;This site&lt;/a&gt; provides “mate in one move” puzzles; here’s one example:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ostinato server expects the input boards in “ostinato notation”, which is simply &lt;a href=&quot;https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation&quot;&gt;FEN notation&lt;/a&gt; plus (optionally) the history in &lt;a href=&quot;https://en.wikipedia.org/wiki/ICCF_numeric_notation&quot;&gt;ICCF notation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;amp;rdid=com.fimetech.chessfimee&amp;amp;pli=1&quot;&gt;this Android app&lt;/a&gt; that OCRs the board and producess the FEN; which was:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the check mate:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/basicAiMove -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;'{&quot;board&quot;:&quot;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1&quot;}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-H &lt;span class=&quot;s2&quot;&gt;&quot;Content-Type:application/json&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;success&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isCheck&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isDraw&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;board&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;r1b1qb1r/1p1n2pp/p2P4/4N2k/6Pn/1Q6/PP2NP1P/R1B2RK1 b - - 0 1 7374&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;isCheckmate&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;action&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;g4+&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a check mate.&lt;/p&gt;
+
+&lt;p&gt;From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.&lt;/p&gt;
+
+&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;playing-a-demo-game-using-the-jvm-as-backend&quot;&gt;Playing a demo game using the JVM as backend&lt;/h2&gt;
+
+&lt;p&gt;Simply use the provided &lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play&quot;&gt;demo chess game&lt;/a&gt; and add the following query parameters:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useServer=localhost:51234 // location of your ostinato backend
+depth=1 // complexity of the AI (from 0, but 3 is already slow)
+debug=1 // optional: logs AI rationale to STDOUT
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;e.g. &lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play?useServer=localhost:51234&amp;amp;depth=1&quot;&gt;https://marianogappa.github.io/ostinato-examples/play?useServer=localhost:51234&amp;amp;depth=1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I’m not a particularly good chess player, but depth 3 beats me. &lt;a href=&quot;https://twitter.com/MarianoGappa/status/716530501075337216&quot;&gt;I was so happy&lt;/a&gt; when I reached that milestone &amp;lt;3&lt;/p&gt;
+
+&lt;h2 id=&quot;docker&quot;&gt;Docker&lt;/h2&gt;
+
+&lt;p&gt;You can start an ostinato container right from Docker Hub with:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker run -p 51234:51234 marianogappa/ostinato:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Once it’s up, you can try the healthcheck and other examples described above. Note that docker may not open the port on &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;; this depends on your docker installation.&lt;/p&gt;
+
+&lt;p&gt;If you want to experiment with the code and build the image locally (for which you will need sbt &amp;amp; docker), you can use the provided script on the root folder:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./docker-build.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The script will kindly ask you to run &lt;code class=&quot;highlighter-rouge&quot;&gt;sbt packArchiveZip&lt;/code&gt; if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.&lt;/p&gt;
+
+&lt;p&gt;The script always builds the &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato&lt;/code&gt; image with the tag &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt;; if you want to specify a custom tag, you can do it like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;v1.2.3 ./docker-build.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;kubernetes&quot;&gt;Kubernetes&lt;/h2&gt;
+
+&lt;p&gt;As previously mentioned, ostinato is 100% stateless. The server doesn’t save any state from previous requests, and all the information necessary to respond to a request is present in the request itself.&lt;/p&gt;
+
+&lt;p&gt;This means that:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Any given ostinato server can satisfy requests from multiple games&lt;/li&gt;
+  &lt;li&gt;A game can be played by issuing requests to multiple ostinato servers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thus, load balancing strategies become very simple with ostinato. Some popular solutions right now are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://serverless.com/&quot;&gt;Serverless&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment&quot;&gt;Kubernetes Deployments&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/elasticloadbalancing/&quot;&gt;AWS ELB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;At least with Kubernetes, there’s also the possibility of dynamically increasing the number of ostinato container replicas when the cpu usage exceeds a given threshold; this is called &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling&quot;&gt;auto-scaling&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ostinato doesn’t use any disk and doesn’t have any special configurations so you don’t need to mount anything. As a JVM application, though, it’s not the cheapest in terms of CPU, memory, and image size. It’s using the smallest base image I could find that has a JVM: the &lt;a href=&quot;https://hub.docker.com/r/anapsix/alpine-java/&quot;&gt;alpine-java&lt;/a&gt; one.&lt;/p&gt;
+
+&lt;p&gt;Here’s a deployment manifest to get you started:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;extensions/v1beta1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deployment&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;replicas&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato:latest&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;imagePullPolicy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;IfNotPresent&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;500m&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;128Mi&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;limits&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;4000m&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;512Mi&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;livenessProbe&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;initialDelaySeconds&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;15&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;httpGet&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/healthcheck&quot;&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;51234&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;external&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;TCP&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;containerPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;51234&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The rationale behind low requests and high limits is that ostinato aggresively parallelises requests but they arrive infrequently, so bursts of usage can be multiplexed on the same Kubernetes minion. Mileage may vary; greater depths are memory hungry.&lt;/p&gt;
+
+&lt;p&gt;You’ll need a service to expose the server to your client code; here’s a service manifest:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Service&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ostinato&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;external&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;51234&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;targetPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;51234&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Apply both manifests with &lt;a href=&quot;https://kubernetes.io/docs/user-guide/kubectl-overview/&quot;&gt;kubectl&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;kubectl apply -f ostinato-deployment.yml
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;kubectl apply -f ostinato-service.yml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Your ostinato instances should be reachable via the Kubernetes proxy API, e.g.:&lt;/p&gt;
+
+&lt;p&gt;https://kubernetes_domain_name/api/v1/proxy/services/ostinato:51234/healthcheck&lt;/p&gt;
+
+&lt;p&gt;Follow the auto-scaling guidelines for dynamic scaling. Here’s a quick trick:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl autoscale deployment ostinato --min=2 --max=5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;developing-ostinato-and-final-thoughts&quot;&gt;Developing ostinato and final thoughts&lt;/h2&gt;
+
+&lt;p&gt;Developing ostinato was an amazing experience. I got to learn a lot about Chess, a lot about Scala, a lot about OSS and a lot about Software Engineering.&lt;/p&gt;
+
+&lt;p&gt;I believe ostinato has enabled some free and open source chess-related use cases that were unavailable before; if you find them useful I’d be very happy to &lt;a href=&quot;https://twitter.com/MarianoGappa&quot;&gt;hear about it&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;OOP blogpost&lt;/a&gt;). Seeing Chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “Chess library”, where &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Game&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Action&lt;/code&gt; and so on. The resulting code &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/core/Game.scala&quot;&gt;scares me still&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Another thing I’ve learned is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide Big O complexity greatly. At some inflexion point, the indirection trade-off is not worth it. While not proud about it, I must link you to some &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/package.scala#L159&quot;&gt;compromises I’ve made&lt;/a&gt; to gain acceptable response times.&lt;/p&gt;
+
+&lt;p&gt;During extensive refactorings, I’ve learned to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.&lt;/p&gt;
+
+&lt;p&gt;I’ve learned to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclasses’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learned a valuable lesson.&lt;/p&gt;
+
+&lt;p&gt;Thank you for reading this blogpost. KISS!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 19 Mar 2017 00:00:00 +1300</pubDate>
+        <link>http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+        <guid isPermaLink="true">http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+      </item>
+    
+      <item>
         <title>Making the move from Scala to Go, and why we’re not going back</title>
         <description>&lt;p&gt;I’ve written a blogpost for Movio about our squad’s decision to migrate part of our Scala codebase to Go. The actual blogpost is on the Movio blog:&lt;/p&gt;
 

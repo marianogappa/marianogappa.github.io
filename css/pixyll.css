@@ -674,6 +674,14 @@ code {
 code {
   color: #7a7a7a; }
 
+/* Mariano modified this to match Slack inline code */
+code.highlighter-rouge {
+  color: #990000;
+  background-color: #EEE;
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  padding: 3px 5px 3px 5px; }
+
 pre {
   padding: 1.125em;
   line-height: 1.11;
