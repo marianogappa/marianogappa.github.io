@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201703222228" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201703222243" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -324,7 +324,7 @@
 
 <h3 id="taking-the-red-pillhttpsenwikipediaorgwikiredpillandbluepill">Taking the <a href="https://en.wikipedia.org/wiki/Red_pill_and_blue_pill">red pill</a></h3>
 
-<p>If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the <a href="https://marianogappa.github.io/ostinato/docs/">Scaladoc</a> and the <a href="https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato">hundreds of tests</a> are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61">voodoo code</a> overall, and I’m not proud of it (anymore, that is).</p>
+<p>If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the <a href="https://marianogappa.github.io/ostinato/docs/">Scaladoc</a> and the <a href="https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato">hundreds of tests</a> are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page and/or post a comment below. There’s a very reduced set of <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61">voodoo code</a> overall, and I’m not proud of it (anymore, that is).</p>
 
 <h2 id="in-the-browser-ostinatojs">In the browser: ostinato.js</h2>
 
@@ -367,7 +367,7 @@
 
 <p>Here’s what’s available at the moment from JavaScript: <a href="https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala">Js.scala</a></p>
 
-<p>From here, you should be able to go to the other examples. If you’re interested in developing an advanced use case, I’d be happy to help you on my spare time. Find my contact details at the top of this page.</p>
+<p>From here, you should be able to go to the other examples. If you’re interested in developing an advanced use case, I’d be happy to help you on my spare time. Find my contact details at the top of this page and/or post a comment below.</p>
 
 <h2 id="server-side">Server-side</h2>
 
@@ -597,7 +597,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous <a href="http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end">OOP blogpost</a>). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where <code class="highlighter-rouge">ChessGame</code> extended <code class="highlighter-rouge">Game</code> and <code class="highlighter-rouge">ChessAction</code> extended <code class="highlighter-rouge">Action</code> and so on. The resulting code <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala">scares me still</a>.</p>
 
-<p>Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199">compromises I’ve made</a> to gain acceptable response times.</p>
+<p>Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurring mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199">compromises I’ve made</a> to gain acceptable response times.</p>
 
 <p>During extensive refactorings, I’ve learnt to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.</p>
 
