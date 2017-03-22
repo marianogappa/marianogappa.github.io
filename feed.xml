@@ -10,7 +10,7 @@
         <title>ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
-&lt;p&gt;In this blogpost, I introduce the ostinato project; a Chess engine written in Scala.&lt;/p&gt;
+&lt;p&gt;In this blogpost, I introduce the ostinato project: a Chess engine written in Scala.&lt;/p&gt;
 
 &lt;p&gt;It’s not the fastest engine around, nor the hardest AI to beat. However, it enables some use cases that I haven’t found good free online sources for, like parsing notations into matches, converting between notations, playing against the AI from a given step in a parsed match, as well as the ability to solve chess puzzles and problems via elegant one-liners on the Scala REPL.&lt;/p&gt;
 
@@ -43,7 +43,7 @@
 
 &lt;h2 id=&quot;meta&quot;&gt;Meta&lt;/h2&gt;
 
-&lt;p&gt;I’ve recently upset some good people of the Scala community with &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;this blogpost&lt;/a&gt; that &lt;a href=&quot;https://news.ycombinator.com/item?id=13476988&quot;&gt;became a language war&lt;/a&gt;. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular one that Golang can’t do: solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.&lt;/p&gt;
+&lt;p&gt;I’ve recently upset some good people of the Scala community with &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;this blogpost&lt;/a&gt; that &lt;a href=&quot;https://news.ycombinator.com/item?id=13476988&quot;&gt;became a language war&lt;/a&gt;. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular one that Golang can’t do: solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time. Sorry that I didn’t foresee or do more to prevent this on the previous blogpost.&lt;/p&gt;
 
 &lt;h2 id=&quot;solving-puzzles-in-the-repl&quot;&gt;Solving puzzles in the REPL&lt;/h2&gt;
 
@@ -57,7 +57,7 @@
 
 &lt;h3 id=&quot;lets-solve-it&quot;&gt;Let’s solve it!&lt;/h3&gt;
 
-&lt;p&gt;First, we need to compile the jar so we can play with it in the REPL; this should be easy:
+&lt;p&gt;First, we need to compile the jar so we can play with it in the REPL. This should be easy:
 (alternatively, just download the latest jar from &lt;a href=&quot;https://github.com/marianogappa/ostinato/releases&quot;&gt;Releases&lt;/a&gt;)&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sbt pack
@@ -77,7 +77,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;OK; let’s generate a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; identical to the one in the puzzle:&lt;/p&gt;
+&lt;p&gt;OK. Let’s generate a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; identical to the one in the puzzle:&lt;/p&gt;
 
 &lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChessGame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromGridString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;........
@@ -289,13 +289,13 @@ OK!
 
 &lt;h2 id=&quot;lets-try-something-more-fun&quot;&gt;Let’s try something more fun&lt;/h2&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://www.chesspuzzles.com/mate-in-one&quot;&gt;This site&lt;/a&gt; provides “mate in one move” puzzles; here’s one example:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.chesspuzzles.com/mate-in-one&quot;&gt;This site&lt;/a&gt; provides “mate in one move” puzzles. Here’s one example:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Ostinato server expects the input boards in “ostinato notation”, which is simply &lt;a href=&quot;https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation&quot;&gt;FEN notation&lt;/a&gt; plus (optionally) the history in &lt;a href=&quot;https://en.wikipedia.org/wiki/ICCF_numeric_notation&quot;&gt;ICCF notation&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;amp;rdid=com.fimetech.chessfimee&amp;amp;pli=1&quot;&gt;this Android app&lt;/a&gt; that OCRs the board and producess the FEN; which was:&lt;/p&gt;
+&lt;p&gt;I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;amp;rdid=com.fimetech.chessfimee&amp;amp;pli=1&quot;&gt;this Android app&lt;/a&gt; that OCRs the board and producess the FEN, which was:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
 &lt;/code&gt;&lt;/pre&gt;
@@ -321,7 +321,7 @@ OK!
 
 &lt;p&gt;From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.&lt;/p&gt;
 
-&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
+&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it. I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
 
 &lt;h2 id=&quot;playing-a-demo-game-using-the-jvm-as-back-end&quot;&gt;Playing a demo game using the JVM as back-end&lt;/h2&gt;
 
@@ -355,7 +355,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;p&gt;The script will kindly ask you to run &lt;code class=&quot;highlighter-rouge&quot;&gt;sbt packArchiveZip&lt;/code&gt; if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.&lt;/p&gt;
 
-&lt;p&gt;The script always builds the &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato&lt;/code&gt; image with the tag &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt;; if you want to specify a custom tag, you can do it like this:&lt;/p&gt;
+&lt;p&gt;The script always builds the &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato&lt;/code&gt; image with the tag &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt;. If you want to specify a custom tag, you can do it like this:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;v1.2.3 ./docker-build.sh
 &lt;/code&gt;&lt;/pre&gt;
@@ -423,7 +423,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;p&gt;The rationale behind low requests and high limits is that ostinato aggresively parallelises requests but they arrive infrequently, so bursts of usage can be multiplexed on the same Kubernetes minion. Mileage may vary; greater depths are memory hungry.&lt;/p&gt;
 
-&lt;p&gt;You’ll need a service to expose the server to your client code; here’s a service manifest:&lt;/p&gt;
+&lt;p&gt;You’ll need a service to expose the server to your client code. Here’s a service manifest:&lt;/p&gt;
 
 &lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
