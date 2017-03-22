@@ -3,27 +3,27 @@
   <channel>
     <title>Mariano Gappa's Blog</title>
     <description>Blog about Software Engineering and Music Production.</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://marianogappa.github.io/</link>
+    <atom:link href="http://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL</title>
+        <title>ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
 &lt;p&gt;In this blogpost, I introduce the ostinato project; a Chess engine written in Scala.&lt;/p&gt;
 
 &lt;p&gt;It’s not the fastest engine around, nor the hardest AI to beat. However, it enables some use cases that I haven’t found good free online sources for, like parsing notations into matches, converting between notations, playing against the AI from a given step in a parsed match, as well as the ability to solve chess puzzles and problems via elegant one-liners on the Scala REPL.&lt;/p&gt;
 
-&lt;p&gt;By &lt;a href=&quot;https://www.scala-js.org/doc/project/cross-build.html&quot;&gt;cross-compiling&lt;/a&gt; into JS using &lt;a href=&quot;https://www.scala-js.org/&quot;&gt;ScalaJS&lt;/a&gt;, the same Scala code can run in the browser as a javascript library, which is great for two reasons:&lt;/p&gt;
+&lt;p&gt;By &lt;a href=&quot;https://www.scala-js.org/doc/project/cross-build.html&quot;&gt;cross-compiling&lt;/a&gt; into JS using &lt;a href=&quot;https://www.scala-js.org/&quot;&gt;ScalaJS&lt;/a&gt;, the same Scala code can run in the browser as a JavaScript library, which is great for two reasons:&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;the tools can be available online for free with Github service quality&lt;/li&gt;
   &lt;li&gt;JS devs can use the library without any Scala knowledge&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;There is an &lt;a href=&quot;https://hub.docker.com/r/marianogappa/ostinato/&quot;&gt;ostinato docker image&lt;/a&gt; available on Docker Hub (or it can be built locally) which exposes the same API as the JS library via an &lt;a href=&quot;http://doc.akka.io/docs/akka-http/current/scala.html&quot;&gt;Akka HTTP&lt;/a&gt; server.&lt;/p&gt;
+&lt;p&gt;There is an &lt;a href=&quot;https://hub.docker.com/r/marianogappa/ostinato/&quot;&gt;ostinato Docker image&lt;/a&gt; available on Docker Hub (or it can be built locally) which exposes the same API as the JS library via an &lt;a href=&quot;http://doc.akka.io/docs/akka-http/current/scala.html&quot;&gt;Akka HTTP&lt;/a&gt; server.&lt;/p&gt;
 
-&lt;p&gt;Because ostinato is 100% &lt;a href=&quot;https://en.wikipedia.org/wiki/Stateless_protocol&quot;&gt;stateless&lt;/a&gt;, it’s a perfect candidate for &lt;a href=&quot;https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment&quot;&gt;Kubernetes deployments&lt;/a&gt;: each individual API request (e.g. an AI move) can be load balanced over a set of pods, and pod count can be &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/&quot;&gt;auto-scaled&lt;/a&gt; based on cpu load average. This makes it attractive for AI research and as a backend for chess sites.&lt;/p&gt;
+&lt;p&gt;Because ostinato is 100% &lt;a href=&quot;https://en.wikipedia.org/wiki/Stateless_protocol&quot;&gt;stateless&lt;/a&gt;, it’s a perfect candidate for &lt;a href=&quot;https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment&quot;&gt;Kubernetes deployments&lt;/a&gt;: each individual API request (e.g. an AI move) can be load balanced over a set of pods, and pod count can be &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/&quot;&gt;auto-scaled&lt;/a&gt; based on CPU load average. This makes it attractive for AI research and as a backend for chess sites.&lt;/p&gt;
 
 &lt;h2 id=&quot;project-links&quot;&gt;Project links&lt;/h2&gt;
 
@@ -43,17 +43,17 @@
 
 &lt;h2 id=&quot;meta&quot;&gt;Meta&lt;/h2&gt;
 
-&lt;p&gt;I’ve recently upset some good people of the Scala community with &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;this blogpost&lt;/a&gt; that &lt;a href=&quot;https://news.ycombinator.com/item?id=13476988&quot;&gt;became a language war&lt;/a&gt;. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular a few that Golang can’t do: (1) running server code on the front-end; (2) solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.&lt;/p&gt;
+&lt;p&gt;I’ve recently upset some good people of the Scala community with &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;this blogpost&lt;/a&gt; that &lt;a href=&quot;https://news.ycombinator.com/item?id=13476988&quot;&gt;became a language war&lt;/a&gt;. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular one that Golang can’t do: solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.&lt;/p&gt;
 
 &lt;h2 id=&quot;solving-puzzles-in-the-repl&quot;&gt;Solving puzzles in the REPL&lt;/h2&gt;
 
 &lt;p&gt;A quite unique feature of ostinato is that it leverages the Scala differentials in terms of succintness and elegance for actually solving problems. As a result, it becomes feasible to solve chess brain teasers directly in the REPL with only a few one-liners.&lt;/p&gt;
 
-&lt;p&gt;Let’s try a check mate in two moves. Here’s an &lt;a href=&quot;http://chesspuzzlesonline.com/solution/ps44/&quot;&gt;example puzzle&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Let’s try a checkmate in two moves. Here’s an &lt;a href=&quot;http://chesspuzzlesonline.com/solution/ps44/&quot;&gt;example puzzle&lt;/a&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/ostinato-mate-in-two.png&quot; alt=&quot;Example: mate in two moves&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/ostinato-mate-in-two.png&quot; alt=&quot;Example: mate in two moves&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;White moves first and it should make check mate in the second move.&lt;/p&gt;
+&lt;p&gt;White moves first and it should make checkmate in the second move.&lt;/p&gt;
 
 &lt;h3 id=&quot;lets-solve-it&quot;&gt;Let’s solve it!&lt;/h3&gt;
 
@@ -113,7 +113,7 @@
 &lt;p&gt;Here’s the meaty part. We need to express the following statement in code:&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;“Find the actions such that for whichever following action, there’s at least one follow-up check mate”&lt;/p&gt;
+  &lt;p&gt;“Find the actions such that for whichever following action, there’s at least one follow-up checkmate”&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;If the puzzle was constructed properly, there should be only one action that satisfies those conditions:&lt;/p&gt;
@@ -192,7 +192,7 @@
 
 &lt;h3 id=&quot;taking-the-red-pillhttpsenwikipediaorgwikiredpillandbluepill&quot;&gt;Taking the &lt;a href=&quot;https://en.wikipedia.org/wiki/Red_pill_and_blue_pill&quot;&gt;red pill&lt;/a&gt;&lt;/h3&gt;
 
-&lt;p&gt;If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/&quot;&gt;Scaladoc&lt;/a&gt; and the &lt;a href=&quot;https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato&quot;&gt;hundreds of tests&lt;/a&gt; are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61&quot;&gt;voodoo code&lt;/a&gt; overall, and I’m not proud of it (anymore, that is).&lt;/p&gt;
+&lt;p&gt;If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/&quot;&gt;Scaladoc&lt;/a&gt; and the &lt;a href=&quot;https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato&quot;&gt;hundreds of tests&lt;/a&gt; are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61&quot;&gt;voodoo code&lt;/a&gt; overall, and I’m not proud of it (anymore, that is).&lt;/p&gt;
 
 &lt;h2 id=&quot;in-the-browser-ostinatojs&quot;&gt;In the browser: ostinato.js&lt;/h2&gt;
 
@@ -231,9 +231,9 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;The only ostinato line in there is &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato.chess.js.Js().randomAiMove(board)&lt;/code&gt;. The rest is ChessboardJS and plain javascript.&lt;/p&gt;
+&lt;p&gt;The only ostinato line in there is &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato.chess.js.Js().randomAiMove(board)&lt;/code&gt;. The rest is ChessboardJS and plain JavaScript.&lt;/p&gt;
 
-&lt;p&gt;Here’s what’s available at the moment from javascript: &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala&quot;&gt;Js.scala&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Here’s what’s available at the moment from JavaScript: &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala&quot;&gt;Js.scala&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;From here, you should be able to go to the other examples. If you’re interested in developing an advanced use case, I’d be happy to help you on my spare time. Find my contact details at the top of this page.&lt;/p&gt;
 
@@ -247,7 +247,7 @@
   &lt;li&gt;No high CPU usage on the client; responsiveness is up to the server&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;via-sbt&quot;&gt;Via SBT&lt;/h2&gt;
+&lt;h2 id=&quot;via-sbt&quot;&gt;Via sbt&lt;/h2&gt;
 
 &lt;p&gt;Try starting the server via sbt:&lt;/p&gt;
 
@@ -275,7 +275,7 @@ OK!
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/randomAiMove -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 &lt;span class=&quot;s1&quot;&gt;'{&quot;board&quot;:&quot;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&quot;}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
--H &lt;span class=&quot;s2&quot;&gt;&quot;Content-type: application/json&quot;&lt;/span&gt;
+-H &lt;span class=&quot;s2&quot;&gt;&quot;Content-Type: application/json&quot;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;s2&quot;&gt;&quot;success&quot;&lt;/span&gt;:true,
   &lt;span class=&quot;s2&quot;&gt;&quot;isCheck&quot;&lt;/span&gt;:false,
@@ -291,7 +291,7 @@ OK!
 
 &lt;p&gt;&lt;a href=&quot;http://www.chesspuzzles.com/mate-in-one&quot;&gt;This site&lt;/a&gt; provides “mate in one move” puzzles; here’s one example:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Ostinato server expects the input boards in “ostinato notation”, which is simply &lt;a href=&quot;https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation&quot;&gt;FEN notation&lt;/a&gt; plus (optionally) the history in &lt;a href=&quot;https://en.wikipedia.org/wiki/ICCF_numeric_notation&quot;&gt;ICCF notation&lt;/a&gt;.&lt;/p&gt;
 
@@ -301,7 +301,7 @@ OK!
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the check mate:&lt;/p&gt;
+&lt;p&gt;I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the checkmate:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl localhost:51234/basicAiMove -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 &lt;span class=&quot;s1&quot;&gt;'{&quot;board&quot;:&quot;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1&quot;}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -317,17 +317,17 @@ OK!
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a check mate.&lt;/p&gt;
+&lt;p&gt;Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a checkmate.&lt;/p&gt;
 
 &lt;p&gt;From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.&lt;/p&gt;
 
-&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
+&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
 
-&lt;h2 id=&quot;playing-a-demo-game-using-the-jvm-as-backend&quot;&gt;Playing a demo game using the JVM as backend&lt;/h2&gt;
+&lt;h2 id=&quot;playing-a-demo-game-using-the-jvm-as-back-end&quot;&gt;Playing a demo game using the JVM as back-end&lt;/h2&gt;
 
 &lt;p&gt;Simply use the provided &lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play&quot;&gt;demo chess game&lt;/a&gt; and add the following query parameters:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useServer=localhost:51234 // location of your ostinato backend
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useServer=localhost:51234 // location of your ostinato back-end
 depth=1 // complexity of the AI (from 0, but 3 is already slow)
 debug=1 // optional: logs AI rationale to STDOUT
 &lt;/code&gt;&lt;/pre&gt;
@@ -345,9 +345,9 @@ debug=1 // optional: logs AI rationale to STDOUT
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Once it’s up, you can try the healthcheck and other examples described above. Note that docker may not open the port on &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;; this depends on your docker installation.&lt;/p&gt;
+&lt;p&gt;Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;; this depends on your Docker installation.&lt;/p&gt;
 
-&lt;p&gt;If you want to experiment with the code and build the image locally (for which you will need sbt &amp;amp; docker), you can use the provided script on the root folder:&lt;/p&gt;
+&lt;p&gt;If you want to experiment with the code and build the image locally (for which you will need sbt &amp;amp; Docker), you can use the provided script on the root folder:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./docker-build.sh
 &lt;/code&gt;&lt;/pre&gt;
@@ -380,7 +380,7 @@ debug=1 // optional: logs AI rationale to STDOUT
   &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/elasticloadbalancing/&quot;&gt;AWS ELB&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;At least with Kubernetes, there’s also the possibility of dynamically increasing the number of ostinato container replicas when the cpu usage exceeds a given threshold; this is called &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling&quot;&gt;auto-scaling&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At least with Kubernetes, there’s also the possibility of dynamically increasing the number of ostinato container replicas when the CPU usage exceeds a given threshold; this is called &lt;a href=&quot;https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling&quot;&gt;auto-scaling&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Ostinato doesn’t use any disk and doesn’t have any special configurations so you don’t need to mount anything. As a JVM application, though, it’s not the cheapest in terms of CPU, memory, and image size. It’s using the smallest base image I could find that has a JVM: the &lt;a href=&quot;https://hub.docker.com/r/anapsix/alpine-java/&quot;&gt;alpine-java&lt;/a&gt; one.&lt;/p&gt;
 
@@ -459,23 +459,23 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;h2 id=&quot;developing-ostinato-and-final-thoughts&quot;&gt;Developing ostinato and final thoughts&lt;/h2&gt;
 
-&lt;p&gt;Developing ostinato was an amazing experience. I got to learn a lot about Chess, a lot about Scala, a lot about OSS and a lot about Software Engineering.&lt;/p&gt;
+&lt;p&gt;Developing ostinato was an amazing experience. I got to learn a lot about chess, a lot about Scala, a lot about OSS and a lot about software engineering.&lt;/p&gt;
 
 &lt;p&gt;I believe ostinato has enabled some free and open source chess-related use cases that were unavailable before; if you find them useful I’d be very happy to &lt;a href=&quot;https://twitter.com/MarianoGappa&quot;&gt;hear about it&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;OOP blogpost&lt;/a&gt;). Seeing Chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “Chess library”, where &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Game&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Action&lt;/code&gt; and so on. The resulting code &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/core/Game.scala&quot;&gt;scares me still&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;OOP blogpost&lt;/a&gt;). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Game&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Action&lt;/code&gt; and so on. The resulting code &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala&quot;&gt;scares me still&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Another thing I’ve learned is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide Big O complexity greatly. At some inflexion point, the indirection trade-off is not worth it. While not proud about it, I must link you to some &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/package.scala#L159&quot;&gt;compromises I’ve made&lt;/a&gt; to gain acceptable response times.&lt;/p&gt;
+&lt;p&gt;Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199&quot;&gt;compromises I’ve made&lt;/a&gt; to gain acceptable response times.&lt;/p&gt;
 
-&lt;p&gt;During extensive refactorings, I’ve learned to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.&lt;/p&gt;
+&lt;p&gt;During extensive refactorings, I’ve learnt to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.&lt;/p&gt;
 
-&lt;p&gt;I’ve learned to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclasses’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learned a valuable lesson.&lt;/p&gt;
+&lt;p&gt;I’ve learnt to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclass’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learnt a valuable lesson.&lt;/p&gt;
 
 &lt;p&gt;Thank you for reading this blogpost. KISS!&lt;/p&gt;
 </description>
         <pubDate>Sun, 19 Mar 2017 00:00:00 +1300</pubDate>
-        <link>http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
-        <guid isPermaLink="true">http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+        <link>http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
       </item>
     
       <item>
@@ -485,8 +485,8 @@ debug=1 // optional: logs AI rationale to STDOUT
 &lt;p&gt;&lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;https://movio.co/blog/migrate-Scala-to-Go/&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 25 Jan 2017 00:00:00 +1300</pubDate>
-        <link>http://localhost:4000/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
-        <guid isPermaLink="true">http://localhost:4000/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
+        <link>http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
       </item>
     
       <item>
@@ -718,8 +718,8 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 &lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Sat, 30 Jul 2016 00:00:00 +1200</pubDate>
-        <link>http://localhost:4000/software/2016/07/30/diffing-streams-on-the-terminal/</link>
-        <guid isPermaLink="true">http://localhost:4000/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
+        <link>http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
       </item>
     
       <item>
@@ -757,7 +757,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;When you first run &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
 
@@ -814,8 +814,8 @@ PQR-678     Take the cat shopping
 &lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 May 2016 00:00:00 +1200</pubDate>
-        <link>http://localhost:4000/software/2016/05/10/jira-cli/</link>
-        <guid isPermaLink="true">http://localhost:4000/software/2016/05/10/jira-cli/</guid>
+        <link>http://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
       </item>
     
       <item>
@@ -838,7 +838,7 @@ PQR-678     Take the cat shopping
 
 &lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;now-heres-how-to-fix-it&quot;&gt;Now, here’s how to fix it&lt;/h2&gt;
 
@@ -888,7 +888,7 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 &lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
 
@@ -903,8 +903,8 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 </description>
         <pubDate>Sat, 27 Feb 2016 00:00:00 +1300</pubDate>
-        <link>http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
-        <guid isPermaLink="true">http://localhost:4000/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
+        <link>http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
       </item>
     
   </channel>

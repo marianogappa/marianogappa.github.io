@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL &#8211; Mariano Gappa's Blog</title>
+    <title>ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL &#8211; Mariano Gappa's Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites.">
     <meta name="author" content="Mariano Gappa">
     <meta name="keywords" content="software">
-    <link rel="canonical" href="http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/">
+    <link rel="canonical" href="http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201703191850" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201703222228" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -28,9 +28,9 @@
     <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL">
+    <meta property="og:title" content="ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL">
     <meta property="og:description" content="Blog about Software Engineering and Music Production.">
-    <meta property="og:url" content="http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/">
+    <meta property="og:url" content="http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/">
     <meta property="og:site_name" content="Mariano Gappa's Blog">
 
     <!-- Twitter Card -->
@@ -38,9 +38,9 @@
     
         <meta name="twitter:site" content="@MarianoGappa" />
     
-    <meta name="twitter:title" content="ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL" />
+    <meta name="twitter:title" content="ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL" />
     <meta name="twitter:description" content="A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites." />
-    <meta name="twitter:url" content="http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/" />
+    <meta name="twitter:url" content="http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/" />
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -78,7 +78,7 @@
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
-      <a href="http://localhost:4000" class="site-title">Mariano Gappa's Blog</a>
+      <a href="http://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
       <nav class="site-nav">
         <a href="/about/">About</a>
 <a href="/contact/">Contact</a>
@@ -126,7 +126,10 @@
 
 
 <div class="post-header mb2">
-  <h1>ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL</h1>
+  
+    <div><img style="max-width: 80%" src="http://marianogappa.github.io//images/ostinato.jpg"/></div><br>
+  
+  <h1>ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL</h1>
   <span class="post-meta">Mar 19, 2017</span><br>
   
   <span class="post-meta small">
@@ -143,16 +146,16 @@
 
 <p>It’s not the fastest engine around, nor the hardest AI to beat. However, it enables some use cases that I haven’t found good free online sources for, like parsing notations into matches, converting between notations, playing against the AI from a given step in a parsed match, as well as the ability to solve chess puzzles and problems via elegant one-liners on the Scala REPL.</p>
 
-<p>By <a href="https://www.scala-js.org/doc/project/cross-build.html">cross-compiling</a> into JS using <a href="https://www.scala-js.org/">ScalaJS</a>, the same Scala code can run in the browser as a javascript library, which is great for two reasons:</p>
+<p>By <a href="https://www.scala-js.org/doc/project/cross-build.html">cross-compiling</a> into JS using <a href="https://www.scala-js.org/">ScalaJS</a>, the same Scala code can run in the browser as a JavaScript library, which is great for two reasons:</p>
 
 <ol>
   <li>the tools can be available online for free with Github service quality</li>
   <li>JS devs can use the library without any Scala knowledge</li>
 </ol>
 
-<p>There is an <a href="https://hub.docker.com/r/marianogappa/ostinato/">ostinato docker image</a> available on Docker Hub (or it can be built locally) which exposes the same API as the JS library via an <a href="http://doc.akka.io/docs/akka-http/current/scala.html">Akka HTTP</a> server.</p>
+<p>There is an <a href="https://hub.docker.com/r/marianogappa/ostinato/">ostinato Docker image</a> available on Docker Hub (or it can be built locally) which exposes the same API as the JS library via an <a href="http://doc.akka.io/docs/akka-http/current/scala.html">Akka HTTP</a> server.</p>
 
-<p>Because ostinato is 100% <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a>, it’s a perfect candidate for <a href="https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment">Kubernetes deployments</a>: each individual API request (e.g. an AI move) can be load balanced over a set of pods, and pod count can be <a href="https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/">auto-scaled</a> based on cpu load average. This makes it attractive for AI research and as a backend for chess sites.</p>
+<p>Because ostinato is 100% <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a>, it’s a perfect candidate for <a href="https://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment">Kubernetes deployments</a>: each individual API request (e.g. an AI move) can be load balanced over a set of pods, and pod count can be <a href="https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/">auto-scaled</a> based on CPU load average. This makes it attractive for AI research and as a backend for chess sites.</p>
 
 <h2 id="project-links">Project links</h2>
 
@@ -172,17 +175,17 @@
 
 <h2 id="meta">Meta</h2>
 
-<p>I’ve recently upset some good people of the Scala community with <a href="https://movio.co/blog/migrate-Scala-to-Go/">this blogpost</a> that <a href="https://news.ycombinator.com/item?id=13476988">became a language war</a>. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular a few that Golang can’t do: (1) running server code on the front-end; (2) solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.</p>
+<p>I’ve recently upset some good people of the Scala community with <a href="https://movio.co/blog/migrate-Scala-to-Go/">this blogpost</a> that <a href="https://news.ycombinator.com/item?id=13476988">became a language war</a>. Partly, for me, working on this blogpost means showing some of the nice use-cases Scala enables, in particular one that Golang can’t do: solving complex domain-specific problems with elegant one-liners. Hopefully we can focus on the engineering this time; sorry that I didn’t foresee or do more to prevent this on the previous blogpost.</p>
 
 <h2 id="solving-puzzles-in-the-repl">Solving puzzles in the REPL</h2>
 
 <p>A quite unique feature of ostinato is that it leverages the Scala differentials in terms of succintness and elegance for actually solving problems. As a result, it becomes feasible to solve chess brain teasers directly in the REPL with only a few one-liners.</p>
 
-<p>Let’s try a check mate in two moves. Here’s an <a href="http://chesspuzzlesonline.com/solution/ps44/">example puzzle</a>:</p>
+<p>Let’s try a checkmate in two moves. Here’s an <a href="http://chesspuzzlesonline.com/solution/ps44/">example puzzle</a>:</p>
 
-<p><img src="http://localhost:4000/images/ostinato-mate-in-two.png" alt="Example: mate in two moves" /></p>
+<p><img src="http://marianogappa.github.io/images/ostinato-mate-in-two.png" alt="Example: mate in two moves" /></p>
 
-<p>White moves first and it should make check mate in the second move.</p>
+<p>White moves first and it should make checkmate in the second move.</p>
 
 <h3 id="lets-solve-it">Let’s solve it!</h3>
 
@@ -242,7 +245,7 @@
 <p>Here’s the meaty part. We need to express the following statement in code:</p>
 
 <blockquote>
-  <p>“Find the actions such that for whichever following action, there’s at least one follow-up check mate”</p>
+  <p>“Find the actions such that for whichever following action, there’s at least one follow-up checkmate”</p>
 </blockquote>
 
 <p>If the puzzle was constructed properly, there should be only one action that satisfies those conditions:</p>
@@ -321,7 +324,7 @@
 
 <h3 id="taking-the-red-pillhttpsenwikipediaorgwikiredpillandbluepill">Taking the <a href="https://en.wikipedia.org/wiki/Red_pill_and_blue_pill">red pill</a></h3>
 
-<p>If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the <a href="https://marianogappa.github.io/ostinato/docs/">Scaladoc</a> and the <a href="https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato">hundreds of tests</a> are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of <a href="https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61">voodoo code</a> overall, and I’m not proud of it (anymore, that is).</p>
+<p>If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the <a href="https://marianogappa.github.io/ostinato/docs/">Scaladoc</a> and the <a href="https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato">hundreds of tests</a> are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page. There’s a very reduced set of <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61">voodoo code</a> overall, and I’m not proud of it (anymore, that is).</p>
 
 <h2 id="in-the-browser-ostinatojs">In the browser: ostinato.js</h2>
 
@@ -360,9 +363,9 @@
 </code></pre>
 </div>
 
-<p>The only ostinato line in there is <code class="highlighter-rouge">ostinato.chess.js.Js().randomAiMove(board)</code>. The rest is ChessboardJS and plain javascript.</p>
+<p>The only ostinato line in there is <code class="highlighter-rouge">ostinato.chess.js.Js().randomAiMove(board)</code>. The rest is ChessboardJS and plain JavaScript.</p>
 
-<p>Here’s what’s available at the moment from javascript: <a href="https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala">Js.scala</a></p>
+<p>Here’s what’s available at the moment from JavaScript: <a href="https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala">Js.scala</a></p>
 
 <p>From here, you should be able to go to the other examples. If you’re interested in developing an advanced use case, I’d be happy to help you on my spare time. Find my contact details at the top of this page.</p>
 
@@ -376,7 +379,7 @@
   <li>No high CPU usage on the client; responsiveness is up to the server</li>
 </ul>
 
-<h2 id="via-sbt">Via SBT</h2>
+<h2 id="via-sbt">Via sbt</h2>
 
 <p>Try starting the server via sbt:</p>
 
@@ -404,7 +407,7 @@ OK!
 
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/randomAiMove -d <span class="se">\</span>
 <span class="s1">'{"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}'</span> <span class="se">\</span>
--H <span class="s2">"Content-type: application/json"</span>
+-H <span class="s2">"Content-Type: application/json"</span>
 <span class="o">{</span>
   <span class="s2">"success"</span>:true,
   <span class="s2">"isCheck"</span>:false,
@@ -420,7 +423,7 @@ OK!
 
 <p><a href="http://www.chesspuzzles.com/mate-in-one">This site</a> provides “mate in one move” puzzles; here’s one example:</p>
 
-<p><img src="http://localhost:4000/images/ostinato-mate-in-one.png" alt="Chess Puzzles: Mate in one" /></p>
+<p><img src="http://marianogappa.github.io/images/ostinato-mate-in-one.png" alt="Chess Puzzles: Mate in one" /></p>
 
 <p>Ostinato server expects the input boards in “ostinato notation”, which is simply <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">FEN notation</a> plus (optionally) the history in <a href="https://en.wikipedia.org/wiki/ICCF_numeric_notation">ICCF notation</a>.</p>
 
@@ -430,7 +433,7 @@ OK!
 </code></pre>
 </div>
 
-<p>I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the check mate:</p>
+<p>I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the checkmate:</p>
 
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/basicAiMove -d <span class="se">\</span>
 <span class="s1">'{"board":"r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1"}'</span> <span class="se">\</span>
@@ -446,17 +449,17 @@ OK!
 </code></pre>
 </div>
 
-<p>Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a check mate.</p>
+<p>Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a checkmate.</p>
 
 <p>From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.</p>
 
-<p>Also, I recently switched the JSON engine to <a href="https://github.com/spray/spray-json">spray-json</a> which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to <a href="https://github.com/sirthias">Mathias</a>. If somebody could please ask him how can I unmarshal the request’s JSON payload when the <code class="highlighter-rouge">Content-type</code> is not <code class="highlighter-rouge">application/json</code>, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.</p>
+<p>Also, I recently switched the JSON engine to <a href="https://github.com/spray/spray-json">spray-json</a> which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to <a href="https://github.com/sirthias">Mathias</a>. If somebody could please ask him how can I unmarshal the request’s JSON payload when the <code class="highlighter-rouge">Content-Type</code> is not <code class="highlighter-rouge">application/json</code>, I’d really appreciate it; I’ve asked around on Gitter and SO and couldn’t get a good solution.</p>
 
-<h2 id="playing-a-demo-game-using-the-jvm-as-backend">Playing a demo game using the JVM as backend</h2>
+<h2 id="playing-a-demo-game-using-the-jvm-as-back-end">Playing a demo game using the JVM as back-end</h2>
 
 <p>Simply use the provided <a href="https://marianogappa.github.io/ostinato-examples/play">demo chess game</a> and add the following query parameters:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato backend
+<div class="highlighter-rouge"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato back-end
 depth=1 // complexity of the AI (from 0, but 3 is already slow)
 debug=1 // optional: logs AI rationale to STDOUT
 </code></pre>
@@ -474,9 +477,9 @@ debug=1 // optional: logs AI rationale to STDOUT
 </code></pre>
 </div>
 
-<p>Once it’s up, you can try the healthcheck and other examples described above. Note that docker may not open the port on <code class="highlighter-rouge">localhost</code>; this depends on your docker installation.</p>
+<p>Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on <code class="highlighter-rouge">localhost</code>; this depends on your Docker installation.</p>
 
-<p>If you want to experiment with the code and build the image locally (for which you will need sbt &amp; docker), you can use the provided script on the root folder:</p>
+<p>If you want to experiment with the code and build the image locally (for which you will need sbt &amp; Docker), you can use the provided script on the root folder:</p>
 
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code>  <span class="nv">$ </span>./docker-build.sh
 </code></pre>
@@ -509,7 +512,7 @@ debug=1 // optional: logs AI rationale to STDOUT
   <li><a href="https://aws.amazon.com/elasticloadbalancing/">AWS ELB</a></li>
 </ul>
 
-<p>At least with Kubernetes, there’s also the possibility of dynamically increasing the number of ostinato container replicas when the cpu usage exceeds a given threshold; this is called <a href="https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling">auto-scaling</a>.</p>
+<p>At least with Kubernetes, there’s also the possibility of dynamically increasing the number of ostinato container replicas when the CPU usage exceeds a given threshold; this is called <a href="https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling">auto-scaling</a>.</p>
 
 <p>Ostinato doesn’t use any disk and doesn’t have any special configurations so you don’t need to mount anything. As a JVM application, though, it’s not the cheapest in terms of CPU, memory, and image size. It’s using the smallest base image I could find that has a JVM: the <a href="https://hub.docker.com/r/anapsix/alpine-java/">alpine-java</a> one.</p>
 
@@ -588,17 +591,17 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <h2 id="developing-ostinato-and-final-thoughts">Developing ostinato and final thoughts</h2>
 
-<p>Developing ostinato was an amazing experience. I got to learn a lot about Chess, a lot about Scala, a lot about OSS and a lot about Software Engineering.</p>
+<p>Developing ostinato was an amazing experience. I got to learn a lot about chess, a lot about Scala, a lot about OSS and a lot about software engineering.</p>
 
 <p>I believe ostinato has enabled some free and open source chess-related use cases that were unavailable before; if you find them useful I’d be very happy to <a href="https://twitter.com/MarianoGappa">hear about it</a>.</p>
 
-<p>One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous <a href="http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end">OOP blogpost</a>). Seeing Chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “Chess library”, where <code class="highlighter-rouge">ChessGame</code> extended <code class="highlighter-rouge">Game</code> and <code class="highlighter-rouge">ChessAction</code> extended <code class="highlighter-rouge">Action</code> and so on. The resulting code <a href="https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/core/Game.scala">scares me still</a>.</p>
+<p>One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous <a href="http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end">OOP blogpost</a>). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where <code class="highlighter-rouge">ChessGame</code> extended <code class="highlighter-rouge">Game</code> and <code class="highlighter-rouge">ChessAction</code> extended <code class="highlighter-rouge">Action</code> and so on. The resulting code <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala">scares me still</a>.</p>
 
-<p>Another thing I’ve learned is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide Big O complexity greatly. At some inflexion point, the indirection trade-off is not worth it. While not proud about it, I must link you to some <a href="https://github.com/marianogappa/ostinato/blob/master/shared/src/main/scala/ostinato/chess/core/package.scala#L159">compromises I’ve made</a> to gain acceptable response times.</p>
+<p>Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurrying mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199">compromises I’ve made</a> to gain acceptable response times.</p>
 
-<p>During extensive refactorings, I’ve learned to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.</p>
+<p>During extensive refactorings, I’ve learnt to love IntelliJ’s renaming features. If just for that, and with its shortcomings, I think IntelliJ has raised the bar in that respect. I’ve found it as convenient as Sublime Text’s multiple cursors.</p>
 
-<p>I’ve learned to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclasses’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learned a valuable lesson.</p>
+<p>I’ve learnt to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclass’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learnt a valuable lesson.</p>
 
 <p>Thank you for reading this blogpost. KISS!</p>
 
@@ -612,7 +615,7 @@ debug=1 // optional: logs AI rationale to STDOUT
     
 
     
-      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL&url=http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL&url=http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
     
 
     
@@ -624,13 +627,13 @@ debug=1 // optional: logs AI rationale to STDOUT
     
 
     
-      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/&title=ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/&title=ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL" rel="nofollow" target="_blank" title="Share on Reddit"></a>
     
 
     
 
     
-      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://localhost:4000/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/&t=ostinato: a chess engine written in Scala that runs on the Browser, Docker and the REPL" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/&t=ostinato: a chess engine written in Scala that runs in the Browser, Docker and the REPL" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
     
 
 
