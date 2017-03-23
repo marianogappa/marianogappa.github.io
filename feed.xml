@@ -471,6 +471,8 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;p&gt;I’ve learnt to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclass’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learnt a valuable lesson.&lt;/p&gt;
 
+&lt;p&gt;Big thank you to &lt;a href=&quot;https://ar.linkedin.com/in/mar%C3%ADa-cecilia-fladung-707b68b4&quot;&gt;Cecilia Fladung&lt;/a&gt; for designing the logo, and to the elite reviewers: &lt;a href=&quot;https://twitter.com/echojc&quot;&gt;@echojc&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/therealplato&quot;&gt;@therealplato&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/chris_d_barrett&quot;&gt;@chris_d_barret&lt;/a&gt;.&lt;/p&gt;
+
 &lt;p&gt;Thank you for reading this blogpost. KISS!&lt;/p&gt;
 
 &lt;style type=&quot;text/css&quot;&gt;
