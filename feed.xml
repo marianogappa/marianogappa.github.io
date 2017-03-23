@@ -472,10 +472,21 @@ debug=1 // optional: logs AI rationale to STDOUT
 &lt;p&gt;I’ve learnt to beware of implicits. While they enable important use cases, they are used way more than they should be. I wasn’t able to completely get rid of them in the ostinato codebase (partly because I was bound by the superclass’ method signatures; thanks OOP), but overall I believe I’ve tamed the beast and learnt a valuable lesson.&lt;/p&gt;
 
 &lt;p&gt;Thank you for reading this blogpost. KISS!&lt;/p&gt;
+
+&lt;style type=&quot;text/css&quot;&gt;
+@font-face {
+  font-family: 'DejaVuSansMono';
+  src: url('/images/DejaVuSansMono.ttf');
+}
+code {
+  font-family: DejaVuSansMono;
+}
+&lt;/style&gt;
+
 </description>
-        <pubDate>Sun, 19 Mar 2017 00:00:00 +1300</pubDate>
-        <link>http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/19/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+        <pubDate>Thu, 23 Mar 2017 00:00:00 +1300</pubDate>
+        <link>http://marianogappa.github.io/software/2017/03/23/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/23/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
       </item>
     
       <item>
