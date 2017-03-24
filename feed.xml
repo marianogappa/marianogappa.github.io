@@ -35,11 +35,19 @@
 
 &lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play&quot;&gt;Chess Game&lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;Play a Chess Match against the AI.&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/parser&quot;&gt;Game Parser&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Tool to paste any chess match in any known notation and browse through the moves via Chessboard. Also play from any board state against the AI, or convert to any other notation.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://marianogappa.github.io/ostinato-examples/convert&quot;&gt;Notation Converter&lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;Convert any pasted chess match between the following notations: PGN, Algebraic, Figurine, Coordinate, Descriptive, ICCF, Smith and FEN (with variations).&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/autoplay&quot;&gt;Auto-play&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Two AI’s playing each other (making random moves).&lt;/p&gt;
 
 &lt;h2 id=&quot;meta&quot;&gt;Meta&lt;/h2&gt;
 
@@ -486,9 +494,9 @@ code {
 &lt;/style&gt;
 
 </description>
-        <pubDate>Thu, 23 Mar 2017 00:00:00 +1300</pubDate>
-        <link>http://marianogappa.github.io/software/2017/03/23/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/23/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+        <pubDate>Fri, 24 Mar 2017 00:00:00 +1300</pubDate>
+        <link>http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
       </item>
     
       <item>
