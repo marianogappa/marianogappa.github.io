@@ -10,7 +10,7 @@
         <title>untitled</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
-&lt;p&gt;Since we began our &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;transition from Scala to Go&lt;/a&gt;, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually gonna use; the extra features are just time wasted on bugs waiting to be found.&lt;/p&gt;
+&lt;p&gt;Since we began our &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;transition from Scala to Go&lt;/a&gt;, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually going to use; the extra features are just time wasted on bugs waiting to be found.&lt;/p&gt;
 
 &lt;p&gt;In this blogpost, I’d like to share two of these tools: &lt;a href=&quot;https://github.com/marianogappa/sql&quot;&gt;sql&lt;/a&gt; and &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;, that we’ve been using a lot lately and that together compose an interesting pattern for tinkering with multiple databases individually or concurrently within the terminal.&lt;/p&gt;
 
@@ -20,7 +20,7 @@
 
 &lt;p&gt;The Movio Cinema SaaS platform has grown to manage the marketing campaigns of almost 60 of the biggest cinema chains worldwide in only a few years. This feat has not come without a few interesting challenges.&lt;/p&gt;
 
-&lt;p&gt;In the early days it was relatively easy to provide good quality support on a timely manner with minimum developer resources. Recently it has become necessary to get creative to accomodate the volume of incoming support tickets, without sacrificing proactive support and the development of new and exciting projects. This effort has not been exclusive to the dev team; the whole organisation has stepped up on this regard as well.&lt;/p&gt;
+&lt;p&gt;In the early days it was relatively easy to provide good quality support on a timely manner with minimum developer resources. Recently it has become necessary to get creative to accommodate the volume of incoming support tickets, without sacrificing proactive support and the development of new and exciting projects. This effort has not been exclusive to the development team; the whole organisation has stepped up on this regard as well.&lt;/p&gt;
 
 &lt;p&gt;When presented with a support situation, sometimes outside office hours, it’s important to diagnose quickly. Given the nature of our issues, much of our support work takes place in the terminal, and our toolbox is based on &lt;a href=&quot;https://www.gnu.org/software/coreutils/coreutils.html&quot;&gt;Linux’s coreutils&lt;/a&gt;. Most of the time, we’re working with remote MySQL databases, Cassandra clusters, Kafka clusters and hundreds of microservices deployed as Kubernetes pods onto several AWS data centers and availability zones.&lt;/p&gt;
 
@@ -32,7 +32,7 @@
 
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;owner &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;;
-    git log --pretty&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;short -- &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; | grep Author: | cut -f 2 -d &lt;span class=&quot;s1&quot;&gt;' '&lt;/span&gt; | sort | uniq -c | sort -rn;
+    git log --pretty&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%an -- &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; | sort | uniq -c | sort -rn;
     &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -52,7 +52,7 @@
 
 &lt;h2 id=&quot;growing-the-toolbox&quot;&gt;Growing the toolbox&lt;/h2&gt;
 
-&lt;p&gt;Over time, we’ve incorporated several tools into this swiss-army knife. Notable examples are &lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;The Silver Searcher&lt;/a&gt; for fast grepping and &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; for parsing JSON.&lt;/p&gt;
+&lt;p&gt;Over time, we’ve incorporated several tools into this Swiss Army knife. Notable examples are &lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;ag&lt;/a&gt; for fast grepping and &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; for parsing JSON.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-about-mysql&quot;&gt;What about MySQL?&lt;/h2&gt;
 
@@ -62,7 +62,7 @@
 
 &lt;ol&gt;
   &lt;li&gt;the database we’re interested in generally runs on a remote machine&lt;/li&gt;
-  &lt;li&gt;the mysql client is interactive&lt;/li&gt;
+  &lt;li&gt;the MySQL client is interactive&lt;/li&gt;
   &lt;li&gt;it outputs results in a format that makes it hard to use&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -138,18 +138,13 @@ $ m 'SELECT * FROM (SELECT 1, 2, 3) t' | tr &quot;\t&quot; &quot;+&quot; | bc
 6
 &lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;But this idea has two new issues:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;It works fine as long as we don’t forget that we can’t use double quotes in the query.&lt;/li&gt;
-  &lt;li&gt;It only works for a specific database; if we want to query a different one, we need either another function or some parameter.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;But this idea only works for a specific database; if we want to query a different one, we need either another function or some parameter.&lt;/p&gt;
 
 &lt;h2 id=&quot;enter-sql&quot;&gt;Enter sql&lt;/h2&gt;
 
 &lt;p&gt;Hoping to address all these issues, we built a ridiculously simple Go CLI tool called &lt;a href=&quot;https://github.com/marianogappa/sql&quot;&gt;sql&lt;/a&gt;. At the time of this writing it was basically a ~200 LoC main.go.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; reads STDIN until an EOF (it assumes the content is a MySQL query) and then sends the query to one or many databases, and outputs the results in a tabulated format to STDOUT.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; reads stdin until an EOF (it assumes the content is a MySQL query) and then sends the query to one or many databases, and outputs the results in a tabulated format to stdout.&lt;/p&gt;
 
 &lt;p&gt;Thus, the previous example would look like this on &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;:&lt;/p&gt;
 
@@ -189,7 +184,7 @@ remote2	Am
 
 &lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sql.png&quot; alt=&quot;sql diagram&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; depends on the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client and optionally &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt;. When &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; is used, the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client must exist in the remote server; not in your local machine.&lt;/p&gt;
+&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; depends on the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client and optionally &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt;. When &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; is used, the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client must exist in the remote server, not on your local machine.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-happened-next&quot;&gt;What happened next&lt;/h2&gt;
 
@@ -199,108 +194,150 @@ remote2	Am
 
 &lt;h2 id=&quot;heres-an-example-that-we-have-come-across&quot;&gt;Here’s an example that we have come across&lt;/h2&gt;
 
-&lt;p&gt;At Movio, we send hundreds of millions of emails. Every once in a while, something goes wrong with some marketing campaign, and we need to figure out what happened, fast. In this example case, we suspect some email provider is rejecting our emails.&lt;/p&gt;
+&lt;p&gt;At Movio, we send hundreds of millions of emails and SMSs. Every once in a while, something goes wrong with some marketing campaign, and we need to figure out what happened, fast.&lt;/p&gt;
 
-&lt;p&gt;Let’s say we have the following table (one of these on each of dozens of mailservers) to track email send attempts:&lt;/p&gt;
+&lt;p&gt;In this example case, we receive an email through support about unusual deliverability results for a campaign, for cinema exhibitor ABC.&lt;/p&gt;
 
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SentEmails&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VARCHAR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TINYINT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;p&gt;If the issue was a failure to execute a marketing campaign, or one being stuck while sending communications, we would immediately look for alerts on our campaigns infrastructure, and keep an eye on suspicious activity on our monitoring dashboards. In this case, however, the campaigns seem to be executing, but the results are not as expected.&lt;/p&gt;
+
+&lt;p&gt;I’ll propose a 3-step process for this investigation:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The first thing to do here is to scope the issue; is this happening to every client or just ABC?&lt;/li&gt;
+  &lt;li&gt;After de-risking, we need some context. How are ABC’s campaigns performing? Is this situation really an anomaly?&lt;/li&gt;
+  &lt;li&gt;Finally, we can really delve into the root cause of the issue.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Let’s say we have the following table (one of these for each of our customers, spread across dozens of database servers):&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Campaigns&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sentCount&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;utcSent&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TIMESTAMP&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;An intuitive query to find the latest failed attempts in the last 7 days would be:&lt;/p&gt;
+&lt;p&gt;An intuitive query to find the results for the campaigns sent in the last 7 days would be:&lt;/p&gt;
 
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SentEmails&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utcSent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DATE_SUB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UTC_TIMESTAMP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INTERVAL&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DAY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sentCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utcSent&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Campaigns&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utcSent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DATE_SUB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UTC_TIMESTAMP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INTERVAL&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DAY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Thanks to &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;, we can run it concurrently on all mailservers:
-(these have been randomly generated using an &lt;a href=&quot;https://www.randomlists.com&quot;&gt;online tool&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Of course, doing this on every single database would take forever, so we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; instead:&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'SELECT email FROM ...'&lt;/span&gt; | sql all
-mail1_db	mthurn@live.com
-mail15_db	fangorn@hotmail.com
-mail6_db	euice@outlook.com
-mail1_db	rgarcia@optonline.net
-mail8_db	mxiao@yahoo.com
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT sentCount, utcSent FROM Campaigns
+  WHERE utcSent &amp;gt; DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)&quot;&lt;/span&gt; | sql all
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Unfortunately, the resulting dataset is too hard for humans to interpret:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ABC  184063  2017-05-20 15:08:37
+JKL  14161 2017-05-20 12:02:49
+DEF  1510620 2017-05-20 11:02:59
+DEF  16923 2017-05-17 17:58:23
+ABC  63502 2017-05-17 17:57:09
+MNO  245708  2017-05-17 17:48:57
+GHI  16959 2017-05-17 17:32:21
 ...
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Let’s extract the domains:&lt;/p&gt;
+&lt;p&gt;There’s ways around this, at the expense of reduced information and extra complexity of the query, which more often than not comes with unintended mistakes. A year ago this would have been a different trade-off.
+Moving to Go has been a wide paradigm shift for us: now complexity weighs heavily in the equation, because &lt;a href=&quot;https://www.youtube.com/watch?v=PAAkCSZUG1c&amp;amp;t=14m35s&quot;&gt;clear is better than clever&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'SELECT email FROM ...'&lt;/span&gt; | sql all | awk &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; | grep -o @.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-@live.com
-@hotmail.com
-@outlook.com
-@optonline.net
-@yahoo.com
-...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;If we’re gonna tinker a lot with the exact same query, piping the result to a file and &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;ting it would be a lot more responsible:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'SELECT email FROM ...'&lt;/span&gt; | sql all | awk &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; &amp;gt; result
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now we can do some coreutils magic to count the domain appearances:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat result | grep -o @.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; | sort | uniq -c | sort -rn | head -n5
-13845 @yahoo.com
- 1505 @hotmail.com
- 1312 @outlook.com
- 1287 @live.com
- 1231 @optonline.net
-...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Eureka! Yahoo must be blocking us temporarily for some reason. Note that, without &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;, it would have been quite laborious to reach this conclusion.&lt;/p&gt;
-
-&lt;p&gt;Is this the full picture though? How many results did we leave out?&lt;/p&gt;
+&lt;p&gt;What we need for this is a scatter plot. Is there a &lt;em&gt;simple&lt;/em&gt; way to get one from this output?&lt;/p&gt;
 
 &lt;h2 id=&quot;enter-chart&quot;&gt;Enter chart&lt;/h2&gt;
 
-&lt;p&gt;Linux has a world-class charting tool called &lt;a href=&quot;http://www.gnuplot.info/&quot;&gt;gnuplot&lt;/a&gt;. It’s very complete and super powerful, but it’s also quite inconvenient for quick ad-hoc charting. It’s &lt;a href=&quot;http://www.gnuplot.info/docs_4.0/gpcard.pdf&quot;&gt;way too hard to learn&lt;/a&gt;. I must admit I haven’t given it a fair shot; complexity scares me.&lt;/p&gt;
+&lt;p&gt;Linux has a world-class charting tool called &lt;a href=&quot;http://www.gnuplot.info/&quot;&gt;gnuplot&lt;/a&gt;. It’s very complete and super powerful, but it’s also quite inconvenient for quick ad-hoc charting. It’s &lt;a href=&quot;http://www.gnuplot.info/docs_4.0/gpcard.pdf&quot;&gt;way too hard to learn&lt;/a&gt;. I must admit I haven’t given it a fair shot, because I find it too complex.&lt;/p&gt;
 
-&lt;p&gt;Instead, we built a very simple charting tool called &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;. It reads data from STDIN (e.g. the output from &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;), figures out the format and opens a browser tab with a chart fitting the data.&lt;/p&gt;
+&lt;p&gt;Instead, we built a very simple charting tool called &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;. It reads data from stdin (e.g. the output from &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;), figures out the format and opens a browser tab with a chart fitting the data.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; has only a very limited set of smarts and modifiers. Again: the key is to keep it simple and to only implement what we use.&lt;/p&gt;
 
-&lt;p&gt;In the above example, we’d like to see a pie chart of domain frequencies. Since this is such a common use case, when &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; receives a list of strings it will calculate frequency and make a pie chart, adding an “Other” category for the aggregated less frequent ones.&lt;/p&gt;
+&lt;p&gt;For step 1 (de-risking), we need a scatter plot of sent counts of the last week of every customer:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat result | grep -o @.* | chart
+&lt;ul&gt;
+  &lt;li&gt;X-axis should be the date&lt;/li&gt;
+  &lt;li&gt;Y-axis should be the sent count&lt;/li&gt;
+  &lt;li&gt;Different customers could be identified by colour&lt;/li&gt;
+  &lt;li&gt;Some customers send a lot more communications than others, so we need logarithmic scale on the Y-axis to see useful output&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All this is remarkably simple to do in &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT sentCount, utcSent FROM Campaigns&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;WHERE utcSent &amp;gt; &quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)&quot;&lt;/span&gt; | sql all | &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  chart scatter log mysql
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/chart1.png&quot; alt=&quot;Chart with bigger Other slice&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;(the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; argument is an alias of &lt;code class=&quot;highlighter-rouge&quot;&gt;--date-format &quot;2006-01-02 15:04:05&quot;&lt;/code&gt;, and was added because it’s a very common occurrence)&lt;/p&gt;
 
-&lt;p&gt;Interesting! Even though &lt;code class=&quot;highlighter-rouge&quot;&gt;@yahoo.com&lt;/code&gt; seems like the most likely culprit, it is much less representative of the pool of emails sent than we previously thought.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/chart1.png&quot; alt=&quot;Scatter plot&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Let’s go back a few steps. Somewhere along the road we decided to ignore the first column of the output (with &lt;code class=&quot;highlighter-rouge&quot;&gt;awk '{print $2}'&lt;/code&gt;). This column was the database name, which corresponds to a mailserver.&lt;/p&gt;
+&lt;p&gt;We’re not seeing a sudden drop in sent counts across the board, so it’s safe to go to step 2: getting some context for this particular customer.&lt;/p&gt;
 
-&lt;p&gt;Maybe the culprit is a mailserver instead?&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'SELECT email FROM ...'&lt;/span&gt; | sql all | awk &lt;span class=&quot;s1&quot;&gt;'{print $1}'&lt;/span&gt; | chart
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'SELECT sentCount, utcSent FROM Campaigns WHERE '&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;'utcSent &amp;gt; DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH) ORDER BY '&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;'utcSent DESC'&lt;/span&gt; | sql abc | chart line mysql --zero-based
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/chart2.png&quot; alt=&quot;Chart with particular mailserver&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/chart2.png&quot; alt=&quot;Line chart&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Ah! One of our mailservers has been blacklisted! After seeing this, we might go back to check that perhaps more emails failed to be sent to yahoo just because we sent a lot more emails to yahoo accounts in the first place, or maybe they just bounce more often that other domains, or both.&lt;/p&gt;
+&lt;p&gt;Clearly something is going on with this particular last campaign. In this case we can resort to a structured log file where we list failures to send. The file looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;utcInserted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;May 17 17:47:17&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;reason&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hard_bounce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;campaignId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;3055&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;customer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;MNO&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;utcInserted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;May 17 17:47:34&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;reason&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;soft_bounce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;campaignId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;123&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;customer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ABC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;utcInserted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;May 17 17:48:02&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;reason&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;feedback&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;campaignId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;58373&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;customer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DEF&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;utcInserted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;May 17 17:48:02&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;reason&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hard_bounce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;campaignId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;123&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;customer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ABC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With a little &lt;code class=&quot;highlighter-rouge&quot;&gt;jq&lt;/code&gt; magic we can fiter out the logs we’re not interested in, and just output the reason for each failure:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jq -r &lt;span class=&quot;s1&quot;&gt;'select(.customer == &quot;ABC&quot; and .campaignId == &quot;123&quot;)` \
+`| .reason'&lt;/span&gt; /var/log/failures.log
+soft_bounce
+hard_bounce
+hard_bounce
+network_timeout
+soft_bounce
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Because identifier frequency is also a very common use case, when &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; receives a list of strings it assumes you want a pie chart, with each string as a category and its frequency as a slice of the total.&lt;/p&gt;
+
+&lt;p&gt;You can just pipe that output to chart:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jq -r 'select(.customer == &quot;ABC&quot; and .campaignId == &quot;123&quot;)` \
+`| .reason' /var/log/failures.log | chart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/chart3.png&quot; alt=&quot;Pie chart&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Hard bounces seem to dominate the failure reasons. Network timeouts tend to have a more systemic effect, so this result is not unexpected. Possible explanations are:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;One or more of our mailservers has been blacklisted&lt;/li&gt;
+  &lt;li&gt;The campaign was addressed to a poorly managed address list&lt;/li&gt;
+  &lt;li&gt;The email content has triggered third party spam checkers&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is still some work to do, but we’ve made a pretty comprehensive initial diagnosis and have ruled out bigger potential threats in just a couple of lines on the terminal.&lt;/p&gt;
 
 &lt;p&gt;Hopefully you can appreciate the advantages of this workflow:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Being able to query all databases at once made it possible to detect the offending mailserver. Otherwise we might have checked only one or two (i.e. looking at “a sample”) and overlooked the root cause.&lt;/li&gt;
-  &lt;li&gt;Rather than looking at the top domains using &lt;code class=&quot;highlighter-rouge&quot;&gt;head -n5&lt;/code&gt; because otherwise there would be simply too much output to read, we got a pie chart with an aggregated “Others” slice that revealed a fact concealed by that &lt;code class=&quot;highlighter-rouge&quot;&gt;head -n5&lt;/code&gt;: the domain pool was very diverse, so looking at the top 5 was not very representative of the total.&lt;/li&gt;
-  &lt;li&gt;We touched on the surface of what this allows. Think of the wealth of tools in coreutils, and what other chart types can reveal. Pie and bar charts can be summarised quite well on simple tables; but line charts and scatter plots can show complex correlations that are invisible on matrices for humans.&lt;/li&gt;
+  &lt;li&gt;Being able to query all databases at once made it possible to rule out a more serious issue. Otherwise we might have checked only the particular customer’s database and overlooked the root cause.&lt;/li&gt;
+  &lt;li&gt;We touched on the surface of what this allows. Think of the wealth of tools in coreutils, and what the different chart types can reveal. Pie and bar charts can be summarised quite well on simple tables; but line charts and scatter plots can show complex correlations that are invisible on matrices for humans.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;gotchas&quot;&gt;Gotchas&lt;/h2&gt;
@@ -317,7 +354,7 @@ mail8_db	mxiao@yahoo.com
 
 &lt;h3 id=&quot;timing-queries&quot;&gt;Timing queries&lt;/h3&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; doesn’t output query running time like the mysql client does. However, you can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;time&lt;/code&gt; coreutils tool like this:&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; doesn’t output query running time like the MySQL client does. However, you can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;time&lt;/code&gt; coreutils tool like this:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;time sql test_db &amp;lt;&amp;lt;&amp;lt; &quot;SELECT COUNT(*) FROM users&quot;
 
@@ -327,7 +364,7 @@ sys     0m0.034s
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Note that these figures include the whole time spent by the &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; process, including outputting to STDOUT, which the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client doesn’t include.&lt;/p&gt;
+&lt;p&gt;Note that these figures include the whole time spent by the &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; process, including outputting to stdout, which the MySQL client doesn’t include.&lt;/p&gt;
 
 &lt;h3 id=&quot;watching-show-processlist&quot;&gt;Watching SHOW PROCESSLIST&lt;/h3&gt;
 
@@ -355,20 +392,6 @@ There are 3 simple ways to learn how to use it:&lt;/p&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;The cheatsheet is produced by a Go test file and it’s updated on every automated release, so there’s no way it can get outdated. It’s a pretty solid piece of documentation!&lt;/p&gt;
-
-&lt;h3 id=&quot;charting-mysql-dates&quot;&gt;Charting MySQL dates&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; uses ChartJS to produce the final chart (which in turn uses MomentJS) and therefore supports plotting dates (although only in the x-axis, as per ChartJS’s limitation). However, in order to understand dates, one has to supply the date format as a parameter to &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat dates.csv | chart line --date-format &lt;span class=&quot;s1&quot;&gt;'2006-01-02 15:04:05'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Because it’s so common to use MySQL’s date format, &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; has a special modifier:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat dates.csv | chart line mysql
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 
 &lt;h2 id=&quot;closing-thoughts&quot;&gt;Closing thoughts&lt;/h2&gt;
 

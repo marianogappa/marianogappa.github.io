@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201705151939" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201705211646" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -133,7 +133,7 @@
   
   <span class="post-meta small">
   
-    14 minute read
+    15 minute read
   
   </span>
 </div>
@@ -141,7 +141,7 @@
 <article class="post-content">
   <h2 id="tldr">TL;DR</h2>
 
-<p>Since we began our <a href="https://movio.co/blog/migrate-Scala-to-Go/">transition from Scala to Go</a>, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually gonna use; the extra features are just time wasted on bugs waiting to be found.</p>
+<p>Since we began our <a href="https://movio.co/blog/migrate-Scala-to-Go/">transition from Scala to Go</a>, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually going to use; the extra features are just time wasted on bugs waiting to be found.</p>
 
 <p>In this blogpost, I’d like to share two of these tools: <a href="https://github.com/marianogappa/sql">sql</a> and <a href="https://github.com/marianogappa/chart">chart</a>, that we’ve been using a lot lately and that together compose an interesting pattern for tinkering with multiple databases individually or concurrently within the terminal.</p>
 
@@ -151,7 +151,7 @@
 
 <p>The Movio Cinema SaaS platform has grown to manage the marketing campaigns of almost 60 of the biggest cinema chains worldwide in only a few years. This feat has not come without a few interesting challenges.</p>
 
-<p>In the early days it was relatively easy to provide good quality support on a timely manner with minimum developer resources. Recently it has become necessary to get creative to accomodate the volume of incoming support tickets, without sacrificing proactive support and the development of new and exciting projects. This effort has not been exclusive to the dev team; the whole organisation has stepped up on this regard as well.</p>
+<p>In the early days it was relatively easy to provide good quality support on a timely manner with minimum developer resources. Recently it has become necessary to get creative to accommodate the volume of incoming support tickets, without sacrificing proactive support and the development of new and exciting projects. This effort has not been exclusive to the development team; the whole organisation has stepped up on this regard as well.</p>
 
 <p>When presented with a support situation, sometimes outside office hours, it’s important to diagnose quickly. Given the nature of our issues, much of our support work takes place in the terminal, and our toolbox is based on <a href="https://www.gnu.org/software/coreutils/coreutils.html">Linux’s coreutils</a>. Most of the time, we’re working with remote MySQL databases, Cassandra clusters, Kafka clusters and hundreds of microservices deployed as Kubernetes pods onto several AWS data centers and availability zones.</p>
 
@@ -163,7 +163,7 @@
 
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>owner <span class="o">()</span> <span class="o">{</span>
     <span class="nb">echo</span> <span class="nv">$1</span>;
-    git log --pretty<span class="o">=</span>short -- <span class="nv">$1</span> | grep Author: | cut -f 2 -d <span class="s1">' '</span> | sort | uniq -c | sort -rn;
+    git log --pretty<span class="o">=</span>%an -- <span class="nv">$1</span> | sort | uniq -c | sort -rn;
     <span class="nb">echo</span>
 <span class="o">}</span>
 </code></pre>
@@ -183,7 +183,7 @@
 
 <h2 id="growing-the-toolbox">Growing the toolbox</h2>
 
-<p>Over time, we’ve incorporated several tools into this swiss-army knife. Notable examples are <a href="https://github.com/ggreer/the_silver_searcher">The Silver Searcher</a> for fast grepping and <a href="https://stedolan.github.io/jq/">jq</a> for parsing JSON.</p>
+<p>Over time, we’ve incorporated several tools into this Swiss Army knife. Notable examples are <a href="https://github.com/ggreer/the_silver_searcher">ag</a> for fast grepping and <a href="https://stedolan.github.io/jq/">jq</a> for parsing JSON.</p>
 
 <h2 id="what-about-mysql">What about MySQL?</h2>
 
@@ -193,7 +193,7 @@
 
 <ol>
   <li>the database we’re interested in generally runs on a remote machine</li>
-  <li>the mysql client is interactive</li>
+  <li>the MySQL client is interactive</li>
   <li>it outputs results in a format that makes it hard to use</li>
 </ol>
 
@@ -269,18 +269,13 @@ $ m 'SELECT * FROM (SELECT 1, 2, 3) t' | tr "\t" "+" | bc
 6
 </code></p>
 
-<p>But this idea has two new issues:</p>
-
-<ol>
-  <li>It works fine as long as we don’t forget that we can’t use double quotes in the query.</li>
-  <li>It only works for a specific database; if we want to query a different one, we need either another function or some parameter.</li>
-</ol>
+<p>But this idea only works for a specific database; if we want to query a different one, we need either another function or some parameter.</p>
 
 <h2 id="enter-sql">Enter sql</h2>
 
 <p>Hoping to address all these issues, we built a ridiculously simple Go CLI tool called <a href="https://github.com/marianogappa/sql">sql</a>. At the time of this writing it was basically a ~200 LoC main.go.</p>
 
-<p><code class="highlighter-rouge">sql</code> reads STDIN until an EOF (it assumes the content is a MySQL query) and then sends the query to one or many databases, and outputs the results in a tabulated format to STDOUT.</p>
+<p><code class="highlighter-rouge">sql</code> reads stdin until an EOF (it assumes the content is a MySQL query) and then sends the query to one or many databases, and outputs the results in a tabulated format to stdout.</p>
 
 <p>Thus, the previous example would look like this on <code class="highlighter-rouge">sql</code>:</p>
 
@@ -320,7 +315,7 @@ remote2	Am
 
 <p><img src="http://marianogappa.github.io/images/sql.png" alt="sql diagram" /></p>
 
-<p>Note that <code class="highlighter-rouge">sql</code> depends on the <code class="highlighter-rouge">mysql</code> client and optionally <code class="highlighter-rouge">ssh</code>. When <code class="highlighter-rouge">ssh</code> is used, the <code class="highlighter-rouge">mysql</code> client must exist in the remote server; not in your local machine.</p>
+<p>Note that <code class="highlighter-rouge">sql</code> depends on the <code class="highlighter-rouge">mysql</code> client and optionally <code class="highlighter-rouge">ssh</code>. When <code class="highlighter-rouge">ssh</code> is used, the <code class="highlighter-rouge">mysql</code> client must exist in the remote server, not on your local machine.</p>
 
 <h2 id="what-happened-next">What happened next</h2>
 
@@ -330,108 +325,150 @@ remote2	Am
 
 <h2 id="heres-an-example-that-we-have-come-across">Here’s an example that we have come across</h2>
 
-<p>At Movio, we send hundreds of millions of emails. Every once in a while, something goes wrong with some marketing campaign, and we need to figure out what happened, fast. In this example case, we suspect some email provider is rejecting our emails.</p>
+<p>At Movio, we send hundreds of millions of emails and SMSs. Every once in a while, something goes wrong with some marketing campaign, and we need to figure out what happened, fast.</p>
 
-<p>Let’s say we have the following table (one of these on each of dozens of mailservers) to track email send attempts:</p>
+<p>In this example case, we receive an email through support about unusual deliverability results for a campaign, for cinema exhibitor ABC.</p>
 
-<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">SentEmails</span> <span class="p">(</span>
-    <span class="n">email</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
-    <span class="n">success</span> <span class="n">TINYINT</span><span class="p">,</span>
+<p>If the issue was a failure to execute a marketing campaign, or one being stuck while sending communications, we would immediately look for alerts on our campaigns infrastructure, and keep an eye on suspicious activity on our monitoring dashboards. In this case, however, the campaigns seem to be executing, but the results are not as expected.</p>
+
+<p>I’ll propose a 3-step process for this investigation:</p>
+
+<ol>
+  <li>The first thing to do here is to scope the issue; is this happening to every client or just ABC?</li>
+  <li>After de-risking, we need some context. How are ABC’s campaigns performing? Is this situation really an anomaly?</li>
+  <li>Finally, we can really delve into the root cause of the issue.</li>
+</ol>
+
+<p>Let’s say we have the following table (one of these for each of our customers, spread across dozens of database servers):</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">Campaigns</span> <span class="p">(</span>
+    <span class="n">sentCount</span> <span class="n">INT</span><span class="p">,</span>
     <span class="n">utcSent</span> <span class="k">TIMESTAMP</span>
 <span class="p">)</span>
 </code></pre>
 </div>
 
-<p>An intuitive query to find the latest failed attempts in the last 7 days would be:</p>
+<p>An intuitive query to find the results for the campaigns sent in the last 7 days would be:</p>
 
-<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">email</span> <span class="k">FROM</span> <span class="n">SentEmails</span>
-  <span class="k">WHERE</span> <span class="n">success</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">AND</span> <span class="n">utcSent</span> <span class="o">&gt;</span> <span class="n">DATE_SUB</span><span class="p">(</span><span class="n">UTC_TIMESTAMP</span><span class="p">(),</span> <span class="n">INTERVAL</span> <span class="mi">7</span> <span class="k">DAY</span><span class="p">)</span>
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">sentCount</span><span class="p">,</span> <span class="n">utcSent</span> <span class="k">FROM</span> <span class="n">Campaigns</span>
+  <span class="k">WHERE</span> <span class="n">utcSent</span> <span class="o">&gt;</span> <span class="n">DATE_SUB</span><span class="p">(</span><span class="n">UTC_TIMESTAMP</span><span class="p">(),</span> <span class="n">INTERVAL</span> <span class="mi">7</span> <span class="k">DAY</span><span class="p">)</span>
 </code></pre>
 </div>
 
-<p>Thanks to <code class="highlighter-rouge">sql</code>, we can run it concurrently on all mailservers:
-(these have been randomly generated using an <a href="https://www.randomlists.com">online tool</a>)</p>
+<p>Of course, doing this on every single database would take forever, so we can use <code class="highlighter-rouge">sql</code> instead:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s1">'SELECT email FROM ...'</span> | sql all
-mail1_db	mthurn@live.com
-mail15_db	fangorn@hotmail.com
-mail6_db	euice@outlook.com
-mail1_db	rgarcia@optonline.net
-mail8_db	mxiao@yahoo.com
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s2">"SELECT sentCount, utcSent FROM Campaigns
+  WHERE utcSent &gt; DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)"</span> | sql all
+</code></pre>
+</div>
+
+<p>Unfortunately, the resulting dataset is too hard for humans to interpret:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ABC  184063  2017-05-20 15:08:37
+JKL  14161 2017-05-20 12:02:49
+DEF  1510620 2017-05-20 11:02:59
+DEF  16923 2017-05-17 17:58:23
+ABC  63502 2017-05-17 17:57:09
+MNO  245708  2017-05-17 17:48:57
+GHI  16959 2017-05-17 17:32:21
 ...
 </code></pre>
 </div>
 
-<p>Let’s extract the domains:</p>
+<p>There’s ways around this, at the expense of reduced information and extra complexity of the query, which more often than not comes with unintended mistakes. A year ago this would have been a different trade-off.
+Moving to Go has been a wide paradigm shift for us: now complexity weighs heavily in the equation, because <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c&amp;t=14m35s">clear is better than clever</a>.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s1">'SELECT email FROM ...'</span> | sql all | awk <span class="s1">'{print $2}'</span> | grep -o @.<span class="k">*</span>
-@live.com
-@hotmail.com
-@outlook.com
-@optonline.net
-@yahoo.com
-...
-</code></pre>
-</div>
-
-<p>If we’re gonna tinker a lot with the exact same query, piping the result to a file and <code class="highlighter-rouge">cat</code>ting it would be a lot more responsible:</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s1">'SELECT email FROM ...'</span> | sql all | awk <span class="s1">'{print $2}'</span> &gt; result
-</code></pre>
-</div>
-
-<p>Now we can do some coreutils magic to count the domain appearances:</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat result | grep -o @.<span class="k">*</span> | sort | uniq -c | sort -rn | head -n5
-13845 @yahoo.com
- 1505 @hotmail.com
- 1312 @outlook.com
- 1287 @live.com
- 1231 @optonline.net
-...
-</code></pre>
-</div>
-
-<p>Eureka! Yahoo must be blocking us temporarily for some reason. Note that, without <code class="highlighter-rouge">sql</code>, it would have been quite laborious to reach this conclusion.</p>
-
-<p>Is this the full picture though? How many results did we leave out?</p>
+<p>What we need for this is a scatter plot. Is there a <em>simple</em> way to get one from this output?</p>
 
 <h2 id="enter-chart">Enter chart</h2>
 
-<p>Linux has a world-class charting tool called <a href="http://www.gnuplot.info/">gnuplot</a>. It’s very complete and super powerful, but it’s also quite inconvenient for quick ad-hoc charting. It’s <a href="http://www.gnuplot.info/docs_4.0/gpcard.pdf">way too hard to learn</a>. I must admit I haven’t given it a fair shot; complexity scares me.</p>
+<p>Linux has a world-class charting tool called <a href="http://www.gnuplot.info/">gnuplot</a>. It’s very complete and super powerful, but it’s also quite inconvenient for quick ad-hoc charting. It’s <a href="http://www.gnuplot.info/docs_4.0/gpcard.pdf">way too hard to learn</a>. I must admit I haven’t given it a fair shot, because I find it too complex.</p>
 
-<p>Instead, we built a very simple charting tool called <a href="https://github.com/marianogappa/chart">chart</a>. It reads data from STDIN (e.g. the output from <code class="highlighter-rouge">sql</code>), figures out the format and opens a browser tab with a chart fitting the data.</p>
+<p>Instead, we built a very simple charting tool called <a href="https://github.com/marianogappa/chart">chart</a>. It reads data from stdin (e.g. the output from <code class="highlighter-rouge">sql</code>), figures out the format and opens a browser tab with a chart fitting the data.</p>
 
 <p><code class="highlighter-rouge">chart</code> has only a very limited set of smarts and modifiers. Again: the key is to keep it simple and to only implement what we use.</p>
 
-<p>In the above example, we’d like to see a pie chart of domain frequencies. Since this is such a common use case, when <code class="highlighter-rouge">chart</code> receives a list of strings it will calculate frequency and make a pie chart, adding an “Other” category for the aggregated less frequent ones.</p>
+<p>For step 1 (de-risking), we need a scatter plot of sent counts of the last week of every customer:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cat result | grep -o @.* | chart
+<ul>
+  <li>X-axis should be the date</li>
+  <li>Y-axis should be the sent count</li>
+  <li>Different customers could be identified by colour</li>
+  <li>Some customers send a lot more communications than others, so we need logarithmic scale on the Y-axis to see useful output</li>
+</ul>
+
+<p>All this is remarkably simple to do in <code class="highlighter-rouge">chart</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s2">"SELECT sentCount, utcSent FROM Campaigns"</span> <span class="se">\</span>
+  <span class="s2">"WHERE utcSent &gt; "</span> <span class="se">\</span>
+  <span class="s2">"DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)"</span> | sql all | <span class="se">\</span>
+  chart scatter log mysql
 </code></pre>
 </div>
 
-<p><img src="http://marianogappa.github.io/images/chart1.png" alt="Chart with bigger Other slice" /></p>
+<p>(the <code class="highlighter-rouge">mysql</code> argument is an alias of <code class="highlighter-rouge">--date-format "2006-01-02 15:04:05"</code>, and was added because it’s a very common occurrence)</p>
 
-<p>Interesting! Even though <code class="highlighter-rouge">@yahoo.com</code> seems like the most likely culprit, it is much less representative of the pool of emails sent than we previously thought.</p>
+<p><img src="http://marianogappa.github.io/images/chart1.png" alt="Scatter plot" /></p>
 
-<p>Let’s go back a few steps. Somewhere along the road we decided to ignore the first column of the output (with <code class="highlighter-rouge">awk '{print $2}'</code>). This column was the database name, which corresponds to a mailserver.</p>
+<p>We’re not seeing a sudden drop in sent counts across the board, so it’s safe to go to step 2: getting some context for this particular customer.</p>
 
-<p>Maybe the culprit is a mailserver instead?</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s1">'SELECT email FROM ...'</span> | sql all | awk <span class="s1">'{print $1}'</span> | chart
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="s1">'SELECT sentCount, utcSent FROM Campaigns WHERE '</span> <span class="se">\</span>
+<span class="s1">'utcSent &gt; DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH) ORDER BY '</span> <span class="se">\</span>
+<span class="s1">'utcSent DESC'</span> | sql abc | chart line mysql --zero-based
 </code></pre>
 </div>
 
-<p><img src="http://marianogappa.github.io/images/chart2.png" alt="Chart with particular mailserver" /></p>
+<p><img src="http://marianogappa.github.io/images/chart2.png" alt="Line chart" /></p>
 
-<p>Ah! One of our mailservers has been blacklisted! After seeing this, we might go back to check that perhaps more emails failed to be sent to yahoo just because we sent a lot more emails to yahoo accounts in the first place, or maybe they just bounce more often that other domains, or both.</p>
+<p>Clearly something is going on with this particular last campaign. In this case we can resort to a structured log file where we list failures to send. The file looks like this:</p>
+
+<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"utcInserted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"May 17 17:47:17"</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hard_bounce"</span><span class="p">,</span><span class="w"> </span><span class="nt">"campaignId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3055"</span><span class="p">,</span><span class="w"> </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MNO"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="nt">"utcInserted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"May 17 17:47:34"</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"soft_bounce"</span><span class="p">,</span><span class="w"> </span><span class="nt">"campaignId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123"</span><span class="p">,</span><span class="w"> </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABC"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="nt">"utcInserted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"May 17 17:48:02"</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feedback"</span><span class="p">,</span><span class="w"> </span><span class="nt">"campaignId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58373"</span><span class="p">,</span><span class="w"> </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEF"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="nt">"utcInserted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"May 17 17:48:02"</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hard_bounce"</span><span class="p">,</span><span class="w"> </span><span class="nt">"campaignId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123"</span><span class="p">,</span><span class="w"> </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABC"</span><span class="p">}</span><span class="w">
+</span><span class="err">...</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>With a little <code class="highlighter-rouge">jq</code> magic we can fiter out the logs we’re not interested in, and just output the reason for each failure:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>jq -r <span class="s1">'select(.customer == "ABC" and .campaignId == "123")` \
+`| .reason'</span> /var/log/failures.log
+soft_bounce
+hard_bounce
+hard_bounce
+network_timeout
+soft_bounce
+...
+</code></pre>
+</div>
+
+<p>Because identifier frequency is also a very common use case, when <code class="highlighter-rouge">chart</code> receives a list of strings it assumes you want a pie chart, with each string as a category and its frequency as a slice of the total.</p>
+
+<p>You can just pipe that output to chart:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ jq -r 'select(.customer == "ABC" and .campaignId == "123")` \
+`| .reason' /var/log/failures.log | chart
+</code></pre>
+</div>
+
+<p><img src="http://marianogappa.github.io/images/chart3.png" alt="Pie chart" /></p>
+
+<p>Hard bounces seem to dominate the failure reasons. Network timeouts tend to have a more systemic effect, so this result is not unexpected. Possible explanations are:</p>
+
+<ol>
+  <li>One or more of our mailservers has been blacklisted</li>
+  <li>The campaign was addressed to a poorly managed address list</li>
+  <li>The email content has triggered third party spam checkers</li>
+</ol>
+
+<p>There is still some work to do, but we’ve made a pretty comprehensive initial diagnosis and have ruled out bigger potential threats in just a couple of lines on the terminal.</p>
 
 <p>Hopefully you can appreciate the advantages of this workflow:</p>
 
 <ol>
-  <li>Being able to query all databases at once made it possible to detect the offending mailserver. Otherwise we might have checked only one or two (i.e. looking at “a sample”) and overlooked the root cause.</li>
-  <li>Rather than looking at the top domains using <code class="highlighter-rouge">head -n5</code> because otherwise there would be simply too much output to read, we got a pie chart with an aggregated “Others” slice that revealed a fact concealed by that <code class="highlighter-rouge">head -n5</code>: the domain pool was very diverse, so looking at the top 5 was not very representative of the total.</li>
-  <li>We touched on the surface of what this allows. Think of the wealth of tools in coreutils, and what other chart types can reveal. Pie and bar charts can be summarised quite well on simple tables; but line charts and scatter plots can show complex correlations that are invisible on matrices for humans.</li>
+  <li>Being able to query all databases at once made it possible to rule out a more serious issue. Otherwise we might have checked only the particular customer’s database and overlooked the root cause.</li>
+  <li>We touched on the surface of what this allows. Think of the wealth of tools in coreutils, and what the different chart types can reveal. Pie and bar charts can be summarised quite well on simple tables; but line charts and scatter plots can show complex correlations that are invisible on matrices for humans.</li>
 </ol>
 
 <h2 id="gotchas">Gotchas</h2>
@@ -448,7 +485,7 @@ mail8_db	mxiao@yahoo.com
 
 <h3 id="timing-queries">Timing queries</h3>
 
-<p><code class="highlighter-rouge">sql</code> doesn’t output query running time like the mysql client does. However, you can use the <code class="highlighter-rouge">time</code> coreutils tool like this:</p>
+<p><code class="highlighter-rouge">sql</code> doesn’t output query running time like the MySQL client does. However, you can use the <code class="highlighter-rouge">time</code> coreutils tool like this:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>time sql test_db &lt;&lt;&lt; "SELECT COUNT(*) FROM users"
 
@@ -458,7 +495,7 @@ sys     0m0.034s
 </code></pre>
 </div>
 
-<p>Note that these figures include the whole time spent by the <code class="highlighter-rouge">sql</code> process, including outputting to STDOUT, which the <code class="highlighter-rouge">mysql</code> client doesn’t include.</p>
+<p>Note that these figures include the whole time spent by the <code class="highlighter-rouge">sql</code> process, including outputting to stdout, which the MySQL client doesn’t include.</p>
 
 <h3 id="watching-show-processlist">Watching SHOW PROCESSLIST</h3>
 
@@ -486,20 +523,6 @@ There are 3 simple ways to learn how to use it:</p>
 </ol>
 
 <p>The cheatsheet is produced by a Go test file and it’s updated on every automated release, so there’s no way it can get outdated. It’s a pretty solid piece of documentation!</p>
-
-<h3 id="charting-mysql-dates">Charting MySQL dates</h3>
-
-<p><code class="highlighter-rouge">chart</code> uses ChartJS to produce the final chart (which in turn uses MomentJS) and therefore supports plotting dates (although only in the x-axis, as per ChartJS’s limitation). However, in order to understand dates, one has to supply the date format as a parameter to <code class="highlighter-rouge">chart</code>:</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat dates.csv | chart line --date-format <span class="s1">'2006-01-02 15:04:05'</span>
-</code></pre>
-</div>
-
-<p>Because it’s so common to use MySQL’s date format, <code class="highlighter-rouge">chart</code> has a special modifier:</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat dates.csv | chart line mysql
-</code></pre>
-</div>
 
 <h2 id="closing-thoughts">Closing thoughts</h2>
 
