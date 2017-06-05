@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201705211646" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201706051956" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -133,7 +133,7 @@
   
   <span class="post-meta small">
   
-    15 minute read
+    14 minute read
   
   </span>
 </div>
@@ -141,7 +141,7 @@
 <article class="post-content">
   <h2 id="tldr">TL;DR</h2>
 
-<p>Since we began our <a href="https://movio.co/blog/migrate-Scala-to-Go/">transition from Scala to Go</a>, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually going to use; the extra features are just time wasted on bugs waiting to be found.</p>
+<p>Since we began our <a href="https://movio.co/blog/migrate-Scala-to-Go/">transition from Scala to Go</a>, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world.</p>
 
 <p>In this blogpost, I’d like to share two of these tools: <a href="https://github.com/marianogappa/sql">sql</a> and <a href="https://github.com/marianogappa/chart">chart</a>, that we’ve been using a lot lately and that together compose an interesting pattern for tinkering with multiple databases individually or concurrently within the terminal.</p>
 
@@ -155,33 +155,7 @@
 
 <p>When presented with a support situation, sometimes outside office hours, it’s important to diagnose quickly. Given the nature of our issues, much of our support work takes place in the terminal, and our toolbox is based on <a href="https://www.gnu.org/software/coreutils/coreutils.html">Linux’s coreutils</a>. Most of the time, we’re working with remote MySQL databases, Cassandra clusters, Kafka clusters and hundreds of microservices deployed as Kubernetes pods onto several AWS data centers and availability zones.</p>
 
-<p>Almost everything that we are required to do to maintain this infrastructure and resolve support issues can be achieved by a clever composition of coreutils, following <a href="https://en.wikipedia.org/wiki/Unix_philosophy">the UNIX philosophy</a>. Over time, common patterns have evolved into scripts and tools.</p>
-
-<h2 id="an-example-of-how-we-compose-coreutils">An example of how we compose coreutils</h2>
-
-<p>When a new member joins our squad, we give him the “owner” bash function so he can figure out who to ask for a brief explanation about what a particular microservice does:</p>
-
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>owner <span class="o">()</span> <span class="o">{</span>
-    <span class="nb">echo</span> <span class="nv">$1</span>;
-    git log --pretty<span class="o">=</span>%an -- <span class="nv">$1</span> | sort | uniq -c | sort -rn;
-    <span class="nb">echo</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
-<p>Which shows who authored the most commits on some folder under git:</p>
-
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>~/Code/monolith <span class="nv">$ </span>owner
-
- 882 Jonathan
- 873 Mariano
- 780 Sebastian
- 760 Peter
- ...
-</code></pre>
-</div>
-
-<h2 id="growing-the-toolbox">Growing the toolbox</h2>
+<p>Almost everything that we are required to do to maintain this infrastructure and resolve support issues can be achieved by a clever composition of coreutils, following <a href="https://en.wikipedia.org/wiki/Unix_philosophy">the UNIX philosophy</a>.</p>
 
 <p>Over time, we’ve incorporated several tools into this Swiss Army knife. Notable examples are <a href="https://github.com/ggreer/the_silver_searcher">ag</a> for fast grepping and <a href="https://stedolan.github.io/jq/">jq</a> for parsing JSON.</p>
 

@@ -10,7 +10,7 @@
         <title>untitled</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
-&lt;p&gt;Since we began our &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;transition from Scala to Go&lt;/a&gt;, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world. The keys are to keep it simple and to only code for the use cases that we’re actually going to use; the extra features are just time wasted on bugs waiting to be found.&lt;/p&gt;
+&lt;p&gt;Since we began our &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;transition from Scala to Go&lt;/a&gt;, we suddenly discovered that when there’s no right tool for the job, we can make a rough one ourselves in an hour or two, and then if it makes sense we can iterate on it until it becomes something the whole team can use, then the whole company, and then sometimes even the whole world.&lt;/p&gt;
 
 &lt;p&gt;In this blogpost, I’d like to share two of these tools: &lt;a href=&quot;https://github.com/marianogappa/sql&quot;&gt;sql&lt;/a&gt; and &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;, that we’ve been using a lot lately and that together compose an interesting pattern for tinkering with multiple databases individually or concurrently within the terminal.&lt;/p&gt;
 
@@ -24,33 +24,7 @@
 
 &lt;p&gt;When presented with a support situation, sometimes outside office hours, it’s important to diagnose quickly. Given the nature of our issues, much of our support work takes place in the terminal, and our toolbox is based on &lt;a href=&quot;https://www.gnu.org/software/coreutils/coreutils.html&quot;&gt;Linux’s coreutils&lt;/a&gt;. Most of the time, we’re working with remote MySQL databases, Cassandra clusters, Kafka clusters and hundreds of microservices deployed as Kubernetes pods onto several AWS data centers and availability zones.&lt;/p&gt;
 
-&lt;p&gt;Almost everything that we are required to do to maintain this infrastructure and resolve support issues can be achieved by a clever composition of coreutils, following &lt;a href=&quot;https://en.wikipedia.org/wiki/Unix_philosophy&quot;&gt;the UNIX philosophy&lt;/a&gt;. Over time, common patterns have evolved into scripts and tools.&lt;/p&gt;
-
-&lt;h2 id=&quot;an-example-of-how-we-compose-coreutils&quot;&gt;An example of how we compose coreutils&lt;/h2&gt;
-
-&lt;p&gt;When a new member joins our squad, we give him the “owner” bash function so he can figure out who to ask for a brief explanation about what a particular microservice does:&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;owner &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;;
-    git log --pretty&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%an -- &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; | sort | uniq -c | sort -rn;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Which shows who authored the most commits on some folder under git:&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/Code/monolith &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;owner
-
- 882 Jonathan
- 873 Mariano
- 780 Sebastian
- 760 Peter
- ...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;growing-the-toolbox&quot;&gt;Growing the toolbox&lt;/h2&gt;
+&lt;p&gt;Almost everything that we are required to do to maintain this infrastructure and resolve support issues can be achieved by a clever composition of coreutils, following &lt;a href=&quot;https://en.wikipedia.org/wiki/Unix_philosophy&quot;&gt;the UNIX philosophy&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Over time, we’ve incorporated several tools into this Swiss Army knife. Notable examples are &lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;ag&lt;/a&gt; for fast grepping and &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; for parsing JSON.&lt;/p&gt;
 
