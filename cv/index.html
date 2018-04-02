@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="vue.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
+
+  <title></title>
+  <style>
+    body { font-family: sans-serif; color: black; }
+    article {
+      max-width: 680px;
+      border-left: 4px solid #DDD;
+      border-top: 1px solid #EEE;
+      border-bottom: 1px solid #EEE;
+      border-right: 1px solid #EEE;
+      margin: 0px 10px -1px 15px;
+      padding: 5px 5px 5px 10px;
+    }
+    .title, .short {
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+    .short { font-weight: normal; }
+    .special { border-left: 4px solid #999; background-color: #F9F9F9 }
+    .subtitle { margin-bottom: 5px; }
+    .links, .headline_links, .subtitle { font-size: 12px; }
+    .headline_links, .bullets { margin-bottom: 5px; }
+    .bullets { margin-top: 8px; }
+    .bullets, .headline_bullets, .link_bullets { font-size: 14px; }
+    .pill {
+      display: inline-block;
+      height: 19px;
+      border: 1px solid #AAA;
+      margin: 1px 4px 1px 0px;
+      padding: 0px 4px 0px 4px;
+      border-radius: 5px;
+    }
+    .pill img {
+      height: 11px;
+      display: inline;
+      padding-right: 3px;
+    }
+    .pill span {
+      font-size: 11px;
+      display: inline;
+    }
+    section {
+      font-size: 18px;
+      font-weight: bolder;
+      margin: 10px 0px 10px 0px;
+    }
+    a { color: blue; } /* visited links are ugly */
+    .flex {
+      display: flex;
+      justify-content: space-between;
+    }
+    .flex_pills {
+      padding-left: 10px;
+      text-align: right;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .flex_row { display: flex; flex-direction: column; } /* why is row column -___- */
+    .no_wrap { flex-wrap: nowrap; white-space: nowrap; }
+    .no_wrap span, .no_wrap i { padding-right: 5px; }
+  </style>
+  <script type="text/javascript" src="cv.js"></script>
+  <script type="text/javascript">
+    Vue.component("pill", {
+      props: ["text","image","color"],
+      template: `<div class="pill"><img v-if="image" :src="image" style="vertical-align:middle"/><span>{{text}}</span></div>`
+    })
+
+    function findGetParameter(parameterName) {
+      var result = null,
+          tmp = [];
+      var items = location.search.substr(1).split("&");
+      for (var index = 0; index < items.length; index++) {
+          tmp = items[index].split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+      }
+      return result;
+    }
+
+    if (findGetParameter("longCV")) {
+      cv.longCV = true
+    }
+
+
+  </script>
+</head>
+<body>
+  <div id="app">
+    <section>{{ headline.name }}
+    <div class="short">{{ headline.short }} with
+    {{((Date.now()-Date.parse(headline.experience_start))/(60*60*24*365*1000)).toFixed(1)}}
+  years of industry experience as of {{ month_names[new Date().getMonth()] }} {{ new Date().getFullYear() }}</div></section>
+
+    <!-- Main section -->
+    <article>
+      <template v-if="headline.links">
+        <div class="headline_links">
+          <template v-for="item in headline.links" class="flex">
+            <span v-if="item.type === 'Email'" class="no_wrap"><i class="fas fa-envelope fa-fw"></i><a :href="item.link">{{item.link}}</a></span>
+            <span v-if="item.type === 'Github'" class="no_wrap"><i class="fab fa-github fa-fw"></i><a :href="item.link">{{item.link}}</a></span>
+            <span v-if="item.type === 'Blog'" class="no_wrap"><i class="fas fa-rss-square fa-fw"></i><a :href="item.link">{{item.link}}</a></span>
+            <span v-if="item.type === 'Twitter'" class="no_wrap"><i class="fab fa-twitter fa-fw"></i><a :href="item.link">{{item.link}}</a></span>
+          </template>
+        </div>
+      </template>
+      <template v-if="!longCV">
+        <span class="headline_bullets">
+          <i class="fas fa-caret-right fa-fw"></i><span>{{education[0].title}} @ <span v-html="education[0].short_name">{{education[0].short_name}}</span></span>
+        </span>
+      </template>
+      <template v-if="longCV && headline.current_location">
+        <span class="headline_bullets">
+          <i class="fas fa-caret-right fa-fw"></i><span>Currently living in</span>
+          <pill :key="headline.current_location.id" :text="headline.current_location.text" :color="headline.current_location.color" :image="headline.current_location.image"></pill>
+        </span>
+      </template>
+      <template v-if="longCV && headline.born_location">
+        <span class="headline_bullets">
+          <span>Born</span>
+          <pill :key="headline.born_location.id" :text="headline.born_location.text" :color="headline.born_location.color" :image="headline.born_location.image"></pill>
+        </span>
+      </template>
+      <template v-if="longCV && headline.languages">
+        <div class="headline_bullets">
+          <i class="fas fa-caret-right fa-fw"></i><span>Speaks</span>
+          <template v-for="item in headline.languages">
+            <pill :key="item.id" :text="item.name + ' ' + item.level" :color="item.color" :image="item.image"></pill>
+          </template>
+        </div>
+      </template>
+      <template v-if="headline.expertise_bullets">
+        <div class="headline_bullets">
+          <i class="fas fa-caret-right fa-fw"></i><span>Most knowledgeable in </span>
+          <template v-for="item in headline.expertise_bullets">
+            <pill :key="item.id" :text="item.text" :color="item.color" :image="item.image"></pill>
+          </template>
+        </div>
+      </template>
+      <template v-if="longCV && headline.interest_bullets">
+        <div class="headline_bullets">
+          <i class="fas fa-caret-right fa-fw"></i><span>Interested in learning more about</span>
+          <template v-for="item in headline.interest_bullets">
+            <pill :key="item.id" :text="item.text" :color="item.color" :image="item.image"></pill>
+          </template>
+        </div>
+      </template>
+      <template v-for="item in headline.bullets">
+        <div class="headline_bullets"><i class="fas fa-caret-right fa-fw"></i>{{item}}</div>
+      </template>
+    </article>
+
+    <!-- Open source -->
+    <template v-if="open_source_projects">
+      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{open_source_projects.length}}</a>)</span></span></section>
+    </template>
+    <template v-for="item in open_source_projects" v-if="!item.hidable || longCV">
+      <article v-bind:class="{'special': item.special, '': !item.special}">
+        <div class="flex">
+          <div>
+            <div class="title">{{ item.name }}: {{ item.short }}</div>
+            <div class="links">
+              <i class="fab fa-github fa-fw"></i><a :href="item.github">{{ item.github }}</a>
+              <span v-if="item.blogpost !== ''"><i class="fas fa-rss-square fa-fw"></i><a :href="item.blogpost">Blogpost</a></span>
+            </div>
+          </div>
+          <div v-if="item.stack" class="stack flex_pills">
+            <pill v-for="pill in item.stack" :key="pill.id" :text="pill.text" :color="pill.color" :image="pill.image"></pill>
+          </div>
+        </div>
+        <div class="bullets">
+          <template v-for="bullet in item.bullets">
+            <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+          </template>
+        </div>
+      </article>
+    </template>
+
+    <!-- Work experience -->
+    <template v-if="work_experience">
+      <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{work_experience.length}}</a> starting {{ work_experience[work_experience.length-1].started}})</span></span></section>
+    </template>
+    <template v-for="item in work_experience">
+      <template v-if="longCV || !item.hidable">
+        <article v-bind:class="{'special': item.special, '': !item.special}">
+          <div class="flex">
+            <div class="flex_row">
+              <div class="title">
+                {{ item.role }} <span v-if="item.company !== ''">@ <b>{{ item.company }}</b></span>
+              </div>
+              <div class="subtitle flex no_wrap">
+                <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ item.date_range }} {{ item.elapsed_time }}</span>
+                <span class="company_link" v-if="item.company_link !== ''"><i class="fas fa-link fa-fw"></i><a :href="item.company_link">{{ item.company_link }}</a></span>
+              </div>
+            </div>
+            <div v-if="item.stack" class="stack flex_pills">
+              <pill v-for="pill in item.stack" :key="pill.id" :text="pill.text" :color="pill.color" :image="pill.image"></pill>
+            </div>
+          </div>
+          <div class="bullets">
+            <template v-for="bullet in item.bullets">
+              <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+            </template>
+            <template v-for="bullet in item.link_bullets">
+              <div><i class="fas fa-link fa-fw"></i><a :href="bullet.link">{{bullet.text}}</a></div>
+            </template>
+          </div>
+        </article>
+      </template>
+    </template>
+
+    <!-- Education -->
+    <template v-if="longCV">
+      <template v-if="education">
+        <section>Education</section>
+      </template>
+      <template v-for="item in education">
+        <article>
+          <div class="title">{{ item.title }} <span v-if="item.name !== ''">@ <b>{{ item.name }}</b></span></div>
+          <div class="subtitle">
+            <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ item.date_range }}</span>
+            <span class="company_link" v-if="item.company_link !== ''"><i class="fas fa-link fa-fw"></i><a :href="item.company_link">{{ item.company_link }}</a></span>
+          </div>
+          <template v-if="item.degree_type">
+          <div class="short"><i class="fas fa-angle-double-right fa-fw"></i>{{ item.degree_type }}</div>
+          </template>
+          <div class="bullets">
+            <template v-for="bullet in item.bullets">
+              <div><i class="fas fa-caret-right fa-fw"></i>{{bullet}}</div>
+            </template>
+          </div>
+        </article>
+      </template>
+    </template>
+
+  </div>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: cv
+    })
+  </script>
+</body>
+</html>
