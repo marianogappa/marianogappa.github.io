@@ -10,11 +10,11 @@
         <title>We saved $50k/y with a tiny Go µservice coded in a Hackathon</title>
         <description>&lt;p&gt;I’ve written a blogpost for Movio about how in the past few weeks we’ve rolled out a Go microservice called “KIB” to production, which reduced a huge portion of the infrastructure necessary for Movio’s main product. In doing this, we saved considerable AWS bills, after-hours and office-hours support bills, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.&lt;/p&gt;
 
-&lt;p&gt;The actual blogpost will be on the Movio blog on the 11th of April. I will add the link as soon as it is available.&lt;/p&gt;
+&lt;p&gt;The actual blogpost is on the Movio blog: &lt;a href=&quot;https://movio.co/en/blog/saving-money-with-Hackathon-project/&quot;&gt;https://movio.co/en/blog/saving-money-with-Hackathon-project/&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Mon, 02 Apr 2018 00:00:00 +1200</pubDate>
-        <link>http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
+        <pubDate>Tue, 10 Apr 2018 00:00:00 +1200</pubDate>
+        <link>http://marianogappa.github.io/software/2018/04/10/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2018/04/10/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
       </item>
     
       <item>
