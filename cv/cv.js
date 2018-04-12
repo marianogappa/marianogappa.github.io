@@ -54,7 +54,7 @@ const cv = {
       "blogpost": "https://movio.co/en/blog/improving-with-sql-and-charts/",
       "bullets": [
         "CLI tool for easy ad-hoc charting of data piped from a terminal, opening a browser tab",
-        "Reached 385 Github stars in Feb 2018; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> ",
+        "Reached 397 Github stars in Apr 2018; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> ",
         "Squads at Movio use it for reports & ad-hoc charting; teams around the world have reported use-cases",
       ],
       "stack": [
@@ -157,12 +157,11 @@ const cv = {
       "started": "Sep 2013",
       "elapsed_time": "(4.5 years)",
       "bullets": [
-        "2017: led 3-person team that implemented service that <a href='http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-µservice-coded-in-a-hackathon/'>saved $50k/yr in AWS cost and benchmarked 80% faster on avg</a>",
-        "2016: was key advocate and enabler for <a href='https://movio.co/en/blog/migrate-Scala-to-Go/'>migration from Scala to Go</a>, and from monolith to microservices",
+        "2017: led 3-person team that implemented service that <a href='http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-µservice-coded-in-a-hackathon/'>saved $50k/yr in AWS cost and benchmarked 80% faster on avg</a>; blogpost peaking at <a href='http://hnrankings.info/16806388'>#2</a> on <a href='https://news.ycombinator.com/item?id=16806388'>Hacker News</a>",
+        "2016: was key advocate and enabler for <a href='https://movio.co/en/blog/migrate-Scala-to-Go/'>migration from Scala to Go</a>, and from monolith to microservices; blogpost peaking at <a href='http://hnrankings.info/13476988'>#5</a> on <a href='https://news.ycombinator.com/item?id=13476988'>Hacker News</a>, and featured in <a href='http://golangweekly.com/issues/144'>Golang Weekly #144</a> & <a href='https://us2.campaign-archive.com/?u=ba834c562d82d9aba5eaf90ba&id=66b0dd9e86'>Scala Times #154</a>",
         "2015: formed 4-person team that implemented custom columnar database replication on top of MySQL",
         "2014: formed 3-person team that migrated large legacy product with new offering without downtime",
-        "Authored open source tools currently being used by the engineers, and many teams around the world",
-        "Authored a number of blogposts featured on Hacker News, <a href='http://golangweekly.com/issues/144'>Golang Weekly #144</a> & <a href='https://us2.campaign-archive.com/?u=ba834c562d82d9aba5eaf90ba&id=66b0dd9e86'>Scala Times #154</a>",
+        "Authored open source tools currently being used by the engineers, and many teams around the world"
       ],
       "stack": [
         {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
