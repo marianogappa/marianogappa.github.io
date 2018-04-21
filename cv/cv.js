@@ -288,6 +288,7 @@ const cv = {
     {
       "type": "education",
       "name": "National Technological University (UTN-FRBA)",
+      "short_description": "5-year Information Systems Engineering degree (<a href='https://en.wikipedia.org/wiki/Engineer's_degree#Latin_America'>equivalent to Master degree</a>)",
       "short_name": "<a href='https://www.frba.utn.edu.ar/en/home/'>UTN-FRBA</a>",
       "company_link": "https://www.frba.utn.edu.ar/en/home/",
       "title": "Information Systems Engineer - Bachelor degree (5 years)",

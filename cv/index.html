@@ -110,7 +110,7 @@
       </template>
       <template v-if="!longCV">
         <span class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span>{{education[0].title}} @ <span v-html="education[0].short_name">{{education[0].short_name}}</span></span>
+          <i class="fas fa-caret-right fa-fw"></i><span><span v-html="education[0].short_description">{{education[0].short_description}}</span> @ <span v-html="education[0].short_name">{{education[0].short_name}}</span></span>
         </span>
       </template>
       <template v-if="longCV && headline.current_location">
