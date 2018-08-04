@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201804221048" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201808041738" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -205,26 +205,23 @@
 <p>First, we need to compile the jar so we can play with it in the REPL. This should be easy:
 (alternatively, just download the latest jar from <a href="https://github.com/marianogappa/ostinato/releases">Releases</a>)</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sbt pack
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sbt pack
+</code></pre></div></div>
 
 <p>We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just <code class="highlighter-rouge">ls</code> the folder and find the ostinato_2.12-*.jar):</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>scala -cp target/pack/lib/ostinato_2.12-1.0.2.jar
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scala <span class="nt">-cp</span> target/pack/lib/ostinato_2.12-1.0.2.jar
+</code></pre></div></div>
 
 <p>Import the core, so we can use the chess classes:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">ostinato.chess.core._</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">ostinato.chess.core._</span>
 <span class="k">import</span> <span class="nn">ostinato.chess.core._</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>OK. Let’s generate a <code class="highlighter-rouge">ChessBoard</code> identical to the one in the puzzle:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">ChessGame</span><span class="o">.</span><span class="n">fromGridString</span><span class="o">(</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">ChessGame</span><span class="o">.</span><span class="n">fromGridString</span><span class="o">(</span>
    <span class="s">"""........
      |....♕...
      |.♟..♟.♟♚
@@ -242,8 +239,7 @@
 <span class="o">.♙....♙.</span>
 <span class="o">♙....♙♔.</span>
 <span class="o">........</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>All the <code class="highlighter-rouge">ChessGame.from...</code> <a href="https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString">methods</a> return a <code class="highlighter-rouge">Try[ChessGame]</code>, because parsing could fail. In this case, I know it’ll work so I just <code class="highlighter-rouge">.get</code>, and get the board from it.</p>
 
@@ -251,9 +247,8 @@
 
 <p>We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include <code class="highlighter-rouge">White resigns</code> and <code class="highlighter-rouge">White claims draw</code>, which we’re not interested in. Same will apply for the next moves. Let’s create a <code class="highlighter-rouge">ChessOptimisations</code> instance and pass it around:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="nc">ChessOptimisations</span><span class="o">.</span><span class="n">beOptimistic</span>
-</code></pre>
-</div>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="nc">ChessOptimisations</span><span class="o">.</span><span class="n">beOptimistic</span>
+</code></pre></div></div>
 
 <p>Here’s the meaty part. We need to express the following statement in code:</p>
 
@@ -263,7 +258,7 @@
 
 <p>If the puzzle was constructed properly, there should be only one action that satisfies those conditions:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span>
         <span class="k">_</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">forall</span><span class="o">(</span>
             <span class="k">_</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">.</span><span class="n">exists</span><span class="o">(</span>
                 <span class="k">_</span><span class="o">.</span><span class="n">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)</span>
@@ -279,8 +274,7 @@
 <span class="o">.♙....♙.</span>
 <span class="o">♙....♙♔.</span>
 <span class="o">........)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Yes! There’s exactly one <code class="highlighter-rouge">ChessBoard</code> in the resulting <code class="highlighter-rouge">Set</code>!</p>
 
@@ -288,14 +282,13 @@
 
 <p><code class="highlighter-rouge">ChessAction</code> has a nice <code class="highlighter-rouge">toString</code> implementation.</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">res1</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">get</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">res1</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">get</span>
 <span class="n">a</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessAction</span> <span class="o">=</span> <span class="nc">White</span><span class="ss">'s </span><span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Let’s apply the action on the board. Not all actions can be applied on a board, so <a href="https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction">doAction</a> returns an <code class="highlighter-rouge">Option[ChessBoard]</code>. For brevity we’ll just <code class="highlighter-rouge">.get</code> it here:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b2</span> <span class="k">=</span> <span class="n">b</span><span class="o">.</span><span class="n">doAction</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">get</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b2</span> <span class="k">=</span> <span class="n">b</span><span class="o">.</span><span class="n">doAction</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">get</span>
 <span class="n">b2</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessBoard</span> <span class="o">=</span>
 <span class="o">.....♕..</span>
 <span class="o">........</span>
@@ -305,8 +298,7 @@
 <span class="o">.♙....♙.</span>
 <span class="o">♙....♙♔.</span>
 <span class="o">........</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Lastly, let’s see the full action history.</p>
 
@@ -319,7 +311,7 @@
   <li>history is stored backwards so we’ll have to reverse it to read it properly</li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b2</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">head</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">.</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b2</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">head</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">.</span>
     <span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)).</span><span class="n">head</span><span class="o">.</span>
     <span class="n">history</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">action</span><span class="o">).</span><span class="n">reverse</span>
 <span class="n">res5</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">ostinato.chess.core.ChessAction</span><span class="o">]</span> <span class="k">=</span> 
@@ -328,14 +320,13 @@
     <span class="nc">Black</span><span class="ss">'s </span><span class="nc">King</span> <span class="n">captures</span> <span class="nc">White</span><span class="ss">'s </span><span class="nc">Knight</span><span class="o">,</span> 
     <span class="nc">White</span><span class="ss">'s </span><span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f4</span>
 <span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Profit! Do compare with the puzzle site, but the solutions match.</p>
 
 <p>Within the REPL, ostinato becomes a swiss-army knife for chess-related queries.</p>
 
-<h3 id="taking-the-red-pillhttpsenwikipediaorgwikiredpillandbluepill">Taking the <a href="https://en.wikipedia.org/wiki/Red_pill_and_blue_pill">red pill</a></h3>
+<h3 id="taking-the-red-pill">Taking the <a href="https://en.wikipedia.org/wiki/Red_pill_and_blue_pill">red pill</a></h3>
 
 <p>If you’re gonna be playing around with advanced cases in the REPL, you’ll probably need some time to get used to the code (you should know Scala; no chance otherwise). These examples, the <a href="https://marianogappa.github.io/ostinato/docs/">Scaladoc</a> and the <a href="https://github.com/marianogappa/ostinato/tree/master/shared/src/test/scala/ostinato">hundreds of tests</a> are good starting points, but I’d be happy to help you on my spare time so let me know; my details are at the top of the page and/or post a comment below. There’s a very reduced set of <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/Notation.scala#L61">voodoo code</a> overall, and I’m not proud of it (anymore, that is).</p>
 
@@ -353,7 +344,7 @@
 
 <p>Here’s the meaty part. You’ll have to pardon my js, but I think it should be quite clear:</p>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
 <span class="kd">var</span> <span class="nx">boardUi</span> <span class="o">=</span> <span class="kc">null</span>
 <span class="kd">var</span> <span class="nx">initialBoard</span> <span class="o">=</span> <span class="s2">"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"</span>
 <span class="kd">var</span> <span class="nx">board</span> <span class="o">=</span> <span class="nx">initialBoard</span>
@@ -373,8 +364,7 @@
     <span class="nx">update</span><span class="p">()</span>
 <span class="p">}</span>
 <span class="nt">&lt;/script&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The only ostinato line in there is <code class="highlighter-rouge">ostinato.chess.js.Js().randomAiMove(board)</code>. The rest is ChessboardJS and plain JavaScript.</p>
 
@@ -396,31 +386,28 @@
 
 <p>Try starting the server via sbt:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sbt ostinatoJVM/run
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sbt ostinatoJVM/run
+</code></pre></div></div>
 
 <p>You can check if it’s working by trying the healthcheck:</p>
 
 <p>(which could be used as a <code class="highlighter-rouge">livenessProbe</code> on a Kubernetes deployment)</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/healthcheck
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl localhost:51234/healthcheck
 OK!
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Or get an initial board to start playing from:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/initialBoard
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl localhost:51234/initialBoard
 <span class="o">{</span><span class="s2">"board"</span>:<span class="s2">"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"</span><span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>And then make the computer play from it:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/randomAiMove -d <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl localhost:51234/randomAiMove <span class="nt">-d</span> <span class="se">\</span>
 <span class="s1">'{"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}'</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
 <span class="o">{</span>
   <span class="s2">"success"</span>:true,
   <span class="s2">"isCheck"</span>:false,
@@ -429,8 +416,7 @@ OK!
   <span class="s2">"isCheckmate"</span>:false,
   <span class="s2">"action"</span>:<span class="s2">"Nf3"</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="lets-try-something-more-fun">Let’s try something more fun</h2>
 
@@ -442,15 +428,14 @@ OK!
 
 <p>I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found <a href="https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;rdid=com.fimetech.chessfimee&amp;pli=1">this Android app</a> that OCRs the board and producess the FEN, which was:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
+</code></pre></div></div>
 
 <p>I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the checkmate:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl localhost:51234/basicAiMove -d <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl localhost:51234/basicAiMove <span class="nt">-d</span> <span class="se">\</span>
 <span class="s1">'{"board":"r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1"}'</span> <span class="se">\</span>
--H <span class="s2">"Content-Type:application/json"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type:application/json"</span>
 <span class="o">{</span>
   <span class="s2">"success"</span>: <span class="nb">true</span>,
   <span class="s2">"isCheck"</span>: <span class="nb">true</span>,
@@ -459,8 +444,7 @@ OK!
   <span class="s2">"isCheckmate"</span>: <span class="nb">true</span>,
   <span class="s2">"action"</span>: <span class="s2">"g4+"</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Luckily, the AI didn’t disappoint me :). It recommended advancing the pawn on the g file (above the white king), and it seems adamant that it’s a checkmate.</p>
 
@@ -472,11 +456,10 @@ OK!
 
 <p>Simply use the provided <a href="https://marianogappa.github.io/ostinato-examples/play">demo chess game</a> and add the following query parameters:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato back-end
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato back-end
 depth=1 // complexity of the AI (from 0, but 3 is already slow)
 debug=1 // optional: logs AI rationale to STDOUT
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>e.g. <a href="https://marianogappa.github.io/ostinato-examples/play?useServer=localhost:51234&amp;depth=1">https://marianogappa.github.io/ostinato-examples/play?useServer=localhost:51234&amp;depth=1</a></p>
 
@@ -486,25 +469,22 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>You can start an ostinato container right from Docker Hub with:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>  <span class="nv">$ </span>docker run -p 51234:51234 marianogappa/ostinato:latest
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>docker run <span class="nt">-p</span> 51234:51234 marianogappa/ostinato:latest
+</code></pre></div></div>
 
 <p>Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on <code class="highlighter-rouge">localhost</code>; this depends on your Docker installation.</p>
 
 <p>If you want to experiment with the code and build the image locally (for which you will need sbt &amp; Docker), you can use the provided script on the root folder:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>  <span class="nv">$ </span>./docker-build.sh
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>./docker-build.sh
+</code></pre></div></div>
 
 <p>The script will kindly ask you to run <code class="highlighter-rouge">sbt packArchiveZip</code> if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.</p>
 
 <p>The script always builds the <code class="highlighter-rouge">ostinato</code> image with the tag <code class="highlighter-rouge">latest</code>. If you want to specify a custom tag, you can do it like this:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>  <span class="nv">$ TAG</span><span class="o">=</span>v1.2.3 ./docker-build.sh
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ TAG</span><span class="o">=</span>v1.2.3 ./docker-build.sh
+</code></pre></div></div>
 
 <h2 id="kubernetes">Kubernetes</h2>
 
@@ -531,66 +511,63 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>Here’s a deployment manifest to get you started:</p>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="nn">---</span>
-<span class="s">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
-<span class="s">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
-<span class="s">metadata</span><span class="pi">:</span>
-  <span class="s">name</span><span class="pi">:</span> <span class="s">ostinato</span>
-<span class="s">spec</span><span class="pi">:</span>
-  <span class="s">replicas</span><span class="pi">:</span> <span class="s">2</span>
-  <span class="s">template</span><span class="pi">:</span>
-    <span class="s">metadata</span><span class="pi">:</span>
-      <span class="s">labels</span><span class="pi">:</span>
-        <span class="s">name</span><span class="pi">:</span> <span class="s">ostinato</span>
-    <span class="s">spec</span><span class="pi">:</span>
-      <span class="s">containers</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ostinato</span>
-        <span class="s">image</span><span class="pi">:</span> <span class="s">ostinato:latest</span>
-        <span class="s">imagePullPolicy</span><span class="pi">:</span> <span class="s">IfNotPresent</span>
-        <span class="s">resources</span><span class="pi">:</span>
-          <span class="s">requests</span><span class="pi">:</span>
-            <span class="s">cpu</span><span class="pi">:</span> <span class="s">500m</span>
-            <span class="s">memory</span><span class="pi">:</span> <span class="s">128Mi</span>
-          <span class="s">limits</span><span class="pi">:</span>
-            <span class="s">cpu</span><span class="pi">:</span> <span class="s">4000m</span>
-            <span class="s">memory</span><span class="pi">:</span> <span class="s">512Mi</span>
-        <span class="s">livenessProbe</span><span class="pi">:</span>
-          <span class="s">initialDelaySeconds</span><span class="pi">:</span> <span class="s">15</span>
-          <span class="s">httpGet</span><span class="pi">:</span>
-            <span class="s">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/healthcheck"</span>
-            <span class="s">port</span><span class="pi">:</span> <span class="s">51234</span>
-        <span class="s">ports</span><span class="pi">:</span>
-        <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">external</span>
-          <span class="s">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-          <span class="s">containerPort</span><span class="pi">:</span> <span class="s">51234</span>
-</code></pre>
-</div>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="s">2</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ostinato:latest</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">IfNotPresent</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s">500m</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s">128Mi</span>
+          <span class="na">limits</span><span class="pi">:</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s">4000m</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s">512Mi</span>
+        <span class="na">livenessProbe</span><span class="pi">:</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="s">15</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/healthcheck"</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="s">51234</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">external</span>
+          <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+          <span class="na">containerPort</span><span class="pi">:</span> <span class="s">51234</span>
+</code></pre></div></div>
 
 <p>The rationale behind low requests and high limits is that ostinato aggresively parallelises requests but they arrive infrequently, so bursts of usage can be multiplexed on the same Kubernetes minion. Mileage may vary; greater depths are memory hungry.</p>
 
 <p>You’ll need a service to expose the server to your client code. Here’s a service manifest:</p>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="nn">---</span>
-<span class="s">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
-<span class="s">kind</span><span class="pi">:</span> <span class="s">Service</span>
-<span class="s">metadata</span><span class="pi">:</span>
-  <span class="s">name</span><span class="pi">:</span> <span class="s">ostinato</span>
-<span class="s">spec</span><span class="pi">:</span>
-  <span class="s">selector</span><span class="pi">:</span>
-    <span class="s">name</span><span class="pi">:</span> <span class="s">ostinato</span>
-  <span class="s">ports</span><span class="pi">:</span>
-  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">external</span>
-    <span class="s">port</span><span class="pi">:</span> <span class="s">51234</span>
-    <span class="s">targetPort</span><span class="pi">:</span> <span class="s">51234</span>
-</code></pre>
-</div>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">external</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="s">51234</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="s">51234</span>
+</code></pre></div></div>
 
 <p>Apply both manifests with <a href="https://kubernetes.io/docs/user-guide/kubectl-overview/">kubectl</a>:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f ostinato-deployment.yml
-<span class="gp">$ </span>kubectl apply -f ostinato-service.yml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> ostinato-deployment.yml
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> ostinato-service.yml
+</code></pre></div></div>
 
 <p>Your ostinato instances should be reachable via the Kubernetes proxy API, e.g.:</p>
 
@@ -598,9 +575,8 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>Follow the auto-scaling guidelines for dynamic scaling. Here’s a quick trick:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ kubectl autoscale deployment ostinato --min=2 --max=5
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl autoscale deployment ostinato --min=2 --max=5
+</code></pre></div></div>
 
 <h2 id="developing-ostinato-and-final-thoughts">Developing ostinato and final thoughts</h2>
 

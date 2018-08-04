@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201804221048" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201808041738" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -155,27 +155,25 @@
 
 <p>Diffing with comm</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>comm -23 &lt;<span class="o">(</span>seq 100 | sort<span class="o">)</span> &lt;<span class="o">(</span>seq 6 100 | sort<span class="o">)</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">comm</span> <span class="nt">-23</span> &lt;<span class="o">(</span><span class="nb">seq </span>100 | <span class="nb">sort</span><span class="o">)</span> &lt;<span class="o">(</span><span class="nb">seq </span>6 100 | <span class="nb">sort</span><span class="o">)</span>
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Another (slower but nevertheless popular) way to accomplish the same task is with <code class="highlighter-rouge">grep -Fxvf</code>. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).</p>
 
 <p>Diffing with grep</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>grep -Fxvf &lt;<span class="o">(</span>seq 6 100<span class="o">)</span> &lt;<span class="o">(</span>seq 100<span class="o">)</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">grep</span> <span class="nt">-Fxvf</span> &lt;<span class="o">(</span><span class="nb">seq </span>6 100<span class="o">)</span> &lt;<span class="o">(</span><span class="nb">seq </span>100<span class="o">)</span>
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>I discourage the use of <code class="highlighter-rouge">grep -Fxvf</code> for two good reasons:</p>
 
@@ -190,18 +188,17 @@
 
 <p>Alpine (<code class="highlighter-rouge">grep 2.25-r0</code>):</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>seq 20 &gt; a <span class="o">&amp;&amp;</span> seq 6 20 &gt; b <span class="o">&amp;&amp;</span> grep -Fxvf b a
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">seq </span>20 <span class="o">&gt;</span> a <span class="o">&amp;&amp;</span> <span class="nb">seq </span>6 20 <span class="o">&gt;</span> b <span class="o">&amp;&amp;</span> <span class="nb">grep</span> <span class="nt">-Fxvf</span> b a
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>OS X (<code class="highlighter-rouge">grep (BSD grep) 2.5.1-FreeBSD</code>):</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>seq 20 &gt; a <span class="o">&amp;&amp;</span> seq 6 20 &gt; b <span class="o">&amp;&amp;</span> grep -Fxvf b a
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">seq </span>20 <span class="o">&gt;</span> a <span class="o">&amp;&amp;</span> <span class="nb">seq </span>6 20 <span class="o">&gt;</span> b <span class="o">&amp;&amp;</span> <span class="nb">grep</span> <span class="nt">-Fxvf</span> b a
 1
 2
 3
@@ -211,8 +208,7 @@
 17
 18
 19
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="what-about-infinite-streams">What about infinite streams?</h2>
 
@@ -242,36 +238,33 @@
 
 <p>Taking the first 10 lines from two “infinite” seqs</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>comm -23 &lt;<span class="o">(</span>seq 10000000000 | head -n 10<span class="o">)</span> <span class="se">\</span>
-<span class="gp">&gt;            </span>&lt;<span class="o">(</span>seq 6 10000000000 | head -n 10<span class="o">)</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">comm</span> <span class="nt">-23</span> &lt;<span class="o">(</span><span class="nb">seq </span>10000000000 | <span class="nb">head</span> <span class="nt">-n</span> 10<span class="o">)</span> <span class="se">\</span>
+<span class="o">&gt;</span>            &lt;<span class="o">(</span><span class="nb">seq </span>6 10000000000 | <span class="nb">head</span> <span class="nt">-n</span> 10<span class="o">)</span>
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>(for brevity, let’s assume that <code class="highlighter-rouge">seq 10000000000</code> takes infinite time; to be fair it does take an impractical amount of time)</p>
 
 <p>Then there is <a href="http://man7.org/linux/man-pages/man1/timeout.1.html">timeout</a> in the Linux coreutils package for timing out a command after a specified duration. Note that it doesn’t come installed in OS X.</p>
 
 <p>The following example is illustrative, because the command varies between systems</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>comm -23 &lt;<span class="o">(</span>timeout 1s seq 10000000000<span class="o">)</span> <span class="se">\</span>
-<span class="gp">&gt;            </span>&lt;<span class="o">(</span>timeout 1s seq 6 10000000000<span class="o">)</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">comm</span> <span class="nt">-23</span> &lt;<span class="o">(</span><span class="nb">timeout </span>1s <span class="nb">seq </span>10000000000<span class="o">)</span> <span class="se">\</span>
+<span class="o">&gt;</span>            &lt;<span class="o">(</span><span class="nb">timeout </span>1s <span class="nb">seq </span>6 10000000000<span class="o">)</span>
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If you want <code class="highlighter-rouge">timeout</code> on OS X, your best bet is to install coreutils from Homebrew, with:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>brew install coreutils
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>coreutils
+</code></pre></div></div>
 <p>and then all coreutils commands are available, with a <code class="highlighter-rouge">g</code> prepended to their names (e.g. <code class="highlighter-rouge">gtimeout</code>)</p>
 
 <h2 id="the-problem-with-these-strategies">The problem with these strategies</h2>
@@ -294,12 +287,11 @@
   <li>Any poll-forever scheme, e.g.</li>
 </ul>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="k">while</span> <span class="o">[[</span> TRUE <span class="o">]]</span>; <span class="k">do
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="o">[[</span> TRUE <span class="o">]]</span><span class="p">;</span> <span class="k">do
   </span>curl https://status.github.com/api/status.json
-  sleep 10
+  <span class="nb">sleep </span>10
 <span class="k">done</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="my-current-solution-sd-stream-differ">My current solution: <code class="highlighter-rouge">sd</code> (stream differ)</h2>
 
@@ -309,14 +301,13 @@
 
 <p>The initial example, with <code class="highlighter-rouge">sd</code></p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>seq 100 | sd <span class="s1">'seq 6 100'</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">seq </span>100 | sd <span class="s1">'seq 6 100'</span>
 2
 1
 3
 5
 4
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Note that <code class="highlighter-rouge">sd</code> does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add <code class="highlighter-rouge">| sort</code> at the end.</p>
 
@@ -324,36 +315,33 @@
 
 <p>Use <code class="highlighter-rouge">-h</code> or <code class="highlighter-rouge">--hard-timeout</code> to timeout after a number of seconds</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>seq 100 | sd -h 1 <span class="s1">'tail -fn 100 &lt;(seq 6 100)'</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">seq </span>100 | sd <span class="nt">-h</span> 1 <span class="s1">'tail -fn 100 &lt;(seq 6 100)'</span>
 1
 2
 3
 4
 5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Use <code class="highlighter-rouge">-t</code> or <code class="highlighter-rouge">--timeout</code> to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat uuids.txt | sd -t 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>uuids.txt | sd <span class="nt">-t</span> 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
 a5aff766-564a-11e6-beb8-9e71128cae77
 a5affbd0-564a-11e6-beb8-9e71128cae77
 a5afff2c-564a-11e6-beb8-9e71128cae77
 a5b00328-564a-11e6-beb8-9e71128cae77
 ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Usually, tools like <code class="highlighter-rouge">mysql</code> or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use <code class="highlighter-rouge">-p</code> or <code class="highlighter-rouge">--patience</code> for this.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat uuids.txt | sd -p 20 -t 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>uuids.txt | sd <span class="nt">-p</span> 20 <span class="nt">-t</span> 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
 a5aff766-564a-11e6-beb8-9e71128cae77
 a5affbd0-564a-11e6-beb8-9e71128cae77
 a5afff2c-564a-11e6-beb8-9e71128cae77
 a5b00328-564a-11e6-beb8-9e71128cae77
 ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Use <code class="highlighter-rouge">-p 0</code> for waiting indefinitely for the initial message.</p>
 

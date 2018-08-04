@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201804221048" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201808041738" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -178,53 +178,57 @@
 
 <p>After you configure your credentials you should be good to go. Try <code class="highlighter-rouge">jira ok</code> one last time to double-check:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>jira ok
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>jira ok
 OK
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="tweaking-and-examples">Tweaking and examples</h2>
 
 <p>Personally, I like to go all the way with the tools I use the most, so I like these aliases:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">g</span><span class="o">=</span><span class="s1">'git'</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">g</span><span class="o">=</span><span class="s1">'git'</span>
 <span class="nb">alias </span><span class="nv">s</span><span class="o">=</span><span class="s1">'subl .'</span>
 <span class="nb">alias </span><span class="nv">d</span><span class="o">=</span><span class="s1">'docker'</span>
 <span class="nb">alias </span><span class="nv">k</span><span class="o">=</span><span class="s1">'kubectl'</span>
 <span class="nb">alias </span><span class="nv">j</span><span class="o">=</span><span class="s1">'jira'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>So if one morning I feel energetic enough to finish up all my backlog, I open all my assigned tickets in Chrome in one go!</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j o
-</code></pre>
-</div>
-<p>Which translates to:
-&gt;jira “output all ticket numbers assigned to me” | jira “open all tickets from STDIN on browser”)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j o
+</code></pre></div></div>
+<p>Which translates to:</p>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>jira “output all ticket numbers assigned to me”</td>
+        <td>jira “open all tickets from STDIN on browser”)</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
 
 <p>(To clarify: you don’t have to be so hacker: <code class="highlighter-rouge">jira me | jira open</code> works just as well.
 For more info just type: <code class="highlighter-rouge">jira</code>.)</p>
 
 <p>If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j t
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>j me | j t
 ABC-123     Do some work
 DEF-456     Do some more work
 GHI-789     Do very urgent work
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s <code class="highlighter-rouge">text</code> filter, all bound to the projects you configured on <code class="highlighter-rouge">~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code class="highlighter-rouge">| j o 3</code>:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>~ <span class="nv">$ </span>j s cat
-JKL-012     Feed the cat
-MNO-345     Buy a new cat
-PQR-678     Take the cat shopping
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>j s <span class="nb">cat
+</span>JKL-012     Feed the <span class="nb">cat
+</span>MNO-345     Buy a new <span class="nb">cat
+</span>PQR-678     Take the <span class="nb">cat </span>shopping
 
-~ <span class="nv">$ </span>j s cat | j o 3
-</code></pre>
-</div>
+~ <span class="nv">$ </span>j s <span class="nb">cat</span> | j o 3
+</code></pre></div></div>
 
 <h2 id="in-closing">In closing</h2>
 

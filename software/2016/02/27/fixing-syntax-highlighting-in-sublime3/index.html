@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201804221048" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201808041738" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -147,15 +147,14 @@
 
 <p>In version 5.4 of PHP, they <a href="http://php.net/manual/en/migration54.new-features.php">introduced a new syntax for arrays</a> that is reminiscent of the JSON notation:</p>
 
-<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
 
-<span class="c1">// Old PHP Array syntax
-</span><span class="nv">$primes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+<span class="c1">// Old PHP Array syntax</span>
+<span class="nv">$primes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
 
-<span class="c1">// New PHP Array syntax
-</span><span class="nv">$primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">];</span>
-</code></pre>
-</div>
+<span class="c1">// New PHP Array syntax</span>
+<span class="nv">$primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">];</span>
+</code></pre></div></div>
 
 <p>Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!</p>
 
@@ -192,9 +191,8 @@
 
 <p>Within Sublime’s Command Palette, type:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>PackageResouceViewer: Open Resource
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PackageResouceViewer: Open Resource
+</code></pre></div></div>
 
 <p>Then select the <code class="highlighter-rouge">PHP</code> resource and then finally <code class="highlighter-rouge">PHP.tmLanguage</code>.</p>
 
