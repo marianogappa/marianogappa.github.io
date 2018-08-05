@@ -6,6 +6,10 @@
 
   <title></title>
   <style>
+    @media print { /* https://stackoverflow.com/questions/46077392/additional-options-in-chrome-headless-print-to-pdf */
+      @page { margin: 0; }
+      body { margin: 1.6cm; }
+    }
     body { font-family: sans-serif; color: black; }
     article {
       max-width: 680px;
