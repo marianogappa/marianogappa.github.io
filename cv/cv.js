@@ -54,7 +54,7 @@ const cv = {
       "blogpost": "https://movio.co/en/blog/improving-with-sql-and-charts/",
       "bullets": [
         "CLI tool for easy ad-hoc charting of data piped from a terminal, opening a browser tab",
-        "Reached 420 Github stars in Aug 2018; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> and <a href='https://golangweekly.com/issues/167'>#222</a> ",
+        "Reached 420 Github stars in Aug 2018; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> and <a href='https://golangweekly.com/issues/222'>#222</a> ",
         "Squads at Movio use it for reports & ad-hoc charting; teams around the world have reported use-cases",
       ],
       "stack": [
