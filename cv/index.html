@@ -2,8 +2,7 @@
 <html>
 <head>
   <script src="vue.min.js"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
-
+  <link rel="stylesheet" type="text/css" href="css/all.min.css">
   <title></title>
   <style>
     @media print { /* https://stackoverflow.com/questions/46077392/additional-options-in-chrome-headless-print-to-pdf */
@@ -158,32 +157,6 @@
       </template>
     </article>
 
-    <!-- Open source -->
-    <template v-if="open_source_projects">
-      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{open_source_projects.length}}</a>)</span></span></section>
-    </template>
-    <template v-for="item in open_source_projects" v-if="!item.hidable || longCV">
-      <article v-bind:class="{'special': item.special, '': !item.special}">
-        <div class="flex">
-          <div>
-            <div class="title">{{ item.name }}: {{ item.short }}</div>
-            <div class="links">
-              <i class="fab fa-github fa-fw"></i><a :href="item.github">{{ item.github }}</a>
-              <span v-if="item.blogpost !== ''"><i class="fas fa-rss-square fa-fw"></i><a :href="item.blogpost">Blogpost</a></span>
-            </div>
-          </div>
-          <div v-if="item.stack" class="stack flex_pills">
-            <pill v-for="pill in item.stack" :key="pill.id" :text="pill.text" :color="pill.color" :image="pill.image"></pill>
-          </div>
-        </div>
-        <div class="bullets">
-          <template v-for="bullet in item.bullets">
-            <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
-          </template>
-        </div>
-      </article>
-    </template>
-
     <!-- Work experience -->
     <template v-if="work_experience">
       <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{work_experience.length}}</a> starting {{ work_experience[work_experience.length-1].started}})</span></span></section>
@@ -217,6 +190,32 @@
       </template>
     </template>
 
+    <!-- Open source -->
+    <template v-if="open_source_projects">
+      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{open_source_projects.length}}</a>)</span></span></section>
+    </template>
+    <template v-for="item in open_source_projects" v-if="!item.hidable || longCV">
+      <article v-bind:class="{'special': item.special, '': !item.special}">
+        <div class="flex">
+          <div>
+            <div class="title">{{ item.name }}: {{ item.short }}</div>
+            <div class="links">
+              <i class="fab fa-github fa-fw"></i><a :href="item.github">{{ item.github }}</a>
+              <span v-if="item.blogpost !== ''"><i class="fas fa-rss-square fa-fw"></i><a :href="item.blogpost">Blogpost</a></span>
+            </div>
+          </div>
+          <div v-if="item.stack" class="stack flex_pills">
+            <pill v-for="pill in item.stack" :key="pill.id" :text="pill.text" :color="pill.color" :image="pill.image"></pill>
+          </div>
+        </div>
+        <div class="bullets">
+          <template v-for="bullet in item.bullets">
+            <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+          </template>
+        </div>
+      </article>
+    </template>
+    
     <!-- Education -->
     <template v-if="longCV">
       <template v-if="education">
