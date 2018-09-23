@@ -291,11 +291,11 @@ const cv = {
       "short_description": "5-year Information Systems Engineering degree (<a href='https://en.wikipedia.org/wiki/Engineer&apos;s_degree#Latin_America'>equivalent to Master degree</a>)",
       "short_name": "<a href='https://www.frba.utn.edu.ar/en/home/'>UTN-FRBA</a>",
       "company_link": "https://www.frba.utn.edu.ar/en/home/",
-      "title": "Information Systems Engineer - Bachelor degree (5 years)",
+      "title": "Information Systems Engineer degree (5 years)",
       "degree_type": "",
       "date_range": "2004-2011",
       "bullets": [
-        "Bachelor degree (5 years)"
+        "5-year Information Systems Engineering degree (<a href='https://en.wikipedia.org/wiki/Engineer&apos;s_degree#Latin_America'>equivalent to Master degree</a>)"
       ]
     }
   ]

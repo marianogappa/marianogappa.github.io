@@ -167,11 +167,11 @@
           <div class="flex">
             <div class="flex_row">
               <div class="title">
-                {{ item.role }} <span v-if="item.company !== ''">@ <b>{{ item.company }}</b></span>
+                {{ item.role }} <span v-if="item.company">@ <b>{{ item.company }}</b></span>
               </div>
               <div class="subtitle flex no_wrap">
                 <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ item.date_range }} {{ item.elapsed_time }}</span>
-                <span class="company_link" v-if="item.company_link !== ''"><i class="fas fa-link fa-fw"></i><a :href="item.company_link">{{ item.company_link }}</a></span>
+                <span class="company_link" v-if="item.company_link"><i class="fas fa-link fa-fw"></i><a :href="item.company_link">{{ item.company_link }}</a></span>
               </div>
             </div>
             <div v-if="item.stack" class="stack flex_pills">
@@ -181,9 +181,6 @@
           <div class="bullets">
             <template v-for="bullet in item.bullets">
               <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
-            </template>
-            <template v-for="bullet in item.link_bullets">
-              <div><i class="fas fa-link fa-fw"></i><a :href="bullet.link">{{bullet.text}}</a></div>
             </template>
           </div>
         </article>
