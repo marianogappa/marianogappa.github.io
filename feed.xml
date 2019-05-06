@@ -101,7 +101,7 @@
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Finite-state_machine&quot;&gt;FSMs&lt;/a&gt; are a super interesting topic, but we’re not here to get a CS degree. Let’s just focus on what we need.&lt;/p&gt;
 
-&lt;p&gt;At any given point (instead of “point” let’s call it “node”) in our parsing journey, only a few tokens are valid, and upon finding these tokens we advance to new nodes where different tokens are valid, and so on until we finish parsing our query. We can visualise these node relationships as a tree:&lt;/p&gt;
+&lt;p&gt;At any given point (instead of “point” let’s call it “node”) in our parsing journey, only a few tokens are valid, and upon finding these tokens we advance to new nodes where different tokens are valid, and so on until we finish parsing our query. We can visualise these node relationships as a directed graph:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sql_parser_graph.png&quot; alt=&quot;SQL Parser Graph&quot; /&gt;&lt;/p&gt;
 
