@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Let's build a SQL parser in Go! &#8211; Mariano Gappa's Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).">
+    <meta name="author" content="Mariano Gappa">
+    <meta name="keywords" content="software">
+    <link rel="canonical" href="http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201905062233" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    
+
+    <!-- Verifications -->
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Let's build a SQL parser in Go!">
+    <meta property="og:description" content="Blog about Software Engineering and Music Production.">
+    <meta property="og:url" content="http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/">
+    <meta property="og:site_name" content="Mariano Gappa's Blog">
+    
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+        <meta name="twitter:site" content="@MarianoGappa" />
+    
+    <meta name="twitter:title" content="Let's build a SQL parser in Go!" />
+    <meta name="twitter:description" content="This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops)." />
+    <meta name="twitter:url" content="http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    <!-- Added by Mariano for syntax highlighting -->
+    <link href="/css/syntax.css" rel="stylesheet">
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58930438-4', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body class="site animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
+      <nav class="site-nav">
+        <a href="/cv/">CV</a>
+<a href="/cv/cv.pdf">CV (pdf)</a>
+<a href="/about/">About</a>
+<a href="/contact/">Contact</a>
+<a href="http://www.gappamixing.com">Mixing</a>
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-github" href="https://github.com/MarianoGappa"></a>
+    
+    
+    
+    <a class="fa fa-rss" href="/feed.xml"></a>
+    
+      <a class="fa fa-twitter" href="https://twitter.com/MarianoGappa"></a>
+    
+    
+    
+      <a class="fa fa-envelope" href="mailto:mariano.gappa@gmail.com"></a>
+    
+    
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Let's build a SQL parser in Go!</h1>
+  
+  <span class="post-meta">May 6, 2019</span><br>
+  
+  <span class="post-meta small">
+  
+    7 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <h2 id="tldr">TL;DR</h2>
+
+<p>This article aims to be the simplest introduction to constructing an <a href="https://en.wikipedia.org/wiki/LL_parser">LL(1) parser</a> in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).</p>
+
+<p>Here’s the complete parser repository if you want to skip to results:</p>
+
+<p><a href="https://github.com/marianogappa/sqlparser">github.com/marianogappa/sqlparser</a></p>
+
+<h2 id="simplification-disclaimer">Simplification disclaimer</h2>
+
+<p>To make things simple we’re gonna descope sub-selects, functions, complex nested expressions and other features that all SQL flavours support. Those features get really involved quickly with the strategy we’re gonna use.</p>
+
+<h2 id="1-minute-theory-lesson">1-minute theory lesson</h2>
+
+<p>A parser has two parts:</p>
+
+<ol>
+  <li>the Lexical Analysis: a.k.a. the “<a href="https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization">Tokeniser</a>”</li>
+  <li>the Syntactic Analysis: the creation of the <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a></li>
+</ol>
+
+<h3 id="lexical-analysis">Lexical Analysis</h3>
+
+<p>Let’s define it by example. “Tokenising” the following query:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span> <span class="k">FROM</span> <span class="s1">'users.csv'</span>
+</code></pre></div></div>
+
+<p>Means extracting the “tokens” that form this query. The result of the tokeniser would be something like:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"SELECT"</span><span class="p">,</span><span class="x"> </span><span class="s">"id"</span><span class="p">,</span><span class="x"> </span><span class="s">","</span><span class="p">,</span><span class="x"> </span><span class="s">"name"</span><span class="p">,</span><span class="x"> </span><span class="s">"FROM"</span><span class="p">,</span><span class="x"> </span><span class="s">"'users.csv'"</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<h3 id="syntactic-analysis">Syntactic Analysis</h3>
+
+<p>This part is where we actually look at the tokens, make sure they make sense and interpret them to construct some product <code class="highlighter-rouge">struct</code> that represents the query in a way that is convenient for the application that is gonna use it (e.g. for executing the query, colour highlighting it). After this step, we’d end up with something like:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">query</span><span class="p">{</span><span class="x">
+	</span><span class="n">Type</span><span class="o">:</span><span class="x"> </span><span class="s">"Select"</span><span class="p">,</span><span class="x">
+	</span><span class="n">TableName</span><span class="o">:</span><span class="x"> </span><span class="s">"users.csv"</span><span class="p">,</span><span class="x">
+	</span><span class="n">Fields</span><span class="o">:</span><span class="x"> </span><span class="p">[</span><span class="s">"id"</span><span class="p">,</span><span class="x"> </span><span class="s">"name"</span><span class="p">],</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>There are a lot of ways in that parsing can fail, so it would be convenient to do the two steps at the same time and stop as soon as something goes wrong.</p>
+
+<h2 id="strategy">Strategy</h2>
+
+<p>We’ll define a <code class="highlighter-rouge">parser</code> that looks like this:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">parser</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="n">sql</span><span class="x">             </span><span class="kt">string</span><span class="x">        </span><span class="c">// The query to parse</span><span class="x">
+  </span><span class="n">i</span><span class="x">               </span><span class="kt">int</span><span class="x">           </span><span class="c">// Where we are in the query</span><span class="x">
+  </span><span class="n">query</span><span class="x">           </span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="x">   </span><span class="c">// The "query struct" we'll build</span><span class="x">
+  </span><span class="n">step</span><span class="x">            </span><span class="n">step</span><span class="x">          </span><span class="c">// What's this? Read on...</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// Main function that returns the "query struct" or an error</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">Parse</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x"> </span><span class="p">{}</span><span class="x">
+
+</span><span class="c">// A "look-ahead" function that returns the next token to parse</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">peek</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">{}</span><span class="x">
+
+</span><span class="c">// same as peek(), but advancing our "i" index</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">pop</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">{}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>Intuitively, what we would do first is to “peek() the first token”. In a basic SQL grammar, there are only a few valid initial tokens: SELECT, UPDATE, DELETE, etc; anything else is an error already. The code would look something like:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">switch</span><span class="x"> </span><span class="n">strings</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">peek</span><span class="p">())</span><span class="x"> </span><span class="p">{</span><span class="x">
+
+</span><span class="k">case</span><span class="x"> </span><span class="s">"SELECT"</span><span class="o">:</span><span class="x">
+  </span><span class="n">parser</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="k">type</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"SELECT"</span><span class="x"> </span><span class="c">// start building the "query struct"</span><span class="x">
+  </span><span class="n">parser</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="x">
+  </span><span class="c">// TODO continue with SELECT query parsing...</span><span class="x">
+
+</span><span class="k">case</span><span class="x"> </span><span class="s">"UPDATE"</span><span class="o">:</span><span class="x">
+  </span><span class="c">// TODO handle UPDATE</span><span class="x">
+
+</span><span class="c">// TODO other cases...</span><span class="x">
+
+</span><span class="k">default</span><span class="o">:</span><span class="x">
+  </span><span class="k">return</span><span class="x"> </span><span class="n">parser</span><span class="o">.</span><span class="n">query</span><span class="p">,</span><span class="x"> </span><span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"invalid query type"</span><span class="p">)</span><span class="x">
+
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>And we can basically fill in the <code class="highlighter-rouge">TODO</code>s and profit! However, the diligent reader will see that the code for parsing the whole <code class="highlighter-rouge">SELECT</code> query can get messy really quickly, and we have many types of queries to parse. We’re gonna need some structure.</p>
+
+<h2 id="finite-state-machines">Finite-state Machines</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Finite-state_machine">FSMs</a> are a super interesting topic, but we’re not here to get a CS degree. Let’s just focus on what we need.</p>
+
+<p>At any given point (instead of “point” let’s call it “node”) in our parsing journey, only a few tokens are valid, and upon finding these tokens we advance to new nodes where different tokens are valid, and so on until we finish parsing our query. We can visualise these node relationships as a tree:</p>
+
+<p><img src="http://marianogappa.github.io/images/sql_parser_graph.png" alt="SQL Parser Graph" /></p>
+
+<p>The node transitions can be defined with a simpler table, though:</p>
+
+<p><img src="http://marianogappa.github.io/images/sql_parser_table.png" alt="SQL Parser Table" /></p>
+
+<p>We can directly translate this table to a really large switch statement. We’ll use that sneaky <code class="highlighter-rouge">parser.step</code> property we defined before:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">Parse</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="n">parser</span><span class="o">.</span><span class="n">step</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">stepType</span><span class="x"> </span><span class="c">// initial step</span><span class="x">
+
+  </span><span class="k">for</span><span class="x"> </span><span class="n">parser</span><span class="o">.</span><span class="n">i</span><span class="x"> </span><span class="o">&lt;</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">sql</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">nextToken</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">parser</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="x">
+
+    </span><span class="k">switch</span><span class="x"> </span><span class="n">parser</span><span class="o">.</span><span class="n">step</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="n">stepType</span><span class="o">:</span><span class="x">
+      </span><span class="k">switch</span><span class="x"> </span><span class="n">nextToken</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="k">case</span><span class="x"> </span><span class="n">UPDATE</span><span class="o">:</span><span class="x">
+        </span><span class="n">parser</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="k">type</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"UPDATE"</span><span class="x">
+        </span><span class="n">parser</span><span class="o">.</span><span class="n">step</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">stepUpdateTable</span><span class="x">
+
+      </span><span class="c">// TODO cases of other query types</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="n">stepUpdateSet</span><span class="o">:</span><span class="x">
+      </span><span class="c">// ...</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="n">stepUpdateField</span><span class="o">:</span><span class="x">
+      </span><span class="c">// ...</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="n">stepUpdateComma</span><span class="o">:</span><span class="x">
+      </span><span class="c">// ...</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+
+    </span><span class="n">parser</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+
+  </span><span class="k">return</span><span class="x"> </span><span class="n">parser</span><span class="o">.</span><span class="n">query</span><span class="p">,</span><span class="x"> </span><span class="no">nil</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>And there we go! Note that some steps might conditionally cycle back to previous ones, like a comma on the <code class="highlighter-rouge">SELECT</code> field definition. This strategy scales well for basic parsers. As the grammar grows complex, though, the number of states will increase dramatically, so it can get tedious to write. I recommend testing as you code; more on that below.</p>
+
+<h2 id="peek-implementation">Peek() implementation</h2>
+
+<p>Remember that we need to implement both <code class="highlighter-rouge">peek()</code> and <code class="highlighter-rouge">pop()</code>. Since they do almost the same, let’s use an auxiliary function to keep things <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a>. Also, <code class="highlighter-rouge">pop()</code> should further advance the index to avoid peeking whitespace.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">peek</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="n">peeked</span><span class="p">,</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">peekWithLength</span><span class="p">()</span><span class="x">
+  </span><span class="k">return</span><span class="x"> </span><span class="n">peeked</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">pop</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="n">peeked</span><span class="p">,</span><span class="x"> </span><span class="nb">len</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">peekWithLength</span><span class="p">()</span><span class="x">
+  </span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="x"> </span><span class="o">+=</span><span class="x"> </span><span class="nb">len</span><span class="x">
+  </span><span class="n">p</span><span class="o">.</span><span class="n">popWhitespace</span><span class="p">()</span><span class="x">
+  </span><span class="k">return</span><span class="x"> </span><span class="n">peeked</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">popWhitespace</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="k">for</span><span class="x"> </span><span class="p">;</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="x"> </span><span class="o">&lt;</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">)</span><span class="x"> </span><span class="o">&amp;&amp;</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="p">]</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="sc">' '</span><span class="p">;</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="o">++</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>Here’s a list of tokens that we might want to peek:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span><span class="x"> </span><span class="n">reservedWords</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="x">
+  </span><span class="s">"("</span><span class="p">,</span><span class="x"> </span><span class="s">")"</span><span class="p">,</span><span class="x"> </span><span class="s">"&gt;="</span><span class="p">,</span><span class="x"> </span><span class="s">"&lt;="</span><span class="p">,</span><span class="x"> </span><span class="s">"!="</span><span class="p">,</span><span class="x"> </span><span class="s">","</span><span class="p">,</span><span class="x"> </span><span class="s">"="</span><span class="p">,</span><span class="x"> </span><span class="s">"&gt;"</span><span class="p">,</span><span class="x"> </span><span class="s">"&lt;"</span><span class="p">,</span><span class="x">
+  </span><span class="s">"SELECT"</span><span class="p">,</span><span class="x"> </span><span class="s">"INSERT INTO"</span><span class="p">,</span><span class="x"> </span><span class="s">"VALUES"</span><span class="p">,</span><span class="x"> </span><span class="s">"UPDATE"</span><span class="p">,</span><span class="x">
+  </span><span class="s">"DELETE FROM"</span><span class="p">,</span><span class="x"> </span><span class="s">"WHERE"</span><span class="p">,</span><span class="x"> </span><span class="s">"FROM"</span><span class="p">,</span><span class="x"> </span><span class="s">"SET"</span><span class="p">,</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>In addition to those, we might come across quoted strings or plain identifiers (e.g. field names). Here’s a hopefully complete <code class="highlighter-rouge">peekWithLength()</code> implementation:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">p</span><span class="x"> </span><span class="o">*</span><span class="n">parser</span><span class="p">)</span><span class="x"> </span><span class="n">peekWithLength</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="kt">int</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="k">if</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="x"> </span><span class="o">&gt;=</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="s">""</span><span class="p">,</span><span class="x"> </span><span class="m">0</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+  </span><span class="k">for</span><span class="x"> </span><span class="n">_</span><span class="p">,</span><span class="x"> </span><span class="n">rWord</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="k">range</span><span class="x"> </span><span class="n">reservedWords</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">token</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="o">:</span><span class="n">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">),</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">rWord</span><span class="p">))]</span><span class="x">
+    </span><span class="n">upToken</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">strings</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="n">token</span><span class="p">)</span><span class="x">
+    </span><span class="k">if</span><span class="x"> </span><span class="n">upToken</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="n">rWord</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="k">return</span><span class="x"> </span><span class="n">upToken</span><span class="p">,</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">upToken</span><span class="p">)</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+  </span><span class="k">if</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">sql</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">i</span><span class="p">]</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="sc">'\'</span><span class="err">'</span><span class="x"> </span><span class="p">{</span><span class="x"> </span><span class="c">// Quoted string</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">peekQuotedStringWithLength</span><span class="p">()</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+  </span><span class="k">return</span><span class="x"> </span><span class="n">p</span><span class="o">.</span><span class="n">peekIdentifierWithLength</span><span class="p">()</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>The remaining functions are trivial and left as an exercise to the reader. If you’re curious, the link at the TL;DR section contains the full source code implementation. I intentionally won’t link it again here to add a little indirection.</p>
+
+<h2 id="final-validation">Final validation</h2>
+
+<p>The parser might find the end of the string before arriving at a complete query definition. It’s probably a good idea to implement a <code class="highlighter-rouge">parser.validate()</code> function that looks at the generated “query” struct, and returns an error if it’s incomplete or otherwise wrong.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Go’s table-driven testing pattern lends itself beautifully for our case:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">testCase</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="n">Name</span><span class="x">     </span><span class="kt">string</span><span class="x">         </span><span class="c">// description of the test</span><span class="x">
+  </span><span class="n">SQL</span><span class="x">      </span><span class="kt">string</span><span class="x">         </span><span class="c">// input sql e.g. "SELECT a FROM 'b'"</span><span class="x">
+  </span><span class="n">Expected</span><span class="x"> </span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="x">    </span><span class="c">// expected resulting "query" struct</span><span class="x">
+  </span><span class="n">Err</span><span class="x">      </span><span class="kt">error</span><span class="x">          </span><span class="c">// expected error result</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>Example tests:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">  </span><span class="n">ts</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="p">[]</span><span class="n">testCase</span><span class="p">{</span><span class="x">
+    </span><span class="p">{</span><span class="x">
+      </span><span class="n">Name</span><span class="o">:</span><span class="x">     </span><span class="s">"empty query fails"</span><span class="p">,</span><span class="x">
+      </span><span class="n">SQL</span><span class="o">:</span><span class="x">      </span><span class="s">""</span><span class="p">,</span><span class="x">
+      </span><span class="n">Expected</span><span class="o">:</span><span class="x"> </span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="p">{},</span><span class="x">
+      </span><span class="n">Err</span><span class="o">:</span><span class="x">      </span><span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"query type cannot be empty"</span><span class="p">),</span><span class="x">
+    </span><span class="p">},</span><span class="x">
+    </span><span class="p">{</span><span class="x">
+      </span><span class="n">Name</span><span class="o">:</span><span class="x">     </span><span class="s">"SELECT without FROM fails"</span><span class="p">,</span><span class="x">
+      </span><span class="n">SQL</span><span class="o">:</span><span class="x">      </span><span class="s">"SELECT"</span><span class="p">,</span><span class="x">
+      </span><span class="n">Expected</span><span class="o">:</span><span class="x"> </span><span class="n">query</span><span class="o">.</span><span class="n">Query</span><span class="p">{</span><span class="n">Type</span><span class="o">:</span><span class="x"> </span><span class="n">query</span><span class="o">.</span><span class="n">Select</span><span class="p">},</span><span class="x">
+      </span><span class="n">Err</span><span class="o">:</span><span class="x">      </span><span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"table name cannot be empty"</span><span class="p">),</span><span class="x">
+    </span><span class="p">},</span><span class="x">
+    </span><span class="o">...</span><span class="x">
+</span></code></pre></div></div>
+
+<p>Test the test cases like this:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">  </span><span class="k">for</span><span class="x"> </span><span class="n">_</span><span class="p">,</span><span class="x"> </span><span class="n">tc</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="k">range</span><span class="x"> </span><span class="n">ts</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">(</span><span class="n">t</span><span class="x"> </span><span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="n">actual</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">Parse</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">SQL</span><span class="p">)</span><span class="x">
+      </span><span class="k">if</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="o">&amp;&amp;</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">t</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"Error should have been %v"</span><span class="p">,</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Err</span><span class="p">)</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+      </span><span class="k">if</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Err</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="o">&amp;&amp;</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">t</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"Error should have been nil but was %v"</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="p">)</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+      </span><span class="k">if</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="o">&amp;&amp;</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">require</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Err</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="p">,</span><span class="x"> </span><span class="s">"Unexpected error"</span><span class="p">)</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+      </span><span class="k">if</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span><span class="x"> </span><span class="o">&gt;</span><span class="x"> </span><span class="m">0</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">require</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="x"> </span><span class="n">tc</span><span class="o">.</span><span class="n">Expected</span><span class="p">,</span><span class="x"> </span><span class="n">actual</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="x">
+          </span><span class="s">"Query didn't match expectation"</span><span class="p">)</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+    </span><span class="p">})</span><span class="x">
+  </span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>I’m using <a href="https://github.com/stretchr/testify">testify</a> because it provides a diff output when the query structs don’t match.</p>
+
+<h2 id="going-deeper">Going deeper</h2>
+
+<p>This experiment is well-suited for:</p>
+
+<ul>
+  <li>Learning LL(1) parser algorithms</li>
+  <li>Custom parsing simple grammars with zero dependencies</li>
+</ul>
+
+<p>However, this approach can get tedious and it’s somewhat limiting. Think about how to parse arbitrarily complex compound expressions (e.g. <code class="highlighter-rouge">sqrt(a) = (1 * (2 + 3))</code>).</p>
+
+<p>For a more powerful parsing model, look into <a href="https://en.wikipedia.org/wiki/Parser_combinator">parser combinators</a>. <a href="https://godoc.org/golang.org/x/tools/cmd/goyacc">goyacc</a> is a popular Go implementation.</p>
+
+<p>I recommend <a href="https://www.youtube.com/watch?v=HxaD_trXwRE">this very interesting talk</a> by Rob Pike on Lexical Scanning.</p>
+
+<p><a href="http://www.cs.binghamton.edu/~zdu/parsdemo/recintro.html">Recursive descent parsing</a> is another parsing approach.</p>
+
+<h2 id="why-i-wrote-this">Why I wrote this</h2>
+
+<p>Recently, I’ve decided to centralise my data into a repository of CSVs. As a bonus, it’d give me a chance to learn <a href="https://reactjs.org/">React</a> better by creating a UI for <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a>ing the data. When I had to decide on an interface for communicating CRUD operations between frontend and backend, I felt SQL was a natural language for it (and I already know it well).</p>
+
+<p>It seems that, although there are many libraries for reading CSV files with SQL, there aren’t many that support write operations (particularly <a href="https://en.wikipedia.org/wiki/Data_definition_language">DDL statements</a>). A colleague recommended me to upload the files into an in-memory <a href="https://www.sqlite.org/index.html">SQLite database</a>, run the SQL and then export to CSV; a fine idea since performance wasn’t at all a concern for me. In the end, I thought to myself: didn’t you always want to write a SQL parser? How hard can it be?</p>
+
+<p>Turns out writing a (basic) parser is very simple! But I bet it can appear daunting without a good tutorial that is as simple as can be.</p>
+
+<p>I hope this can be that tutorial for you. <a href="https://en.wikipedia.org/wiki/KISS_principle">KISS!</a></p>
+
+</article>
+
+
+  <div class="share-page">
+  
+
+  <div class="share-links">
+    
+
+    
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Let's build a SQL parser in Go!&url=http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/&title=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+    
+
+    
+
+    
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://marianogappa.github.io/software/2019/05/06/lets-build-a-sql-parser-in-go/&t=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'marianogappasblog';
+    var disqus_identifier = '/software/2019/05/06/lets-build-a-sql-parser-in-go';
+    var disqus_title      = '';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>
