@@ -16,7 +16,7 @@ const cv = {
         "type": "Email"
       },
       {
-        "link": "https://github.com/MarianoGappa",
+        "link": "https://github.com/marianogappa",
         "type": "Github"
       },
       {
@@ -24,7 +24,7 @@ const cv = {
         "type": "Blog"
       },
       {
-        "link": "https://twitter.com/MarianoGappa",
+        "link": "https://twitter.com/marianogappa",
         "type": "Twitter"
       }
     ],
@@ -54,7 +54,7 @@ const cv = {
       "blogpost": "https://movio.co/en/blog/improving-with-sql-and-charts/",
       "bullets": [
         "CLI tool for easy ad-hoc charting of data piped from a terminal, opening a browser tab",
-        "Reached 420 Github stars in Aug 2018; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> and <a href='https://golangweekly.com/issues/222'>#222</a> ",
+        "Reached 497 Github stars in May 2019; featured in <a href='https://golangweekly.com/issues/167'>Golang Weekly #167</a> and <a href='https://golangweekly.com/issues/222'>#222</a> ",
         "Squads at Movio use it for reports & ad-hoc charting; teams around the world have reported use-cases",
       ],
       "stack": [
@@ -66,7 +66,7 @@ const cv = {
     {
       "type": "open_source_project",
       "name": "sql",
-      "short": "MySQL pipe",
+      "short": "MySQL & Postgres pipe",
       "github": "https://github.com/marianogappa/sql",
       "blogpost": "https://movio.co/en/blog/improving-with-sql-and-charts/",
       "bullets": [
@@ -84,8 +84,8 @@ const cv = {
       "github": "https://github.com/marianogappa/ostinato",
       "blogpost": "https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/",
       "bullets": [
-        "Feature-complete Chess library, including AI and with UI implementations",
-        "Cross-compiled for both server and client; works as a server API and also standalone within the browser"
+        "Feature-rich chess library cross-compiled for both server (Scala) and browser (ScalaJS)",
+        "#1 Google result for Chess Notation Converter"
       ],
       "stack": [
         {"id": 1, "text": "Scala", "color": "red", "image": "images/scala.svg"},
@@ -107,7 +107,8 @@ const cv = {
       "stack": [
         {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
         {"id": 2, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"}
-      ]
+      ],
+      "hidable": true
     },
     {
       "type": "open_source_project",
@@ -135,13 +136,30 @@ const cv = {
   "work_experience": [
     {
       "type": "work_experience",
+      "role": "Software Engineer",
+      "company": "Fat Llama",
+      "country": "images/uk.svg",
+      "company_link": "https://fatllama.com",
+      "date_range": "Jan 2019 - Present",
+      "started": "Jan 2019",
+      "elapsed_time": "(6 months)",
+      "bullets": ["One of the senior engineers taking the startup from Series A to Series B"],
+      "stack": [
+        {"id": 1, "text": "Typescript", "color": "red", "image": "images/typescript.png"},
+        {"id": 2, "text": "Go", "color": "red", "image": "images/gopher.svg"},
+        {"id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg"},
+      ]
+    },
+    {
+      "type": "work_experience",
       "role": "Software Engineer Squad Lead",
       "company": "Movio",
+      "country": "images/nz.svg",
       "company_link": "https://movio.co/en/",
-      "date_range": "Feb 2018 - Present",
+      "date_range": "Feb 2018 - Dec 2018",
       "started": "Feb 2018",
-      "elapsed_time": "(7 months)",
-      "bullets": ["Leading the team that is building Movio's Datawarehouse"],
+      "elapsed_time": "(11 months)",
+      "bullets": ["Led the team that built Movio's Datawarehouse"],
       "stack": [
         {"id": 1, "text": "Spark", "color": "red", "image": "images/spark.png"},
         {"id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg"},
@@ -152,6 +170,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer",
       "company": "Movio",
+      "country": "images/nz.svg",
       "company_link": "https://movio.co/en/",
       "date_range": "Sep 2013 - Jan 2018",
       "started": "Sep 2013",
@@ -179,6 +198,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer",
       "company": "OLX",
+      "country": "images/ar.svg",
       "company_link": "http://www.olx.in",
       "date_range": "Jan 2013 - Sep 2013",
       "started": "Jan 2013",
@@ -196,6 +216,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer",
       "company": "Psicofxp S.A.",
+      "country": "images/ar.svg",
       "date_range": "Aug 2012 - Nov 2012",
       "started": "Aug 2012",
       "elapsed_time": "(4 months)",
@@ -210,6 +231,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer",
       "company": "Rocket Internet GmbH",
+      "country": "images/ar.svg",
       "company_link": "http://www.rocket-internet.de/",
       "date_range": "Mar 2012 - Jun 2012",
       "started": "Mar 2012",
@@ -224,6 +246,7 @@ const cv = {
     {
       "type": "work_experience",
       "role": "Software Engineer (freelance)",
+      "country": "images/ar.svg",
       "date_range": "Sep 2011 - Mar 2012",
       "started": "Sep 2011",
       "elapsed_time": "(6 months)",
@@ -240,6 +263,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer",
       "company": "Metrogames",
+      "country": "images/ar.svg",
       "company_link": "http://www.metrogames.com/",
       "date_range": "Mar 2010 - Aug 2011",
       "started": "Mar 2010",
@@ -257,6 +281,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Developer",
       "company": "Casablanca Hardware Store Chain",
+      "country": "images/ar.svg",
       "date_range": "2007",
       "started": "Jan 2007",
       "elapsed_time": "(1 year)",
@@ -272,6 +297,7 @@ const cv = {
       "type": "work_experience",
       "role": "Software Developer",
       "company": "AranaParera Real Estate",
+      "country": "images/ar.svg",
       "date_range": "2006",
       "started": "Jan 2006",
       "elapsed_time": "(6 months)",

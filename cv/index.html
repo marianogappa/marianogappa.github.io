@@ -3,6 +3,7 @@
 <head>
   <script src="vue.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/all.min.css">
+  <meta charset="utf-8"/>
   <title></title>
   <style>
     @media print { /* https://stackoverflow.com/questions/46077392/additional-options-in-chrome-headless-print-to-pdf */
@@ -18,10 +19,12 @@
       border-right: 1px solid #EEE;
       margin: 0px 10px -1px 15px;
       padding: 5px 5px 5px 10px;
+      color: #333;
     }
     .title, .short {
       font-size: 16px;
       margin-bottom: 3px;
+      color: black;
     }
     .short { font-weight: normal; }
     .special { border-left: 4px solid #999; background-color: #F9F9F9 }
@@ -52,7 +55,7 @@
       font-weight: bolder;
       margin: 10px 0px 10px 0px;
     }
-    a { color: blue; } /* visited links are ugly */
+    a { color: blue; text-decoration: none } /* visited links are ugly */
     .flex {
       display: flex;
       justify-content: space-between;
@@ -66,6 +69,7 @@
     .flex_row { display: flex; flex-direction: column; } /* why is row column -___- */
     .no_wrap { flex-wrap: nowrap; white-space: nowrap; }
     .no_wrap span, .no_wrap i { padding-right: 5px; }
+    .country { height: 12px; width: 13px; padding-right: 3px; }
   </style>
   <script type="text/javascript" src="cv.js"></script>
   <script type="text/javascript">
@@ -167,7 +171,7 @@
           <div class="flex">
             <div class="flex_row">
               <div class="title">
-                {{ item.role }} <span v-if="item.company">@ <b>{{ item.company }}</b></span>
+                {{ item.role }} <span v-if="item.company">@ <img v-if="item.country" :src="item.country" class="country"/><b>{{ item.company }}</b></span>
               </div>
               <div class="subtitle flex no_wrap">
                 <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ item.date_range }} {{ item.elapsed_time }}</span>
