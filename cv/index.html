@@ -234,7 +234,7 @@
           </template>
           <div class="bullets">
             <template v-for="bullet in item.bullets">
-              <div><i class="fas fa-caret-right fa-fw"></i>{{bullet}}</div>
+              <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
             </template>
           </div>
         </article>

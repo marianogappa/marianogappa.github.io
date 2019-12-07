@@ -28,7 +28,7 @@ const cv = {
         "type": "Twitter"
       }
     ],
-    "current_location": {"text": "Auckland, New Zealand", "image": "images/nz.svg", "color": "white"},
+    "current_location": {"text": "London, UK", "image": "images/uk.svg", "color": "white"},
     "born_location": {"text": "Buenos Aires, Argentina", "image": "images/ar.svg", "color": "white"},
     "expertise_bullets": [
       {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
