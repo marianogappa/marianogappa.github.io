@@ -281,7 +281,7 @@
 
 &lt;p&gt;I hope this can be that tutorial for you. &lt;a href=&quot;https://en.wikipedia.org/wiki/KISS_principle&quot;&gt;KISS!&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Wed, 05 Jun 2019 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 05 Jun 2019 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid>
       </item>
@@ -292,7 +292,7 @@
 
 &lt;p&gt;The actual blogpost is on the Movio blog: &lt;a href=&quot;https://movio.co/en/blog/saving-money-with-Hackathon-project/&quot;&gt;https://movio.co/en/blog/saving-money-with-Hackathon-project/&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Mon, 02 Apr 2018 00:00:00 +0100</pubDate>
+        <pubDate>Mon, 02 Apr 2018 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
       </item>
@@ -303,7 +303,7 @@
 
 &lt;p&gt;&lt;a href=&quot;https://movio.co/en/blog/improving-with-sql-and-charts/&quot;&gt;https://movio.co/en/blog/improving-with-sql-and-charts/&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Wed, 28 Jun 2017 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 28 Jun 2017 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</guid>
       </item>
@@ -772,7 +772,7 @@ code {
 &lt;/style&gt;
 
 </description>
-        <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 24 Mar 2017 00:00:00 +1300</pubDate>
         <link>http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
       </item>
@@ -783,7 +783,7 @@ code {
 
 &lt;p&gt;&lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;https://movio.co/blog/migrate-Scala-to-Go/&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
+        <pubDate>Wed, 25 Jan 2017 00:00:00 +1300</pubDate>
         <link>http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
       </item>
@@ -1004,7 +1004,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Sat, 30 Jul 2016 00:00:00 +0100</pubDate>
+        <pubDate>Sat, 30 Jul 2016 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
       </item>
@@ -1104,7 +1104,7 @@ GHI-789     Do very urgent work
 
 &lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
-        <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
+        <pubDate>Tue, 10 May 2016 00:00:00 +1200</pubDate>
         <link>http://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
       </item>
@@ -1191,7 +1191,7 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 &lt;p&gt;Happy open sourcing!&lt;/p&gt;
 
 </description>
-        <pubDate>Sat, 27 Feb 2016 00:00:00 +0000</pubDate>
+        <pubDate>Sat, 27 Feb 2016 00:00:00 +1300</pubDate>
         <link>http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
         <guid isPermaLink="true">http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
       </item>
