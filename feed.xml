@@ -7,6 +7,433 @@
     <atom:link href="http://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Running Golang on the browser with WebAssembly and TinyGo</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;This is the story of how I managed to expose my Golang chess backend project &lt;a href=&quot;https://github.com/marianogappa/cheesse&quot;&gt;cheesse&lt;/a&gt; as a &lt;a href=&quot;https://webassembly.org/&quot;&gt;WebAssembly&lt;/a&gt; binary, compiled using &lt;a href=&quot;https://tinygo.org/&quot;&gt;TinyGo&lt;/a&gt;. The blogpost is optimised for helping others going through a similar exercise.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-are-all-those-technologies&quot;&gt;What are all those technologies?&lt;/h2&gt;
+
+&lt;p&gt;The following are not definitions (go to above links for that, please), but a narrow description of what they are good for, in terms of this blogpost.&lt;/p&gt;
+
+&lt;h3 id=&quot;webassembly&quot;&gt;WebAssembly&lt;/h3&gt;
+
+&lt;p&gt;Huh, the Assembly language of the Web, apparently. All major browsers support it, and the Go compiler supports js/wasm as an OS/ARCH target, so one can write Go code that runs on a webpage, rather than on a server.&lt;/p&gt;
+
+&lt;h3 id=&quot;tinygo&quot;&gt;TinyGo&lt;/h3&gt;
+
+&lt;p&gt;It’s a Go compiler optimised for the WebAssembly target (and also for microcontrollers). While the official Go compiler has much better feature support, it has a huge problem: it generates massive binaries. This isn’t a big deal for a CLI, but for the web it can be a showstopper. &lt;a href=&quot;https://github.com/golang/go/wiki/WebAssembly&quot;&gt;Even the Go wiki&lt;/a&gt; recommends using TinyGo.&lt;/p&gt;
+
+&lt;h3 id=&quot;cheesse&quot;&gt;Cheesse&lt;/h3&gt;
+
+&lt;p&gt;Think of it as an API with only a few endpoints that you can use to know, for example, for a given chess board, what are the possible moves, or if it’s a checkmate and, if so, who won. If you’re wondering why it’s called &lt;em&gt;cheesse&lt;/em&gt;, it’s just how chess sounds with a kiwi accent.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-the-goal&quot;&gt;What’s the goal?&lt;/h2&gt;
+
+&lt;p&gt;The &lt;em&gt;cheesse&lt;/em&gt; API is already available as (1) a backend server, (2) a cli and (3) an importable package (within Go). The goal is to make this API available to client JavaScript code directly on a webpage, without needing a server. Therefore, it has to compile to the wasm target.&lt;/p&gt;
+
+&lt;p&gt;Three goal specifics:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The project compiles to the wasm target, exposing its API to Javascript.&lt;/li&gt;
+  &lt;li&gt;It is not necessary to maintain a separate version of the code to compile to this target.&lt;/li&gt;
+  &lt;li&gt;The generated wasm binary has a reasonable size for use on the Web.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;exposing-api-to-javascript&quot;&gt;Exposing API to JavaScript&lt;/h2&gt;
+
+&lt;p&gt;Consider one of &lt;em&gt;cheesse&lt;/em&gt;’s basic endpoints:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;game&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You give it a chess game (either the default starting board, a game in &lt;a href=&quot;https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation&quot;&gt;FEN notation&lt;/a&gt;, or you can even draw a chess board with &lt;a href=&quot;https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode&quot;&gt;Unicode characters&lt;/a&gt;), and it spits out all relevant info about it, like what moves you can make, what the board looks like, who’s in check by who, etc. It also gives you a hopefully clear error message when your input doesn’t make sense.&lt;/p&gt;
+
+&lt;p&gt;This is how you expose a function onto the JavaScript global scope:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// A good place for this code is a &quot;main_js.go&quot; file&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ParseGame&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FuncOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Your code must not finish&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you don’t do that &lt;code class=&quot;highlighter-rouge&quot;&gt;select{}&lt;/code&gt;, or something to that effect, you’ll find this error in the Developer console of your browser:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: Go program has already exited
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;mapping-values-from-js-to-go-and-vice-versa&quot;&gt;Mapping values from JS to Go and vice-versa&lt;/h2&gt;
+
+&lt;p&gt;This is the implementation of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; function defined above:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertToInputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ValueOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;outputGame&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, there’s nothing going on here other than mapping the API function’s inputs and outputs to an interface that &lt;code class=&quot;highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt; can use. It gets tricky for complex arguments (&lt;code class=&quot;highlighter-rouge&quot;&gt;OutputGame&lt;/code&gt; is pretty complex).&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt;’s signature is mandated by &lt;a href=&quot;https://golang.org/pkg/syscall/js/#FuncOf&quot;&gt;js.FuncOf()&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Where the &lt;code class=&quot;highlighter-rouge&quot;&gt;p&lt;/code&gt; slice is the list of arguments supplied to the &lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; from JavaScript.&lt;/p&gt;
+
+&lt;p&gt;Here’s the implementation for &lt;code class=&quot;highlighter-rouge&quot;&gt;convertToInputGame&lt;/code&gt; (simplified for brevity):&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertToInputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InputGame&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DefaultGame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsBool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;defaultGame&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FENString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fenString&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsBool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsUndefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsNull&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsUndefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsNull&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For implementing &lt;code class=&quot;highlighter-rouge&quot;&gt;convertOutputGame&lt;/code&gt;, things are not that simple. Here’s a very simplified version of the &lt;code class=&quot;highlighter-rouge&quot;&gt;OutputGame&lt;/code&gt; struct:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputGame&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FENString&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;         &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;`json:&quot;fenString&quot;`&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Actions&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputAction&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;`json:&quot;actions&quot;`&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputAction&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FromSquare&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;      &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;`json:&quot;fromSquare&quot;`&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ToSquare&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;`json:&quot;toSquare&quot;`&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So how do we map a struct with a slice of structs to something that &lt;code class=&quot;highlighter-rouge&quot;&gt;js.ValueOf&lt;/code&gt; can receive? For this, first review &lt;a href=&quot;https://golang.org/pkg/syscall/js/#ValueOf&quot;&gt;the docs&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func ValueOf(x interface{}) Value
+
+ValueOf returns x as a JavaScript value:
+
+| Go                     | JavaScript             |
+| ---------------------- | ---------------------- |
+| js.Value               | [its value]            |
+| js.Func                | function               |
+| nil                    | null                   |
+| bool                   | boolean                |
+| integers and floats    | number                 |
+| string                 | string                 |
+| []interface{}          | new array              |
+| map[string]interface{} | new object             |
+
+Panics if x is not one of the expected types.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A Go struct will be an object on the JS side, so the top-layer type we’ll send to &lt;code class=&quot;highlighter-rouge&quot;&gt;ValueOf&lt;/code&gt; must be a &lt;code class=&quot;highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;. The trick here is that the map’s values (i.e. of type &lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt;) follow the same rules described in the docs, and that’s how we achieve the nesting.&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fenString&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FENString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;actions&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputActions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputActions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertOutputAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fromSquare&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FromPieceSquare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;toSquare&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ToSquare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ok-compile-time&quot;&gt;Ok, compile time!&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;✔ &lt;span class=&quot;nv&quot;&gt;$ GOOS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;js &lt;span class=&quot;nv&quot;&gt;GOARCH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;wasm go build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; poc/main.wasm
+&lt;span class=&quot;c&quot;&gt;# github.com/marianogappa/cheesse&lt;/span&gt;
+./main_js.go:39:6: main redeclared &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this block
+	previous declaration at ./main.go:17:6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Oh, right. One of the goals was to be able to compile to both targets without needing different branches. Fortunately, that’s very simple. We can use build flags.&lt;/p&gt;
+
+&lt;p&gt;Put this on the first line of &lt;code class=&quot;highlighter-rouge&quot;&gt;main.go&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;!js
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And this on the first line of &lt;code class=&quot;highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wasm&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Don’t forget to leave a newline between the comment and &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;/code&gt;. That newline is &lt;a href=&quot;https://golang.org/pkg/go/build/#hdr-Build_Constraints&quot;&gt;not optional&lt;/a&gt;, and unfortunately the error you’ll get won’t clarify the need for the newline; it’s just gonna ignore the constraint and give you the same redeclare error.&lt;/p&gt;
+
+&lt;p&gt;Also, don’t do &lt;code class=&quot;highlighter-rouge&quot;&gt;+build !js,wasm&lt;/code&gt;. That doesn’t work either, and there’s no point worrying about being specific when there’s only one target architecture anyway.&lt;/p&gt;
+
+&lt;h2 id=&quot;ok-compile-time-2&quot;&gt;Ok, compile time! #2&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;✔ $ GOOS=js GOARCH=wasm go build -o poc/main.wasm
+✔ $
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;🎉&lt;/p&gt;
+
+&lt;p&gt;Follow &lt;a href=&quot;https://github.com/golang/go/wiki/WebAssembly#getting-started&quot;&gt;these instructions&lt;/a&gt; on how to load the &lt;code class=&quot;highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; into an &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;If you try to open the &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; directly on your browser you’ll get this error on the browser’s Developer Console:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Fetch API cannot load file:///.../poc/main.wasm.
+URL scheme must be &quot;http&quot; or &quot;https&quot; for CORS request.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As per the instructions, you need to serve the files. Don’t just use your favourite one-liner server (is it Python’s &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; for all of us?), or you might get this error on the browser’s Developer Console:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: Response has unsupported MIME type
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You need a server that knows about WebAssembly’s MIME type. If you really want to use &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; there’s a solution that I validated to work &lt;a href=&quot;https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The easiest way, though, as described in the docs, is to just do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# install goexec: go get -u github.com/shurcooL/goexec
+$ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;did-it-work&quot;&gt;Did it work?&lt;/h2&gt;
+
+&lt;p&gt;Yes! 🎉&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But there’s a catch:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ll &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; main.wasm
+&lt;span class=&quot;nt&quot;&gt;-rwxr-xr-x&lt;/span&gt;  1 marianol  staff   7.6M 28 Mar 20:45 main.wasm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I know we live in a bloated Web reality, but 7.6MB is not gonna fly. And it doesn’t satisfy our third goal regarding reasonable binary size.&lt;/p&gt;
+
+&lt;h2 id=&quot;enter-tinygo&quot;&gt;Enter TinyGo&lt;/h2&gt;
+
+&lt;p&gt;Drop-in replacement for the Go compiler, right?&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+error: requires go version 1.11, 1.12, or 1.13, got go1.14
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok, that’s not that bad. Go 1.14 is gonna be supported &lt;a href=&quot;https://github.com/tinygo-org/tinygo/pull/901&quot;&gt;soon&lt;/a&gt;, but for now we’ll have to downgrade:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ brew install go@1.13
+...
+$ echo 'export PATH=&quot;/usr/local/opt/go@1.13/bin:$PATH&quot;' &amp;gt;&amp;gt; ~/.bash_profile
+...
+$ go version
+go version go1.13.9 darwin/amd64
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;tinygo-round-2&quot;&gt;TinyGo, Round 2!&lt;/h2&gt;
+
+&lt;p&gt;Drop-in replacement for the Go compiler, right?&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tinygo build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; poc/main.wasm &lt;span class=&quot;nt&quot;&gt;-target&lt;/span&gt; wasm &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# encoding/asn1&lt;/span&gt;
+usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:537:47: v.Type&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;.NumMethod undefined &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;reflect.Type has no field or method NumMethod&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:549:14: DeepEqual not declared by package reflect
+usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:558:14: DeepEqual not declared by package reflect
+usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:479:93: t.Field&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;startingField&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Tag.Get undefined &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;string has no field or method Get&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:483:103: t.Field&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;i + startingField&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Tag.Get undefined &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;string has no field or method Get&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Oh, God, what’s all this?&lt;/p&gt;
+
+&lt;p&gt;Ok, the thing with TinyGo is that there are many stdlib packages that are not yet supported, so if you must use them then you can’t use TinyGo, unfortunately.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tinygo.org/lang-support/stdlib/&quot;&gt;https://tinygo.org/lang-support/stdlib/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;But what is &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding/asn1&lt;/code&gt; and why would I be using it?&lt;/p&gt;
+
+&lt;p&gt;It wasn’t immediately clear to me which package was indirectly importing it, but the unfortunate reality is that &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding/json&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;net/http&lt;/code&gt; are not supported, and I was using them both for the &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cli&lt;/code&gt; components of &lt;em&gt;cheesse&lt;/em&gt;. It’s possible that &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding/asn1&lt;/code&gt; is an indirect dependency of &lt;code class=&quot;highlighter-rouge&quot;&gt;net/http&lt;/code&gt;. It’s &lt;a href=&quot;https://pkg.go.dev/net/http?tab=imports&quot;&gt;not direct&lt;/a&gt;, though.&lt;/p&gt;
+
+&lt;p&gt;Luckily, JavaScript doesn’t need my server nor my cli, so the solution for this one is adding a TinyGo-specific build constraint replacing the previous &lt;code class=&quot;highlighter-rouge&quot;&gt;// +build !js&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// +build !tinygo&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And vice-versa for &lt;code class=&quot;highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;tinygo-round-3&quot;&gt;TinyGo, Round 3!&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+# github.com/marianogappa/cheesse
+main_js.go:102:7: j.IsUndefined undefined (type js.Value has no field or method IsUndefined)
+main_js.go:102:26: j.IsNull undefined (type js.Value has no field or method IsNull)
+main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method IsUndefined)
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Unsupported &lt;code class=&quot;highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt; methods? Nah, this one is not on TinyGo. We’ve downgraded Go to 1.13.9, so those methods don’t exist anymore. There’s a quick workaround:&lt;/p&gt;
+
+&lt;p&gt;Replace all:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsUndefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;===&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Undefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;tinygo-round-4&quot;&gt;TinyGo, Round 4!&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+# github.com/marianogappa/cheesse/api
+/usr/local/Cellar/tinygo/0.12.0/src/sync/pool.go:14:14 unsupported instruction during init evaluation:
+  %23 = inttoptr i32 %22 to %runtime._interface (i8*, i8*)*, !dbg !1864
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Huh?&lt;/p&gt;
+
+&lt;p&gt;Ok, that’s confusing, but it’s something to do with an instruction that runs during an &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt; that indirectly ends up in &lt;code class=&quot;highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;, that must be unsupported or something.&lt;/p&gt;
+
+&lt;p&gt;I don’t use &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt;, and &lt;a href=&quot;https://github.com/leighmcculloch/gochecknoinits&quot;&gt;neither should you&lt;/a&gt;. But if you have a &lt;code class=&quot;highlighter-rouge&quot;&gt;var&lt;/code&gt; in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an init.&lt;/p&gt;
+
+&lt;p&gt;You shouldn’t have globals either, but we make some exceptions, and in my case it was like a million error literals like this one:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errBlackCastle&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Errorf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;impossible for black to castle since king has moved&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It turns out &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; ends up calling &lt;code class=&quot;highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;. A brilliant workaround for this one is to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;errors.New&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;While you’re at it, be on the lookout for any other non-constant global.&lt;/p&gt;
+
+&lt;h2 id=&quot;tinygo-round-5&quot;&gt;TinyGo: Round 5!&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tinygo build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; poc/main.wasm &lt;span class=&quot;nt&quot;&gt;-target&lt;/span&gt; wasm &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+inlinable &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;call &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;a &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;with debug info must have a &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;dbg location
+  call void @runtime.nilPanic&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; undef, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+inlinable &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;call &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;a &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;with debug info must have a &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;dbg location
+  %352 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; call fastcc i1 @&lt;span class=&quot;s2&quot;&gt;&quot;github.com/marianogappa/cheesse/api.boolMatcher&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;i32 %351, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %pack.int217, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %341, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; undef&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+inlinable &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;call &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;a &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;with debug info must have a &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;dbg location
+  %353 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; call fastcc i1 @&lt;span class=&quot;s2&quot;&gt;&quot;github.com/marianogappa/cheesse/api.intMatcher&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;i32 %351, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %pack.int217, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %341, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; undef&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+inlinable &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;call &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;a &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;with debug info must have a &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;dbg location
+  %354 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; call fastcc i1 @&lt;span class=&quot;s2&quot;&gt;&quot;github.com/marianogappa/cheesse/api.pieceTypeMatcher&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;i32 %351, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %pack.int217, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; %341, i8&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; undef&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+error: optimizations caused a verification failure
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;WAT.
+Ok, I don’t know. But if you get this, the workaround is to add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-no-debug&lt;/code&gt; flag to the compile line.&lt;/p&gt;
+
+&lt;h2 id=&quot;tinygo-round-6&quot;&gt;TinyGo, Round 6!&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tinygo build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; poc/main.wasm &lt;span class=&quot;nt&quot;&gt;-no-debug&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-target&lt;/span&gt; wasm &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;OMG, YES! 🎉🎉🎉 Did it work???&lt;/p&gt;
+
+&lt;p&gt;Nope. If you get an error in the Developer Console on your browser, perhaps this one:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: import object field 'wasi_unstable' is not an Object
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You need to take into account that every compiler you use, and every version of that compiler might have a different companion &lt;code class=&quot;highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt;. For TinyGo, do this:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;tinygo &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;TINYGOROOT&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;/targets/wasm_exec.js &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;tinygo-round-7&quot;&gt;TinyGo, Round 7!&lt;/h2&gt;
+
+&lt;p&gt;You might do absolutely everything right, get it compiled and then go to your browser’s Developer Console and see this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: syscall/js: Value.Call: property _makeFuncWrapper is not a function, got undefined [wasm_exec.js:201:19](http://localhost:8000/wasm_exec.js)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That one is this issue:
+&lt;a href=&quot;https://github.com/tinygo-org/tinygo/issues/716&quot;&gt;https://github.com/tinygo-org/tinygo/issues/716&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;It might be solved by the time you read this, but the workaround at the time of this writing is to switch to the &lt;code class=&quot;highlighter-rouge&quot;&gt;dev&lt;/code&gt; version of TinyGo, which is pretty bleeding edge but seems to work well.&lt;/p&gt;
+
+&lt;p&gt;Follow the &lt;a href=&quot;https://tinygo.org/getting-started/macos/&quot;&gt;Source Install instructions&lt;/a&gt; and change branch before installing.&lt;/p&gt;
+
+&lt;p&gt;Something like:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;llvm
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GO111MODULE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;on
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go get &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; github.com/tinygo-org/tinygo
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$GOPATH&lt;/span&gt;/src/github.com/tinygo-org/tinygo
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git checkout dev
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;tinygo-round-8&quot;&gt;TinyGo, Round 8!&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tinygo build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; poc/main.wasm &lt;span class=&quot;nt&quot;&gt;-no-debug&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-target&lt;/span&gt; wasm &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Before testing on the browser, remember that you’ve changed the version of TinyGo, so you must copy &lt;code class=&quot;highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt; again, only this time the file is in a different place because you’ve built from source:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$GOPATH&lt;/span&gt;/src/github.com/tinygo-org/tinygo/targets/wasm_exec.js &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Did it work???&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;OMG, YES! 🎉🎉🎉&lt;/p&gt;
+
+&lt;h2 id=&quot;one-last-check&quot;&gt;One last check&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ll &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; main.wasm
+&lt;span class=&quot;nt&quot;&gt;-rwxr-xr-x&lt;/span&gt;  1 marianol  staff   392K 29 Mar 00:21 main.wasm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;392 KB! That’s an amazing improvement from 7.6MB! 🎉🎉🎉&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Writing Go code for the browser is a reality today. But it’s no picnic. Ideally, we’d write whatever we want, run the Go compiler and get a 1kb npm package or something, right? Well, we’ll get there. Still a better love story than writing JavaScript, aye.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/marianogappa/cheesse&quot;&gt;cheesse open source project&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;acknowledgements&quot;&gt;Acknowledgements&lt;/h2&gt;
+
+&lt;p&gt;I didn’t come up with most of the solutions to the issues outlined in this blogpost. This was only possible thanks to the kind and patient help I received from TinyGo’s author &lt;a href=&quot;https://twitter.com/aykevl&quot;&gt;Ayke van Laethem&lt;/a&gt; and contributors &lt;a href=&quot;https://twitter.com/jaddr2line&quot;&gt;Jaden Weiss&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/JohanBrandhorst&quot;&gt;Johan Brandhorst&lt;/a&gt; for hours on end at the #tinygo channel on &lt;a href=&quot;https://invite.slack.golangbridge.org/&quot;&gt;GopherSlack&lt;/a&gt;.
+Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly&lt;/a&gt; for pointing me in the right direction while getting started with WebAssembly.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 29 Mar 2020 00:00:00 +0000</pubDate>
+        <link>http://marianogappa.github.io/software/2020/03/29/webassembly-tinygo-cheesse/</link>
+        <guid isPermaLink="true">http://marianogappa.github.io/software/2020/03/29/webassembly-tinygo-cheesse/</guid>
+      </item>
+    
+      <item>
         <title>Let's build a SQL parser in Go!</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
