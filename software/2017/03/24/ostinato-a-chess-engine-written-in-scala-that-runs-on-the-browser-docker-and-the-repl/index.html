@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202003291326" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202003312230" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -220,7 +220,7 @@
 
 <p>OK. Let’s generate a <code class="highlighter-rouge">ChessBoard</code> identical to the one in the puzzle:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">ChessGame</span><span class="o">.</span><span class="n">fromGridString</span><span class="o">(</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">b</span> <span class="k">=</span> <span class="nv">ChessGame</span><span class="o">.</span><span class="py">fromGridString</span><span class="o">(</span>
    <span class="s">"""........
      |....♕...
      |.♟..♟.♟♚
@@ -228,7 +228,7 @@
      |...♙♟...
      |.♙....♙.
      |♙....♙♔.
-     |........"""</span><span class="o">.</span><span class="n">stripMargin</span><span class="o">,</span> <span class="n">turn</span> <span class="k">=</span> <span class="nc">WhiteChessPlayer</span><span class="o">).</span><span class="n">get</span><span class="o">.</span><span class="n">board</span>
+     |........"""</span><span class="o">.</span><span class="py">stripMargin</span><span class="o">,</span> <span class="n">turn</span> <span class="k">=</span> <span class="nc">WhiteChessPlayer</span><span class="o">).</span><span class="py">get</span><span class="o">.</span><span class="py">board</span>
 <span class="n">b</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessBoard</span> <span class="o">=</span>
 <span class="o">........</span>
 <span class="o">....♕...</span>
@@ -246,7 +246,7 @@
 
 <p>We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include <code class="highlighter-rouge">White resigns</code> and <code class="highlighter-rouge">White claims draw</code>, which we’re not interested in. Same will apply for the next moves. Let’s create a <code class="highlighter-rouge">ChessOptimisations</code> instance and pass it around:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="nc">ChessOptimisations</span><span class="o">.</span><span class="n">beOptimistic</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">o</span> <span class="k">=</span> <span class="nv">ChessOptimisations</span><span class="o">.</span><span class="py">beOptimistic</span>
 </code></pre></div></div>
 
 <p>Here’s the meaty part. We need to express the following statement in code:</p>
@@ -257,10 +257,10 @@
 
 <p>If the puzzle was constructed properly, there should be only one action that satisfies those conditions:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span>
-        <span class="k">_</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">forall</span><span class="o">(</span>
-            <span class="k">_</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">.</span><span class="n">exists</span><span class="o">(</span>
-                <span class="k">_</span><span class="o">.</span><span class="n">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">b</span><span class="o">.</span><span class="py">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="py">filter</span><span class="o">(</span>
+        <span class="nv">_</span><span class="o">.</span><span class="py">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="py">forall</span><span class="o">(</span>
+            <span class="nv">_</span><span class="o">.</span><span class="py">doAllActions</span><span class="o">.</span><span class="py">exists</span><span class="o">(</span>
+                <span class="nv">_</span><span class="o">.</span><span class="py">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)</span>
             <span class="o">)</span>
         <span class="o">)</span>
     <span class="o">)</span>
@@ -281,13 +281,13 @@
 
 <p><code class="highlighter-rouge">ChessAction</code> has a nice <code class="highlighter-rouge">toString</code> implementation.</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">res1</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">get</span>
-<span class="n">a</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessAction</span> <span class="o">=</span> <span class="nc">White</span><span class="ss">'s </span><span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">a</span> <span class="k">=</span> <span class="nv">res1</span><span class="o">.</span><span class="py">head</span><span class="o">.</span><span class="py">history</span><span class="o">.</span><span class="py">head</span><span class="o">.</span><span class="py">action</span><span class="o">.</span><span class="py">get</span>
+<span class="n">a</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessAction</span> <span class="o">=</span> <span class="nc">White</span><span class="ss">'s</span> <span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span>
 </code></pre></div></div>
 
 <p>Let’s apply the action on the board. Not all actions can be applied on a board, so <a href="https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction">doAction</a> returns an <code class="highlighter-rouge">Option[ChessBoard]</code>. For brevity we’ll just <code class="highlighter-rouge">.get</code> it here:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">b2</span> <span class="k">=</span> <span class="n">b</span><span class="o">.</span><span class="n">doAction</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">get</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">b2</span> <span class="k">=</span> <span class="nv">b</span><span class="o">.</span><span class="py">doAction</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="py">get</span>
 <span class="n">b2</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessBoard</span> <span class="o">=</span>
 <span class="o">.....♕..</span>
 <span class="o">........</span>
@@ -310,14 +310,14 @@
   <li>history is stored backwards so we’ll have to reverse it to read it properly</li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">b2</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">head</span><span class="o">.</span><span class="n">doAllActions</span><span class="o">.</span>
-    <span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)).</span><span class="n">head</span><span class="o">.</span>
-    <span class="n">history</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">action</span><span class="o">).</span><span class="n">reverse</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">b2</span><span class="o">.</span><span class="py">doAllActions</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="py">head</span><span class="o">.</span><span class="py">doAllActions</span><span class="o">.</span>
+    <span class="nf">filter</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">isLossFor</span><span class="o">(</span><span class="nc">BlackChessPlayer</span><span class="o">)).</span><span class="py">head</span><span class="o">.</span>
+    <span class="nv">history</span><span class="o">.</span><span class="py">flatMap</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">action</span><span class="o">).</span><span class="py">reverse</span>
 <span class="n">res5</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">ostinato.chess.core.ChessAction</span><span class="o">]</span> <span class="k">=</span> 
 <span class="nc">List</span><span class="o">(</span>
-    <span class="nc">White</span><span class="ss">'s </span><span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span><span class="o">,</span> 
-    <span class="nc">Black</span><span class="ss">'s </span><span class="nc">King</span> <span class="n">captures</span> <span class="nc">White</span><span class="ss">'s </span><span class="nc">Knight</span><span class="o">,</span> 
-    <span class="nc">White</span><span class="ss">'s </span><span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f4</span>
+    <span class="nc">White</span><span class="ss">'s</span> <span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span><span class="o">,</span> 
+    <span class="nc">Black</span><span class="ss">'s</span> <span class="nc">King</span> <span class="n">captures</span> <span class="nc">White</span><span class="ss">'s</span> <span class="nc">Knight</span><span class="o">,</span> 
+    <span class="nc">White</span><span class="ss">'s</span> <span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f4</span>
 <span class="o">)</span>
 </code></pre></div></div>
 
@@ -345,7 +345,7 @@
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
 <span class="kd">var</span> <span class="nx">boardUi</span> <span class="o">=</span> <span class="kc">null</span>
-<span class="kd">var</span> <span class="nx">initialBoard</span> <span class="o">=</span> <span class="s2">"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"</span>
+<span class="kd">var</span> <span class="nx">initialBoard</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1</span><span class="dl">"</span>
 <span class="kd">var</span> <span class="nx">board</span> <span class="o">=</span> <span class="nx">initialBoard</span>
 
 <span class="kd">var</span> <span class="nx">init</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -358,7 +358,7 @@
         <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">update</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="nx">boardUi</span> <span class="o">=</span> <span class="nx">ChessBoard</span><span class="p">(</span><span class="s1">'board'</span><span class="p">,</span> <span class="p">{</span> <span class="na">moveSpeed</span><span class="p">:</span> <span class="s1">'fast'</span> <span class="p">})</span>
+    <span class="nx">boardUi</span> <span class="o">=</span> <span class="nx">ChessBoard</span><span class="p">(</span><span class="dl">'</span><span class="s1">board</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">moveSpeed</span><span class="p">:</span> <span class="dl">'</span><span class="s1">fast</span><span class="dl">'</span> <span class="p">})</span>
     <span class="nx">boardUi</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
     <span class="nx">update</span><span class="p">()</span>
 <span class="p">}</span>
@@ -516,7 +516,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
 <span class="na">spec</span><span class="pi">:</span>
-  <span class="na">replicas</span><span class="pi">:</span> <span class="s">2</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
   <span class="na">template</span><span class="pi">:</span>
     <span class="na">metadata</span><span class="pi">:</span>
       <span class="na">labels</span><span class="pi">:</span>
@@ -534,14 +534,14 @@ debug=1 // optional: logs AI rationale to STDOUT
             <span class="na">cpu</span><span class="pi">:</span> <span class="s">4000m</span>
             <span class="na">memory</span><span class="pi">:</span> <span class="s">512Mi</span>
         <span class="na">livenessProbe</span><span class="pi">:</span>
-          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="s">15</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">15</span>
           <span class="na">httpGet</span><span class="pi">:</span>
             <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/healthcheck"</span>
-            <span class="na">port</span><span class="pi">:</span> <span class="s">51234</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">51234</span>
         <span class="na">ports</span><span class="pi">:</span>
         <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">external</span>
           <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-          <span class="na">containerPort</span><span class="pi">:</span> <span class="s">51234</span>
+          <span class="na">containerPort</span><span class="pi">:</span> <span class="m">51234</span>
 </code></pre></div></div>
 
 <p>The rationale behind low requests and high limits is that ostinato aggresively parallelises requests but they arrive infrequently, so bursts of usage can be multiplexed on the same Kubernetes minion. Mileage may vary; greater depths are memory hungry.</p>
@@ -558,8 +558,8 @@ debug=1 // optional: logs AI rationale to STDOUT
     <span class="na">name</span><span class="pi">:</span> <span class="s">ostinato</span>
   <span class="na">ports</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">external</span>
-    <span class="na">port</span><span class="pi">:</span> <span class="s">51234</span>
-    <span class="na">targetPort</span><span class="pi">:</span> <span class="s">51234</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">51234</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">51234</span>
 </code></pre></div></div>
 
 <p>Apply both manifests with <a href="https://kubernetes.io/docs/user-guide/kubectl-overview/">kubectl</a>:</p>

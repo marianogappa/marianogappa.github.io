@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Running Golang on the browser with WebAssembly and TinyGo &#8211; Mariano Gappa's Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo. The blogpost is optimised for helping others going through a similar exercise.">
+    <meta name="description" content="This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server.">
     <meta name="author" content="Mariano Gappa">
     <meta name="keywords" content="software">
     <link rel="canonical" href="http://marianogappa.github.io/software/2020/03/29/webassembly-tinygo-cheesse/">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202003291326" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202003312230" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -40,7 +40,7 @@
         <meta name="twitter:site" content="@MarianoGappa" />
     
     <meta name="twitter:title" content="Running Golang on the browser with WebAssembly and TinyGo" />
-    <meta name="twitter:description" content="This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo. The blogpost is optimised for helping others going through a similar exercise." />
+    <meta name="twitter:description" content="This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server." />
     <meta name="twitter:url" content="http://marianogappa.github.io/software/2020/03/29/webassembly-tinygo-cheesse/" />
 
     <!-- Icons -->
@@ -134,7 +134,7 @@
   
   <span class="post-meta small">
   
-    12 minute read
+    10 minute read
   
   </span>
 </div>
@@ -142,32 +142,34 @@
 <article class="post-content">
   <h2 id="tldr">TL;DR</h2>
 
-<p>This is the story of how I managed to expose my Golang chess backend project <a href="https://github.com/marianogappa/cheesse">cheesse</a> as a <a href="https://webassembly.org/">WebAssembly</a> binary, compiled using <a href="https://tinygo.org/">TinyGo</a>. The blogpost is optimised for helping others going through a similar exercise.</p>
+<p>This is the story of how I managed to expose my Golang chess API project <a href="https://github.com/marianogappa/cheesse">cheesse</a> as a <a href="https://webassembly.org/">WebAssembly</a> binary, compiled using <a href="https://tinygo.org/">TinyGo</a>, so JavaScript could use it without needing a server.</p>
+
+<p>The blogpost is optimised for helping others going through a similar exercise, rather than for readability, so expect a little too much of “if this, do this”. Sorry.</p>
 
 <h2 id="what-are-all-those-technologies">What are all those technologies?</h2>
 
-<p>The following are not definitions (go to above links for that, please), but a narrow description of what they are good for, in terms of this blogpost.</p>
+<p><strong>WebAssembly</strong></p>
 
-<h3 id="webassembly">WebAssembly</h3>
+<p>Assembly language of the Web, apparently. All major browsers support it, and the Go compiler supports js/wasm as an OS/ARCH target, so one can write Go code that runs on a webpage, rather than on a server.</p>
 
-<p>Huh, the Assembly language of the Web, apparently. All major browsers support it, and the Go compiler supports js/wasm as an OS/ARCH target, so one can write Go code that runs on a webpage, rather than on a server.</p>
+<p><strong>TinyGo</strong></p>
 
-<h3 id="tinygo">TinyGo</h3>
+<p>It’s a Go compiler optimised for the WebAssembly target (and also for microcontrollers). The key advantage over the official Go compiler is that it generates <em>tiny</em> binaries. <a href="https://github.com/golang/go/wiki/WebAssembly#reducing-the-size-of-wasm-files">Even the Go wiki</a> recommends using TinyGo.</p>
 
-<p>It’s a Go compiler optimised for the WebAssembly target (and also for microcontrollers). While the official Go compiler has much better feature support, it has a huge problem: it generates massive binaries. This isn’t a big deal for a CLI, but for the web it can be a showstopper. <a href="https://github.com/golang/go/wiki/WebAssembly">Even the Go wiki</a> recommends using TinyGo.</p>
+<p><strong>Cheesse</strong></p>
 
-<h3 id="cheesse">Cheesse</h3>
+<p>Chess API that tells you, e.g.:</p>
 
-<p>Think of it as an API with only a few endpoints that you can use to know, for example, for a given chess board, what are the possible moves, or if it’s a checkmate and, if so, who won. If you’re wondering why it’s called <em>cheesse</em>, it’s just how chess sounds with a kiwi accent.</p>
+<ul>
+  <li>given chess board: what are the possible moves?</li>
+  <li>given a chess board and an action: what does the game look like after?</li>
+  <li>given a chess match in some notation: how does the chess board evolve?</li>
+</ul>
 
 <h2 id="whats-the-goal">What’s the goal?</h2>
 
-<p>The <em>cheesse</em> API is already available as (1) a backend server, (2) a cli and (3) an importable package (within Go). The goal is to make this API available to client JavaScript code directly on a webpage, without needing a server. Therefore, it has to compile to the wasm target.</p>
-
-<p>Three goal specifics:</p>
-
 <ul>
-  <li>The project compiles to the wasm target, exposing its API to Javascript.</li>
+  <li>The <em>cheesse</em> API compiles to a wasm binary, exposing the API to JavaScript without needing a server.</li>
   <li>It is not necessary to maintain a separate version of the code to compile to this target.</li>
   <li>The generated wasm binary has a reasonable size for use on the Web.</li>
 </ul>
@@ -176,128 +178,130 @@
 
 <p>Consider one of <em>cheesse</em>’s basic endpoints:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ParseGame</span><span class="p">(</span><span class="n">game</span><span class="x"> </span><span class="n">InputGame</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="n">OutputGame</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ParseGame</span><span class="p">(</span><span class="n">game</span> <span class="n">InputGame</span><span class="p">)</span> <span class="p">(</span><span class="n">OutputGame</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>You give it a chess game (either the default starting board, a game in <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">FEN notation</a>, or you can even draw a chess board with <a href="https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode">Unicode characters</a>), and it spits out all relevant info about it, like what moves you can make, what the board looks like, who’s in check by who, etc. It also gives you a hopefully clear error message when your input doesn’t make sense.</p>
+<p>You give it a chess game and it spits out all relevant info about it, or an error if input is wrong.</p>
 
 <p>This is how you expose a function onto the JavaScript global scope:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// A good place for this code is a "main_js.go" file</span><span class="x">
-</span><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">js</span><span class="o">.</span><span class="n">Global</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"ParseGame"</span><span class="p">,</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">FuncOf</span><span class="p">(</span><span class="n">ParseGame</span><span class="p">))</span><span class="x">
-  </span><span class="k">select</span><span class="x"> </span><span class="p">{}</span><span class="x"> </span><span class="c">// Your code must not finish</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// This should be in a "main_js.go"</span>
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">js</span><span class="o">.</span><span class="n">Global</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"ParseGame"</span><span class="p">,</span> <span class="n">js</span><span class="o">.</span><span class="n">FuncOf</span><span class="p">(</span><span class="n">ParseGame</span><span class="p">))</span>
+  <span class="k">select</span> <span class="p">{}</span> <span class="c">// Code must not finish</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>If you don’t do that <code class="highlighter-rouge">select{}</code>, or something to that effect, you’ll find this error in the Developer console of your browser:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: Go program has already exited
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: Go program has already exited
 </code></pre></div></div>
 
 <h2 id="mapping-values-from-js-to-go-and-vice-versa">Mapping values from JS to Go and vice-versa</h2>
 
 <p>This is the implementation of the <code class="highlighter-rouge">ParseGame</code> function defined above:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">ParseGame</span><span class="p">(</span><span class="n">this</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span><span class="x"> </span><span class="n">p</span><span class="x"> </span><span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span><span class="x"> </span><span class="k">interface</span><span class="p">{}</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">og</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">api</span><span class="o">.</span><span class="n">ParseGame</span><span class="p">(</span><span class="n">convertToInputGame</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="m">0</span><span class="p">]))</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">ValueOf</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span><span class="x">
-    </span><span class="s">"outputGame"</span><span class="o">:</span><span class="x"> </span><span class="n">convertOutputGame</span><span class="p">(</span><span class="n">og</span><span class="p">),</span><span class="x">
-    </span><span class="s">"error"</span><span class="o">:</span><span class="x"> </span><span class="n">convertError</span><span class="p">(</span><span class="n">err</span><span class="p">),</span><span class="x">
-  </span><span class="p">})</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ParseGame</span><span class="p">(</span><span class="n">this</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">args</span> <span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+  <span class="n">og</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">api</span><span class="o">.</span><span class="n">ParseGame</span><span class="p">(</span><span class="n">convertToInputGame</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="m">0</span><span class="p">]))</span>
+  <span class="k">return</span> <span class="n">js</span><span class="o">.</span><span class="n">ValueOf</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+    <span class="s">"outputGame"</span><span class="o">:</span> <span class="n">convertOutputGame</span><span class="p">(</span><span class="n">og</span><span class="p">),</span>
+    <span class="s">"error"</span><span class="o">:</span> <span class="n">convertError</span><span class="p">(</span><span class="n">err</span><span class="p">),</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>As you can see, there’s nothing going on here other than mapping the API function’s inputs and outputs to an interface that <code class="highlighter-rouge">js/syscall</code> can use. It gets tricky for complex arguments (<code class="highlighter-rouge">OutputGame</code> is pretty complex).</p>
+<p>Basically just mapping the API’s inputs and outputs to <code class="highlighter-rouge">js/syscall</code>’s interfaces.</p>
 
-<p><code class="highlighter-rouge">ParseGame</code>’s signature is mandated by <a href="https://golang.org/pkg/syscall/js/#FuncOf">js.FuncOf()</a>:</p>
+<p><code class="highlighter-rouge">ParseGame</code> follows <a href="https://golang.org/pkg/syscall/js/#FuncOf">js.FuncOf()</a>’s interface:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">this</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span><span class="x"> </span><span class="n">p</span><span class="x"> </span><span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span><span class="x"> </span><span class="k">interface</span><span class="p">{}</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">this</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">args</span> <span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="k">interface</span><span class="p">{}</span>
+</code></pre></div></div>
 
-<p>Where the <code class="highlighter-rouge">p</code> slice is the list of arguments supplied to the <code class="highlighter-rouge">ParseGame</code> from JavaScript.</p>
+<p>Where <code class="highlighter-rouge">args</code> are the arguments supplied to <code class="highlighter-rouge">ParseGame</code> from JavaScript.</p>
 
-<p>Here’s the implementation for <code class="highlighter-rouge">convertToInputGame</code> (simplified for brevity):</p>
+<p>Here’s a simplified implementation of <code class="highlighter-rouge">convertToInputGame</code>:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">convertToInputGame</span><span class="p">(</span><span class="n">v</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span><span class="x"> </span><span class="n">api</span><span class="o">.</span><span class="n">InputGame</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="n">api</span><span class="o">.</span><span class="n">InputGame</span><span class="p">{</span><span class="x">
-    </span><span class="n">DefaultGame</span><span class="o">:</span><span class="x"> </span><span class="n">jsBool</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"defaultGame"</span><span class="p">)),</span><span class="x">
-    </span><span class="n">FENString</span><span class="o">:</span><span class="x"> </span><span class="n">jsString</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"fenString"</span><span class="p">)),</span><span class="x">
-  </span><span class="p">}</span><span class="x">
-</span><span class="p">}</span><span class="x">
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">convertToInputGame</span><span class="p">(</span><span class="n">v</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="n">api</span><span class="o">.</span><span class="n">InputGame</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">api</span><span class="o">.</span><span class="n">InputGame</span><span class="p">{</span>
+    <span class="n">DefaultGame</span><span class="o">:</span> <span class="n">jsBool</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"defaultGame"</span><span class="p">)),</span>
+    <span class="n">FENString</span><span class="o">:</span> <span class="n">jsString</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"fenString"</span><span class="p">)),</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-</span><span class="k">func</span><span class="x">  </span><span class="n">jsBool</span><span class="p">(</span><span class="n">j</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span><span class="x"> </span><span class="kt">bool</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="k">if</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span><span class="x"> </span><span class="o">||</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">IsNull</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
-    </span><span class="k">return</span><span class="x">  </span><span class="no">false</span><span class="x">
-  </span><span class="p">}</span><span class="x">
- </span><span class="k">return</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">Bool</span><span class="p">()</span><span class="x">
-</span><span class="p">}</span><span class="x">
+<span class="k">func</span>  <span class="n">jsBool</span><span class="p">(</span><span class="n">j</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span> <span class="o">||</span> <span class="n">j</span><span class="o">.</span><span class="n">IsNull</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span>  <span class="no">false</span>
+  <span class="p">}</span>
+ <span class="k">return</span> <span class="n">j</span><span class="o">.</span><span class="n">Bool</span><span class="p">()</span>
+<span class="p">}</span>
 
-</span><span class="k">func</span><span class="x">  </span><span class="n">jsString</span><span class="p">(</span><span class="n">j</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="k">if</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span><span class="x"> </span><span class="o">||</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">IsNull</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
-    </span><span class="k">return</span><span class="x">  </span><span class="s">""</span><span class="x">
-  </span><span class="p">}</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="n">j</span><span class="o">.</span><span class="n">String</span><span class="p">()</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div></div>
+<span class="k">func</span>  <span class="n">jsString</span><span class="p">(</span><span class="n">j</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span> <span class="o">||</span> <span class="n">j</span><span class="o">.</span><span class="n">IsNull</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span>  <span class="s">""</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">j</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>For implementing <code class="highlighter-rouge">convertOutputGame</code>, things are not that simple. Here’s a very simplified version of the <code class="highlighter-rouge">OutputGame</code> struct:</p>
+<p>For <code class="highlighter-rouge">convertOutputGame</code>, it’s trickier. Here’s a very simplified <code class="highlighter-rouge">OutputGame</code>:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">OutputGame</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">FENString</span><span class="x"> </span><span class="kt">string</span><span class="x">         </span><span class="s">`json:"fenString"`</span><span class="x">
-  </span><span class="n">Actions</span><span class="x">   </span><span class="p">[]</span><span class="n">OutputAction</span><span class="x"> </span><span class="s">`json:"actions"`</span><span class="x">
-</span><span class="p">}</span><span class="x">
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">OutputGame</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="n">FENString</span> <span class="kt">string</span>         <span class="s">`json:"fenString"`</span>
+  <span class="n">Actions</span>   <span class="p">[]</span><span class="n">OutputAction</span> <span class="s">`json:"actions"`</span>
+<span class="p">}</span>
 
-</span><span class="k">type</span><span class="x"> </span><span class="n">OutputAction</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">FromSquare</span><span class="x">      </span><span class="kt">string</span><span class="x">  </span><span class="s">`json:"fromSquare"`</span><span class="x">
-  </span><span class="n">ToSquare</span><span class="x">        </span><span class="kt">string</span><span class="x">  </span><span class="s">`json:"toSquare"`</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div></div>
+<span class="k">type</span> <span class="n">OutputAction</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="n">FromSquare</span>      <span class="kt">string</span>  <span class="s">`json:"fromSquare"`</span>
+  <span class="n">ToSquare</span>        <span class="kt">string</span>  <span class="s">`json:"toSquare"`</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>So how do we map a struct with a slice of structs to something that <code class="highlighter-rouge">js.ValueOf</code> can receive? For this, first review <a href="https://golang.org/pkg/syscall/js/#ValueOf">the docs</a>:</p>
+<p>How do we map a struct with a slice of structs to something that <code class="highlighter-rouge">js.ValueOf</code> can receive? For this, first review <a href="https://golang.org/pkg/syscall/js/#ValueOf">the docs</a>:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func ValueOf(x interface{}) Value
 
 ValueOf returns x as a JavaScript value:
 
-| Go                     | JavaScript             |
-| ---------------------- | ---------------------- |
-| js.Value               | [its value]            |
-| js.Func                | function               |
-| nil                    | null                   |
-| bool                   | boolean                |
-| integers and floats    | number                 |
-| string                 | string                 |
-| []interface{}          | new array              |
-| map[string]interface{} | new object             |
+Go                    | JavaScript 
+----------------------| -----------
+js.Value              | [its value]
+js.Func               | function   
+nil                   | null       
+bool                  | boolean    
+integers and floats   | number     
+string                | string     
+[]interface{}         | new array  
+map[string]interface{}| new object 
 
 Panics if x is not one of the expected types.
 </code></pre></div></div>
 
-<p>A Go struct will be an object on the JS side, so the top-layer type we’ll send to <code class="highlighter-rouge">ValueOf</code> must be a <code class="highlighter-rouge">map[string]interface{}</code>. The trick here is that the map’s values (i.e. of type <code class="highlighter-rouge">interface{}</code>) follow the same rules described in the docs, and that’s how we achieve the nesting.</p>
+<p>Go struct =&gt; JS object, so top-layer we must send a <code class="highlighter-rouge">map[string]interface{}</code>.</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">convertOutputGame</span><span class="p">(</span><span class="n">og</span><span class="x"> </span><span class="n">api</span><span class="o">.</span><span class="n">OutputGame</span><span class="p">)</span><span class="x"> </span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span><span class="x">
-    </span><span class="s">"fenString"</span><span class="o">:</span><span class="x"> </span><span class="n">og</span><span class="o">.</span><span class="n">FENString</span><span class="p">,</span><span class="x">
-    </span><span class="s">"actions"</span><span class="o">:</span><span class="x"> </span><span class="n">convertOutputActions</span><span class="p">(</span><span class="n">og</span><span class="o">.</span><span class="n">Actions</span><span class="p">),</span><span class="x">
-  </span><span class="p">}</span><span class="x">
-</span><span class="p">}</span><span class="x">
+<p>The trick is: the map’s values (i.e. the <code class="highlighter-rouge">interface{}</code> part) follow the same rules from those docs. That’s how we achieve the nesting.</p>
 
-</span><span class="k">func</span><span class="x"> </span><span class="n">convertOutputActions</span><span class="p">(</span><span class="n">as</span><span class="x"> </span><span class="p">[]</span><span class="n">api</span><span class="o">.</span><span class="n">OutputAction</span><span class="p">)</span><span class="x"> </span><span class="p">[]</span><span class="k">interface</span><span class="p">{}</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">is</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">make</span><span class="p">([]</span><span class="k">interface</span><span class="p">{},</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">as</span><span class="p">))</span><span class="x">
-  </span><span class="k">for</span><span class="x"> </span><span class="n">i</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="k">range</span><span class="x"> </span><span class="n">as</span><span class="x"> </span><span class="p">{</span><span class="x">
-    </span><span class="n">is</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">convertOutputAction</span><span class="p">(</span><span class="n">as</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="x">
-  </span><span class="p">}</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="n">is</span><span class="x">
-</span><span class="p">}</span><span class="x">
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">convertOutputGame</span><span class="p">(</span><span class="n">og</span> <span class="n">api</span><span class="o">.</span><span class="n">OutputGame</span><span class="p">)</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+    <span class="s">"fenString"</span><span class="o">:</span> <span class="n">og</span><span class="o">.</span><span class="n">FENString</span><span class="p">,</span>
+    <span class="s">"actions"</span><span class="o">:</span> <span class="n">convertOutputActions</span><span class="p">(</span><span class="n">og</span><span class="o">.</span><span class="n">Actions</span><span class="p">),</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-</span><span class="k">func</span><span class="x"> </span><span class="n">convertOutputAction</span><span class="p">(</span><span class="n">a</span><span class="x"> </span><span class="n">api</span><span class="o">.</span><span class="n">OutputAction</span><span class="p">)</span><span class="x"> </span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="k">return</span><span class="x"> </span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span><span class="x">
-    </span><span class="s">"fromSquare"</span><span class="o">:</span><span class="x"> </span><span class="n">a</span><span class="o">.</span><span class="n">FromPieceSquare</span><span class="p">,</span><span class="x">
-    </span><span class="s">"toSquare"</span><span class="o">:</span><span class="x"> </span><span class="n">a</span><span class="o">.</span><span class="n">ToSquare</span><span class="p">,</span><span class="x">
-  </span><span class="p">}</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div></div>
+<span class="k">func</span> <span class="n">convertOutputActions</span><span class="p">(</span><span class="n">as</span> <span class="p">[]</span><span class="n">api</span><span class="o">.</span><span class="n">OutputAction</span><span class="p">)</span> <span class="p">[]</span><span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+  <span class="n">is</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="k">interface</span><span class="p">{},</span> <span class="nb">len</span><span class="p">(</span><span class="n">as</span><span class="p">))</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">as</span> <span class="p">{</span>
+    <span class="n">is</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">convertOutputAction</span><span class="p">(</span><span class="n">as</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">is</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">convertOutputAction</span><span class="p">(</span><span class="n">a</span> <span class="n">api</span><span class="o">.</span><span class="n">OutputAction</span><span class="p">)</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+    <span class="s">"fromSquare"</span><span class="o">:</span> <span class="n">a</span><span class="o">.</span><span class="n">FromPieceSquare</span><span class="p">,</span>
+    <span class="s">"toSquare"</span><span class="o">:</span> <span class="n">a</span><span class="o">.</span><span class="n">ToSquare</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h2 id="ok-compile-time">Ok, compile time!</h2>
 
@@ -307,7 +311,7 @@ Panics if x is not one of the expected types.
 	previous declaration at ./main.go:17:6
 </code></pre></div></div>
 
-<p>Oh, right. One of the goals was to be able to compile to both targets without needing different branches. Fortunately, that’s very simple. We can use build flags.</p>
+<p>Oh, right. We have two <code class="highlighter-rouge">main()</code>. We can use build constraints.</p>
 
 <p>Put this on the first line of <code class="highlighter-rouge">main.go</code>:</p>
 
@@ -323,9 +327,9 @@ Panics if x is not one of the expected types.
 <span class="k">package</span> <span class="n">main</span>
 </code></pre></div></div>
 
-<p>Don’t forget to leave a newline between the comment and <code class="highlighter-rouge"><span class="k">package</span> <span class="n">main</span></code>. That newline is <a href="https://golang.org/pkg/go/build/#hdr-Build_Constraints">not optional</a>, and unfortunately the error you’ll get won’t clarify the need for the newline; it’s just gonna ignore the constraint and give you the same redeclare error.</p>
+<p>Don’t forget to leave a <strong>newline</strong> between the <code class="highlighter-rouge">//</code> and <code class="highlighter-rouge"><span class="k">package</span> <span class="n">main</span></code>. That’s <a href="https://golang.org/pkg/go/build/#hdr-Build_Constraints">not optional</a> and fails silently.</p>
 
-<p>Also, don’t do <code class="highlighter-rouge">+build !js,wasm</code>. That doesn’t work either, and there’s no point worrying about being specific when there’s only one target architecture anyway.</p>
+<p>Also, don’t do <code class="highlighter-rouge">+build !js,wasm</code>. That doesn’t work either. There’s only <code class="highlighter-rouge">wasm</code> anyway, right?</p>
 
 <h2 id="ok-compile-time-2">Ok, compile time! #2</h2>
 
@@ -342,18 +346,24 @@ Panics if x is not one of the expected types.
 URL scheme must be "http" or "https" for CORS request.
 </code></pre></div></div>
 
-<p>As per the instructions, you need to serve the files. Don’t just use your favourite one-liner server (is it Python’s <code class="highlighter-rouge">SimpleHTTPServer</code> for all of us?), or you might get this error on the browser’s Developer Console:</p>
+<p>You need to serve the files.</p>
+
+<h2 id="serving-the-files">Serving the files</h2>
+
+<p>Your favourite one-liner server (is it Python’s <code class="highlighter-rouge">SimpleHTTPServer</code> for all of us?), might give you this error:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TypeError: Response has unsupported MIME type
 </code></pre></div></div>
 
-<p>You need a server that knows about WebAssembly’s MIME type. If you really want to use <code class="highlighter-rouge">SimpleHTTPServer</code> there’s a solution that I validated to work <a href="https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/">here</a>.</p>
+<p>You need a server that knows about WebAssembly’s MIME type.</p>
 
-<p>The easiest way, though, as described in the docs, is to just do this:</p>
+<p>The easy way:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install goexec: go get -u github.com/shurcooL/goexec
 $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 </code></pre></div></div>
+
+<p>If you really want to use <code class="highlighter-rouge">SimpleHTTPServer</code> there’s a solution that I validated to work <a href="https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/">here</a>.</p>
 
 <h2 id="did-it-work">Did it work?</h2>
 
@@ -367,7 +377,7 @@ $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 <span class="nt">-rwxr-xr-x</span>  1 marianol  staff   7.6M 28 Mar 20:45 main.wasm
 </code></pre></div></div>
 
-<p>I know we live in a bloated Web reality, but 7.6MB is not gonna fly. And it doesn’t satisfy our third goal regarding reasonable binary size.</p>
+<p>I know the Web is bloated, but 7.6MB is not gonna fly.</p>
 
 <h2 id="enter-tinygo">Enter TinyGo</h2>
 
@@ -407,14 +417,12 @@ usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:483:103: t.
 
 <p><a href="https://tinygo.org/lang-support/stdlib/">https://tinygo.org/lang-support/stdlib/</a></p>
 
-<p>But what is <code class="highlighter-rouge">encoding/asn1</code> and why would I be using it?</p>
+<p>Some key unsupported packages: <code class="highlighter-rouge">encoding/json</code> &amp; <code class="highlighter-rouge">net/http</code> (I assume <code class="highlighter-rouge">encoding/asn1</code> is a dependency of <code class="highlighter-rouge">net/http</code>).</p>
 
-<p>It wasn’t immediately clear to me which package was indirectly importing it, but the unfortunate reality is that <code class="highlighter-rouge">encoding/json</code> and <code class="highlighter-rouge">net/http</code> are not supported, and I was using them both for the <code class="highlighter-rouge">server</code> and <code class="highlighter-rouge">cli</code> components of <em>cheesse</em>. It’s possible that <code class="highlighter-rouge">encoding/asn1</code> is an indirect dependency of <code class="highlighter-rouge">net/http</code>. It’s <a href="https://pkg.go.dev/net/http?tab=imports">not direct</a>, though.</p>
+<p>I was using both. Since I don’t need them for the JS part, the solution is to use a TinyGo-specific build constraint instead of <code class="highlighter-rouge">// +build !js</code>:</p>
 
-<p>Luckily, JavaScript doesn’t need my server nor my cli, so the solution for this one is adding a TinyGo-specific build constraint replacing the previous <code class="highlighter-rouge">// +build !js</code>:</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// +build !tinygo</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// +build !tinygo</span>
+</code></pre></div></div>
 
 <p>And vice-versa for <code class="highlighter-rouge">main_js.go</code>.</p>
 
@@ -428,17 +436,19 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 ...
 </code></pre></div></div>
 
-<p>Unsupported <code class="highlighter-rouge">js/syscall</code> methods? Nah, this one is not on TinyGo. We’ve downgraded Go to 1.13.9, so those methods don’t exist anymore. There’s a quick workaround:</p>
+<p>Unsupported <code class="highlighter-rouge">js/syscall</code> methods?</p>
+
+<p>Nah, this one is not on TinyGo. We’ve downgraded Go to 1.13.9, so those methods don’t exist anymore.</p>
 
 <p>Replace all:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">j</span><span class="o">.</span><span class="n">IsUndefined</span><span class="p">()</span>
+</code></pre></div></div>
 
 <p>With:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">j</span><span class="x"> </span><span class="o">===</span><span class="x"> </span><span class="n">js</span><span class="o">.</span><span class="n">Undefined</span><span class="p">()</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">j</span> <span class="o">===</span> <span class="n">js</span><span class="o">.</span><span class="n">Undefined</span><span class="p">()</span>
+</code></pre></div></div>
 
 <h2 id="tinygo-round-4">TinyGo, Round 4!</h2>
 
@@ -452,16 +462,16 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 
 <p>Ok, that’s confusing, but it’s something to do with an instruction that runs during an <code class="highlighter-rouge">init()</code> that indirectly ends up in <code class="highlighter-rouge">sync/pool</code>, that must be unsupported or something.</p>
 
-<p>I don’t use <code class="highlighter-rouge">init()</code>, and <a href="https://github.com/leighmcculloch/gochecknoinits">neither should you</a>. But if you have a <code class="highlighter-rouge">var</code> in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an init.</p>
+<p>I don’t use <code class="highlighter-rouge">init()</code>, and <a href="https://github.com/leighmcculloch/gochecknoinits">neither should you</a>. But if you have a <code class="highlighter-rouge">var</code> in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an <code class="highlighter-rouge">init()</code>.</p>
 
 <p>You shouldn’t have globals either, but we make some exceptions, and in my case it was like a million error literals like this one:</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span><span class="x"> </span><span class="n">errBlackCastle</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"impossible for black to castle since king has moved"</span><span class="p">)</span><span class="x">
-</span></code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">errBlackCastle</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"impossible for black to castle since king has moved"</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>It turns out <code class="highlighter-rouge">fmt.Errorf</code> ends up calling <code class="highlighter-rouge">sync/pool</code>. A brilliant workaround for this one is to replace <code class="highlighter-rouge">fmt.Errorf</code> with <code class="highlighter-rouge">errors.New</code>.</p>
+<p>It turns out <code class="highlighter-rouge">fmt.Errorf</code> ends up calling <code class="highlighter-rouge">sync/pool</code>. A brilliant workaround for this one is to replace <code class="highlighter-rouge">fmt.Errorf</code> with <code class="highlighter-rouge">errors.New</code>. This only works if you have nothing to interpolate, but since it’s a global, you probably don’t.</p>
 
-<p>While you’re at it, be on the lookout for any other non-constant global.</p>
+<p>If you have other globals that call things, keep the <code class="highlighter-rouge">var</code>, but initialise the value in your <code class="highlighter-rouge">main()</code>.</p>
 
 <h2 id="tinygo-round-5">TinyGo: Round 5!</h2>
 
@@ -495,7 +505,7 @@ Ok, I don’t know. But if you get this, the workaround is to add the <code clas
 
 <p>You need to take into account that every compiler you use, and every version of that compiler might have a different companion <code class="highlighter-rouge">wasm_exec.js</code>. For TinyGo, do this:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> <span class="k">$(</span>tinygo <span class="nb">env </span>TINYGOROOT<span class="k">)</span>/targets/wasm_exec.js <span class="nb">.</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> <span class="si">$(</span>tinygo <span class="nb">env </span>TINYGOROOT<span class="si">)</span>/targets/wasm_exec.js <span class="nb">.</span>
 </code></pre></div></div>
 
 <h2 id="tinygo-round-7">TinyGo, Round 7!</h2>
@@ -551,6 +561,8 @@ Ok, I don’t know. But if you get this, the workaround is to add the <code clas
 <h2 id="conclusion">Conclusion</h2>
 
 <p>Writing Go code for the browser is a reality today. But it’s no picnic. Ideally, we’d write whatever we want, run the Go compiler and get a 1kb npm package or something, right? Well, we’ll get there. Still a better love story than writing JavaScript, aye.</p>
+
+<p><a href="https://marianogappa.github.io/cheesse-examples/">auto-play proof of concept</a></p>
 
 <p><a href="https://github.com/marianogappa/cheesse">cheesse open source project</a></p>
 
