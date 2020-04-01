@@ -3,8 +3,8 @@
   <channel>
     <title>Mariano Gappa's Blog</title>
     <description>Blog about Software Engineering and Music Production.</description>
-    <link>http://marianogappa.github.io/</link>
-    <atom:link href="http://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <link>https://marianogappa.github.io/</link>
+    <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
         <title>Running Golang on the browser with WebAssembly and TinyGo</title>
@@ -237,7 +237,7 @@ $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 
 &lt;p&gt;Yes! 🎉&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;But there’s a catch:&lt;/p&gt;
 
@@ -414,7 +414,7 @@ Ok, I don’t know. But if you get this, the workaround is to add the &lt;code c
 
 &lt;p&gt;Did it work???&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/webassembly-tinygo-cheesse.gif&quot; alt=&quot;Working Proof of Concept&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;OMG, YES! 🎉🎉🎉&lt;/p&gt;
 
@@ -441,8 +441,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 </description>
         <pubDate>Wed, 01 Apr 2020 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
+        <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
       </item>
     
       <item>
@@ -542,11 +542,11 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;p&gt;At any given point (instead of “point” let’s call it “node”) in our parsing journey, only a few tokens are valid, and upon finding these tokens we advance to new nodes where different tokens are valid, and so on until we finish parsing our query. We can visualise these node relationships as a directed graph:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sql_parser_graph.png&quot; alt=&quot;SQL Parser Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sql_parser_graph.png&quot; alt=&quot;SQL Parser Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The node transitions can be defined with a simpler table, though:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sql_parser_table.png&quot; alt=&quot;SQL Parser Table&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sql_parser_table.png&quot; alt=&quot;SQL Parser Table&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;We can directly translate this table to a really large switch statement. We’ll use that sneaky &lt;code class=&quot;highlighter-rouge&quot;&gt;parser.step&lt;/code&gt; property we defined before:&lt;/p&gt;
 
@@ -721,8 +721,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;p&gt;I hope this can be that tutorial for you. &lt;a href=&quot;https://en.wikipedia.org/wiki/KISS_principle&quot;&gt;KISS!&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 05 Jun 2019 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid>
+        <link>https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid>
       </item>
     
       <item>
@@ -732,8 +732,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;p&gt;The actual blogpost is on the Movio blog: &lt;a href=&quot;https://movio.co/en/blog/saving-money-with-Hackathon-project/&quot;&gt;https://movio.co/en/blog/saving-money-with-Hackathon-project/&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 02 Apr 2018 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
+        <link>https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
       </item>
     
       <item>
@@ -743,8 +743,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;p&gt;&lt;a href=&quot;https://movio.co/en/blog/improving-with-sql-and-charts/&quot;&gt;https://movio.co/en/blog/improving-with-sql-and-charts/&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 28 Jun 2017 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</guid>
+        <link>https://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</guid>
       </item>
     
       <item>
@@ -800,7 +800,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;p&gt;Let’s try a checkmate in two moves. Here’s an &lt;a href=&quot;http://chesspuzzlesonline.com/solution/ps44/&quot;&gt;example puzzle&lt;/a&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/ostinato-mate-in-two.png&quot; alt=&quot;Example: mate in two moves&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ostinato-mate-in-two.png&quot; alt=&quot;Example: mate in two moves&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;White moves first and it should make checkmate in the second move.&lt;/p&gt;
 
@@ -1026,7 +1026,7 @@ OK!
 
 &lt;p&gt;&lt;a href=&quot;http://www.chesspuzzles.com/mate-in-one&quot;&gt;This site&lt;/a&gt; provides “mate in one move” puzzles. Here’s one example:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ostinato-mate-in-one.png&quot; alt=&quot;Chess Puzzles: Mate in one&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Ostinato server expects the input boards in “ostinato notation”, which is simply &lt;a href=&quot;https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation&quot;&gt;FEN notation&lt;/a&gt; plus (optionally) the history in &lt;a href=&quot;https://en.wikipedia.org/wiki/ICCF_numeric_notation&quot;&gt;ICCF notation&lt;/a&gt;.&lt;/p&gt;
 
@@ -1212,8 +1212,8 @@ code {
 
 </description>
         <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
-        <link>http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+        <link>https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
       </item>
     
       <item>
@@ -1223,8 +1223,8 @@ code {
 &lt;p&gt;&lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;https://movio.co/blog/migrate-Scala-to-Go/&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
-        <link>http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
+        <link>https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
       </item>
     
       <item>
@@ -1444,8 +1444,8 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 &lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Sat, 30 Jul 2016 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
+        <link>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
       </item>
     
       <item>
@@ -1483,7 +1483,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;When you first run &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
 
@@ -1544,8 +1544,8 @@ GHI-789     Do very urgent work
 &lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
-        <link>http://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
+        <link>https://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
       </item>
     
       <item>
@@ -1567,7 +1567,7 @@ GHI-789     Do very urgent work
 
 &lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;now-heres-how-to-fix-it&quot;&gt;Now, here’s how to fix it&lt;/h2&gt;
 
@@ -1616,7 +1616,7 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 &lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
 
@@ -1631,8 +1631,8 @@ Looking at the yaml file makes it much easier to spot the place where you need t
 
 </description>
         <pubDate>Sat, 27 Feb 2016 00:00:00 +0000</pubDate>
-        <link>http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
-        <guid isPermaLink="true">http://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
+        <link>https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
       </item>
     
   </channel>

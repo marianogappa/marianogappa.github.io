@@ -8,11 +8,11 @@
     <meta name="description" content="This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).">
     <meta name="author" content="Mariano Gappa">
     <meta name="keywords" content="software">
-    <link rel="canonical" href="http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/">
+    <link rel="canonical" href="https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/">
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202004011349" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202004011529" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -30,7 +30,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="Let's build a SQL parser in Go!">
     <meta property="og:description" content="Blog about Software Engineering and Music Production.">
-    <meta property="og:url" content="http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/">
+    <meta property="og:url" content="https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/">
     <meta property="og:site_name" content="Mariano Gappa's Blog">
     
 
@@ -41,7 +41,7 @@
     
     <meta name="twitter:title" content="Let's build a SQL parser in Go!" />
     <meta name="twitter:description" content="This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops)." />
-    <meta name="twitter:url" content="http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/" />
+    <meta name="twitter:url" content="https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/" />
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -79,7 +79,7 @@
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
-      <a href="http://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
+      <a href="https://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
       <nav class="site-nav">
         <!-- <a href="/cv/">CV</a> -->
 <!-- <a href="/cv/cv.pdf">CV (pdf)</a> -->
@@ -235,11 +235,11 @@
 
 <p>At any given point (instead of “point” let’s call it “node”) in our parsing journey, only a few tokens are valid, and upon finding these tokens we advance to new nodes where different tokens are valid, and so on until we finish parsing our query. We can visualise these node relationships as a directed graph:</p>
 
-<p><img src="http://marianogappa.github.io/images/sql_parser_graph.png" alt="SQL Parser Graph" /></p>
+<p><img src="https://marianogappa.github.io/images/sql_parser_graph.png" alt="SQL Parser Graph" /></p>
 
 <p>The node transitions can be defined with a simpler table, though:</p>
 
-<p><img src="http://marianogappa.github.io/images/sql_parser_table.png" alt="SQL Parser Table" /></p>
+<p><img src="https://marianogappa.github.io/images/sql_parser_table.png" alt="SQL Parser Table" /></p>
 
 <p>We can directly translate this table to a really large switch statement. We’ll use that sneaky <code class="highlighter-rouge">parser.step</code> property we defined before:</p>
 
@@ -423,7 +423,7 @@
     
 
     
-      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Let's build a SQL parser in Go!&url=http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Let's build a SQL parser in Go!&url=https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
     
 
     
@@ -435,13 +435,13 @@
     
 
     
-      <a class="fa fa-reddit" href="http://reddit.com/submit?url=http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/&title=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/&title=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Reddit"></a>
     
 
     
 
     
-      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=http://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/&t=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/&t=Let's build a SQL parser in Go!" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
     
 
 
