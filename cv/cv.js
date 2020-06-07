@@ -140,10 +140,12 @@ const cv = {
       "company": "Fat Llama",
       "country": "images/uk.svg",
       "company_link": "https://fatllama.com",
-      "date_range": "Jan 2019 - Present",
-      "started": "Jan 2019",
-      "elapsed_time": "(6 months)",
-      "bullets": ["One of the senior engineers taking the startup from Series A to Series B"],
+      "started": "2019-01",
+      "ended": "",
+      "bullets": [
+        "Senior engineer taking the startup from Series A to Series B.",
+        "Designed and implemented core business processes e.g. inventory, seller payouts, logistics integration, stateful microservices, optimised CI pipelines, partnerships integrations, payment platform test modes."
+      ],
       "stack": [
         {"id": 1, "text": "Typescript", "color": "red", "image": "images/typescript.png"},
         {"id": 2, "text": "Go", "color": "red", "image": "images/gopher.svg"},
@@ -156,10 +158,9 @@ const cv = {
       "company": "Movio",
       "country": "images/nz.svg",
       "company_link": "https://movio.co/en/",
-      "date_range": "Feb 2018 - Dec 2018",
-      "started": "Feb 2018",
-      "elapsed_time": "(11 months)",
-      "bullets": ["Led the team that built Movio's Datawarehouse"],
+      "started": "2018-02",
+      "ended": "2018-12",
+      "bullets": ["Led the team that built Movio's Datawarehouse."],
       "stack": [
         {"id": 1, "text": "Spark", "color": "red", "image": "images/spark.png"},
         {"id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg"},
@@ -172,9 +173,8 @@ const cv = {
       "company": "Movio",
       "country": "images/nz.svg",
       "company_link": "https://movio.co/en/",
-      "date_range": "Sep 2013 - Jan 2018",
-      "started": "Sep 2013",
-      "elapsed_time": "(4.5 years)",
+      "started": "2013-09",
+      "ended": "2018-01",
       "bullets": [
         "2017: led 3-person team that implemented service that <a href='http://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-µservice-coded-in-a-hackathon/'>saved $50k/yr in AWS cost and benchmarked 80% faster on avg</a>; blogpost peaking at <a href='http://hnrankings.info/16806388'>#2</a> on <a href='https://news.ycombinator.com/item?id=16806388'>Hacker News</a> & featured in <a href='https://golangweekly.com/issues/206'>Golang Weekly #206</a>",
         "2016: was key advocate and enabler for <a href='https://movio.co/en/blog/migrate-Scala-to-Go/'>migration from Scala to Go</a>, and from monolith to microservices; blogpost peaking at <a href='http://hnrankings.info/13476988'>#5</a> on <a href='https://news.ycombinator.com/item?id=13476988'>Hacker News</a>, and featured in <a href='http://golangweekly.com/issues/144'>Golang Weekly #144</a> & <a href='https://us2.campaign-archive.com/?u=ba834c562d82d9aba5eaf90ba&id=66b0dd9e86'>Scala Times #154</a>",
@@ -200,12 +200,10 @@ const cv = {
       "company": "OLX",
       "country": "images/ar.svg",
       "company_link": "http://www.olx.in",
-      "date_range": "Jan 2013 - Sep 2013",
-      "started": "Jan 2013",
-      "elapsed_time": "(9 months)",
+      "started": "2013-01",
+      "ended": "2013-09",
       "bullets": [
-        "Co-wrote Scala API for all mobile versions of the OLX app",
-        "The API went on to power OLX India, the #2 e-commerce market in the world by population",
+        "Co-wrote Scala API for all mobile versions of the OLX app, which powers e.g. OLX India, Brazil, Nigeria.",
         "<a href='https://en.wikipedia.org/wiki/OLX#India'>\"OLX became the vernacular for 'selling' in India, in the form of [...] 'OLX it'.\"</a>"
       ],
       "stack": [
@@ -217,9 +215,8 @@ const cv = {
       "role": "Software Engineer",
       "company": "Psicofxp S.A.",
       "country": "images/ar.svg",
-      "date_range": "Aug 2012 - Nov 2012",
-      "started": "Aug 2012",
-      "elapsed_time": "(4 months)",
+      "started": "2012-08",
+      "ended": "2012-11",
       "bullets": ["Co-designed a Pinterest-like project and maintained the #1 Argentinian forum (#1 by daily active users)"],
       "stack": [
         {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
@@ -233,9 +230,8 @@ const cv = {
       "company": "Rocket Internet GmbH",
       "country": "images/ar.svg",
       "company_link": "http://www.rocket-internet.de/",
-      "date_range": "Mar 2012 - Jun 2012",
-      "started": "Mar 2012",
-      "elapsed_time": "(4 months)",
+      "started": "2012-03",
+      "ended": "2012-06",
       "bullets": ["Implemented Rocket Internet e-commerce ventures throughout Latin America"],
       "stack": [
         {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
@@ -247,9 +243,8 @@ const cv = {
       "type": "work_experience",
       "role": "Software Engineer (freelance)",
       "country": "images/ar.svg",
-      "date_range": "Sep 2011 - Mar 2012",
-      "started": "Sep 2011",
-      "elapsed_time": "(6 months)",
+      "started": "2011-09",
+      "ended": "2012-03",
       "bullets": [
         "Various short-lived projects while focusing on engineering thesis"
       ],
@@ -265,9 +260,8 @@ const cv = {
       "company": "Metrogames",
       "country": "images/ar.svg",
       "company_link": "http://www.metrogames.com/",
-      "date_range": "Mar 2010 - Aug 2011",
-      "started": "Mar 2010",
-      "elapsed_time": "(1.5 years)",
+      "started": "2010-03",
+      "ended": "2011-08",
       "bullets": [
         "Backend Developer Leader of <a href='https://www.facebook.com/cocogirl'>Coco Girl</a>, the last big Metrogames' game project (60+ people involved)"
       ],
@@ -282,9 +276,8 @@ const cv = {
       "role": "Software Developer",
       "company": "Casablanca Hardware Store Chain",
       "country": "images/ar.svg",
-      "date_range": "2007",
-      "started": "Jan 2007",
-      "elapsed_time": "(1 year)",
+      "started": "2007-01",
+      "ended": "2007-12",
       "bullets": ["Designed, implemented and maintained hardware store accounting and inventory system"],
       "stack": [
         {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
@@ -298,9 +291,8 @@ const cv = {
       "role": "Software Developer",
       "company": "AranaParera Real Estate",
       "country": "images/ar.svg",
-      "date_range": "2006",
-      "started": "Jan 2006",
-      "elapsed_time": "(6 months)",
+      "started": "2006-01",
+      "ended": "2006-12",
       "bullets": ["Designed, implemented and maintained real-estate website"],
       "stack": [
         {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
@@ -324,5 +316,6 @@ const cv = {
         "5-year Information Systems Engineering degree (<a href='https://en.wikipedia.org/wiki/Engineer&apos;s_degree#Latin_America'>equivalent to Master degree</a>)"
       ]
     }
-  ]
+  ],
+  "finalMessage": "I've also studied Studio Mixing at <a href='https://en.wikipedia.org/wiki/Berklee_College_of_Music'>Berklee College of Music</a>, I'm co-authoring a Chess book and I'm learning Chinese."
 }

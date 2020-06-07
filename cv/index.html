@@ -70,6 +70,7 @@
     .no_wrap { flex-wrap: nowrap; white-space: nowrap; }
     .no_wrap span, .no_wrap i { padding-right: 5px; }
     .country { height: 12px; width: 13px; padding-right: 3px; }
+    .final_message { padding-top: 10px; font-size: 14px; }
   </style>
   <script type="text/javascript" src="cv.js"></script>
   <script type="text/javascript">
@@ -93,15 +94,40 @@
       cv.longCV = true
     }
 
+    const getDateFromYyyyDashMm = (yyyyDashMm) => {
+      if (!yyyyDashMm || yyyyDashMm === 'Present') {
+        return new Date()
+      }
+      return new Date(Date.parse(yyyyDashMm))
+    }
 
+    const getHumanReadableDate = (yyyyDashMm) => {
+      const d = getDateFromYyyyDashMm(yyyyDashMm)
+      const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+      const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d)
+      return `${mo} ${ye}`
+    }
+
+    const getHumanReadableElapsedTime = (yyyyDashMmStart, yyyyDashMmEnd) => {
+      const start = getDateFromYyyyDashMm(yyyyDashMmStart)
+      const end = getDateFromYyyyDashMm(yyyyDashMmEnd)
+
+      const elapsedMonths = Math.ceil((end-start)/1000/60/60/24/30)
+      
+      if (elapsedMonths > 12) {
+        const elapsedYears = (elapsedMonths/12).toFixed(1)
+        return `${elapsedYears} years`
+      } 
+      return `${elapsedMonths} months`
+    }
   </script>
 </head>
 <body>
   <div id="app">
     <section>{{ headline.name }}
     <div class="short">{{ headline.short }} with
-    {{((Date.now()-Date.parse(headline.experience_start))/(60*60*24*365*1000)).toFixed(1)}}
-  years of industry experience as of {{ month_names[new Date().getMonth()] }} {{ new Date().getFullYear() }}</div></section>
+    {{ getHumanReadableElapsedTime(headline.experience_start, '')}}
+  years of industry experience as of {{ getHumanReadableDate() }}</div></section>
 
     <!-- Main section -->
     <article>
@@ -117,12 +143,12 @@
       </template>
       <template v-if="!longCV">
         <span class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span><span v-html="education[0].short_description">{{education[0].short_description}}</span> @ <span v-html="education[0].short_name">{{education[0].short_name}}</span></span>
+          •&nbsp;<span><span v-html="education[0].short_description"></span> @ <span v-html="education[0].short_name"></span></span>
         </span>
       </template>
       <template v-if="longCV && headline.current_location">
         <span class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span>Currently living in</span>
+          •&nbsp;<span>Currently living in</span>
           <pill :key="headline.current_location.id" :text="headline.current_location.text" :color="headline.current_location.color" :image="headline.current_location.image"></pill>
         </span>
       </template>
@@ -134,7 +160,7 @@
       </template>
       <template v-if="longCV && headline.languages">
         <div class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span>Speaks</span>
+          •&nbsp;<span>Speaks</span>
           <template v-for="item in headline.languages">
             <pill :key="item.id" :text="item.name + ' ' + item.level" :color="item.color" :image="item.image"></pill>
           </template>
@@ -142,7 +168,7 @@
       </template>
       <template v-if="headline.expertise_bullets">
         <div class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span>Most knowledgeable in </span>
+          •&nbsp;<span>Most knowledgeable in </span>
           <template v-for="item in headline.expertise_bullets">
             <pill :key="item.id" :text="item.text" :color="item.color" :image="item.image"></pill>
           </template>
@@ -150,20 +176,20 @@
       </template>
       <template v-if="longCV && headline.interest_bullets">
         <div class="headline_bullets">
-          <i class="fas fa-caret-right fa-fw"></i><span>Interested in learning more about</span>
+          •&nbsp;<span>Interested in learning more about</span>
           <template v-for="item in headline.interest_bullets">
             <pill :key="item.id" :text="item.text" :color="item.color" :image="item.image"></pill>
           </template>
         </div>
       </template>
       <template v-for="item in headline.bullets">
-        <div class="headline_bullets"><i class="fas fa-caret-right fa-fw"></i>{{item}}</div>
+        <div class="headline_bullets">•&nbsp;{{item}}</div>
       </template>
     </article>
 
     <!-- Work experience -->
     <template v-if="work_experience">
-      <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{work_experience.length}}</a> starting {{ work_experience[work_experience.length-1].started}})</span></span></section>
+      <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{work_experience.length}} jobs starting {{ getHumanReadableDate(work_experience[work_experience.length-1].started) }}) <a href="/cv?longCV=true">See all</a> </span></span></section>
     </template>
     <template v-for="item in work_experience">
       <template v-if="longCV || !item.hidable">
@@ -174,7 +200,7 @@
                 {{ item.role }} <span v-if="item.company">@ <img v-if="item.country" :src="item.country" class="country"/><b>{{ item.company }}</b></span>
               </div>
               <div class="subtitle flex no_wrap">
-                <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ item.date_range }} {{ item.elapsed_time }}</span>
+                <span class="time"><i class="far fa-calendar-alt fa-fw"></i>{{ getHumanReadableDate(item.started) }}&nbsp;-&nbsp;{{ getHumanReadableDate(item.ended) }} ({{ getHumanReadableElapsedTime(item.started, item.ended) }})</span>
                 <span class="company_link" v-if="item.company_link"><i class="fas fa-link fa-fw"></i><a :href="item.company_link">{{ item.company_link }}</a></span>
               </div>
             </div>
@@ -184,7 +210,7 @@
           </div>
           <div class="bullets">
             <template v-for="bullet in item.bullets">
-              <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+              <div>•&nbsp;<span v-html="bullet"></span></div>
             </template>
           </div>
         </article>
@@ -193,7 +219,7 @@
 
     <!-- Open source -->
     <template v-if="open_source_projects">
-      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of <a href="http://marianogappa.github.io/cv?longCV=true">{{open_source_projects.length}}</a>)</span></span></section>
+      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{open_source_projects.length}} projects) <a href="/cv?longCV=true">See all</a></span></span></section>
     </template>
     <template v-for="item in open_source_projects" v-if="!item.hidable || longCV">
       <article v-bind:class="{'special': item.special, '': !item.special}">
@@ -211,7 +237,7 @@
         </div>
         <div class="bullets">
           <template v-for="bullet in item.bullets">
-            <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+            <div>•&nbsp;<span v-html="bullet"></span></div>
           </template>
         </div>
       </article>
@@ -234,11 +260,14 @@
           </template>
           <div class="bullets">
             <template v-for="bullet in item.bullets">
-              <div><i class="fas fa-caret-right fa-fw"></i><span v-html="bullet">{{bullet}}</span></div>
+              <div>•&nbsp;<span v-html="bullet"></span></div>
             </template>
           </div>
         </article>
       </template>
+    </template>
+    <template v-if="finalMessage">
+      <div class="final_message" v-html="finalMessage"></div>
     </template>
 
   </div>
