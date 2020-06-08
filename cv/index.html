@@ -189,7 +189,7 @@
 
     <!-- Work experience -->
     <template v-if="work_experience">
-      <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{work_experience.length}} jobs starting {{ getHumanReadableDate(work_experience[work_experience.length-1].started) }}) <a href="/cv?longCV=true">See all</a> </span></span></section>
+      <section>Work Experience<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{work_experience.length}} jobs starting {{ getHumanReadableDate(work_experience[work_experience.length-1].started) }}) <a href="https://marianogappa.github.io/cv?longCV=true">See all</a> </span></span></section>
     </template>
     <template v-for="item in work_experience">
       <template v-if="longCV || !item.hidable">
@@ -219,7 +219,7 @@
 
     <!-- Open source -->
     <template v-if="open_source_projects">
-      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{open_source_projects.length}} projects) <a href="/cv?longCV=true">See all</a></span></span></section>
+      <section>Open Source Projects<span v-if="!longCV"> Highlights <span style="font-weight: normal">(out of {{open_source_projects.length}} projects) <a href="https://marianogappa.github.io/cv?longCV=true">See all</a></span></span></section>
     </template>
     <template v-for="item in open_source_projects" v-if="!item.hidable || longCV">
       <article v-bind:class="{'special': item.special, '': !item.special}">
