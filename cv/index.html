@@ -102,6 +102,9 @@
     }
 
     const getHumanReadableDate = (yyyyDashMm) => {
+      if (yyyyDashMm === 'Present') {
+        return 'Present'
+      }
       const d = getDateFromYyyyDashMm(yyyyDashMm)
       const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
       const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d)
@@ -126,8 +129,7 @@
   <div id="app">
     <section>{{ headline.name }}
     <div class="short">{{ headline.short }} with
-    {{ getHumanReadableElapsedTime(headline.experience_start, '')}}
-  years of industry experience as of {{ getHumanReadableDate() }}</div></section>
+    {{ getHumanReadableElapsedTime(headline.experience_start, '')}} of industry experience as of {{ getHumanReadableDate() }}</div></section>
 
     <!-- Main section -->
     <article>

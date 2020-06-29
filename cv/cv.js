@@ -141,7 +141,7 @@ const cv = {
       "country": "images/uk.svg",
       "company_link": "https://fatllama.com",
       "started": "2019-01",
-      "ended": "",
+      "ended": "Present",
       "bullets": [
         "Senior engineer taking the startup from Series A to Series B.",
         "Designed and implemented core business processes e.g. inventory, seller payouts, logistics integration, stateful microservices, optimised CI pipelines, partnerships integrations, payment platform test modes."
