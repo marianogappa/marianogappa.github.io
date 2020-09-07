@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -258,9 +258,9 @@ This blogpost has received a lot of attention since it’s been published, inclu
 
 <p><img src="https://marianogappa.github.io/images/scala_to_go_stream.jpg" alt="Stream diagram" /></p>
 
-<p>First, we made the mistake of making the <code class="highlighter-rouge">persist</code> function <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html">synchronized</a>. This guaranteed that buffer-full-based invocations would not run concurrently with timeout-based invocations. However, because the stream digest and the <code class="highlighter-rouge">persist</code> functions did run concurrently and manipulated the buffer, we had to further synchronize those functions to each other!</p>
+<p>First, we made the mistake of making the <code class="language-plaintext highlighter-rouge">persist</code> function <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html">synchronized</a>. This guaranteed that buffer-full-based invocations would not run concurrently with timeout-based invocations. However, because the stream digest and the <code class="language-plaintext highlighter-rouge">persist</code> functions did run concurrently and manipulated the buffer, we had to further synchronize those functions to each other!</p>
 
-<p>In the end, we resorted to the <a href="http://doc.akka.io/docs/akka/current/general/actor-systems.html">Actor system</a> as we had Akka in the module’s dependencies anyway, and it did the job. We just had to ensure that adding to the buffer and clearing the buffer were messages processed by the same Actor, and would never run concurrently. This is just fine, but to get there we needed to; learn the Actor System, teach it to the newcomers, import those dependencies, have Akka properly configured in the code and in the configuration files, etc. Furthermore, the stream came from a Kafka Consumer, and in our wrapper we needed to provide a <code class="highlighter-rouge">digest</code> function for each consumed message that ran in a <code class="highlighter-rouge">Future</code>. Circumventing the issue of mixing Futures and Actors required extra head scratching time.</p>
+<p>In the end, we resorted to the <a href="http://doc.akka.io/docs/akka/current/general/actor-systems.html">Actor system</a> as we had Akka in the module’s dependencies anyway, and it did the job. We just had to ensure that adding to the buffer and clearing the buffer were messages processed by the same Actor, and would never run concurrently. This is just fine, but to get there we needed to; learn the Actor System, teach it to the newcomers, import those dependencies, have Akka properly configured in the code and in the configuration files, etc. Furthermore, the stream came from a Kafka Consumer, and in our wrapper we needed to provide a <code class="language-plaintext highlighter-rouge">digest</code> function for each consumed message that ran in a <code class="language-plaintext highlighter-rouge">Future</code>. Circumventing the issue of mixing Futures and Actors required extra head scratching time.</p>
 
 <p>Enter channels.</p>
 

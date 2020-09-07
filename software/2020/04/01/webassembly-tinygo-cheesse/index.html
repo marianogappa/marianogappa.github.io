@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -192,14 +192,14 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>If you don’t do that <code class="highlighter-rouge">select{}</code>, or something to that effect, you’ll find this error in the Developer console of your browser:</p>
+<p>If you don’t do that <code class="language-plaintext highlighter-rouge">select{}</code>, or something to that effect, you’ll find this error in the Developer console of your browser:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: Go program has already exited
 </code></pre></div></div>
 
 <h2 id="mapping-values-from-js-to-go-and-vice-versa">Mapping values from JS to Go and vice-versa</h2>
 
-<p>This is the implementation of the <code class="highlighter-rouge">ParseGame</code> function defined above:</p>
+<p>This is the implementation of the <code class="language-plaintext highlighter-rouge">ParseGame</code> function defined above:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ParseGame</span><span class="p">(</span><span class="n">this</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">args</span> <span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
   <span class="n">og</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">api</span><span class="o">.</span><span class="n">ParseGame</span><span class="p">(</span><span class="n">convertToInputGame</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="m">0</span><span class="p">]))</span>
@@ -210,16 +210,16 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Basically just mapping the API’s inputs and outputs to <code class="highlighter-rouge">js/syscall</code>’s interfaces.</p>
+<p>Basically just mapping the API’s inputs and outputs to <code class="language-plaintext highlighter-rouge">js/syscall</code>’s interfaces.</p>
 
-<p><code class="highlighter-rouge">ParseGame</code> follows <a href="https://golang.org/pkg/syscall/js/#FuncOf">js.FuncOf()</a>’s interface:</p>
+<p><code class="language-plaintext highlighter-rouge">ParseGame</code> follows <a href="https://golang.org/pkg/syscall/js/#FuncOf">js.FuncOf()</a>’s interface:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">this</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">args</span> <span class="p">[]</span><span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="k">interface</span><span class="p">{}</span>
 </code></pre></div></div>
 
-<p>Where <code class="highlighter-rouge">args</code> are the arguments supplied to <code class="highlighter-rouge">ParseGame</code> from JavaScript.</p>
+<p>Where <code class="language-plaintext highlighter-rouge">args</code> are the arguments supplied to <code class="language-plaintext highlighter-rouge">ParseGame</code> from JavaScript.</p>
 
-<p>Here’s a simplified implementation of <code class="highlighter-rouge">convertToInputGame</code>:</p>
+<p>Here’s a simplified implementation of <code class="language-plaintext highlighter-rouge">convertToInputGame</code>:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">convertToInputGame</span><span class="p">(</span><span class="n">v</span> <span class="n">js</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="n">api</span><span class="o">.</span><span class="n">InputGame</span> <span class="p">{</span>
   <span class="k">return</span> <span class="n">api</span><span class="o">.</span><span class="n">InputGame</span><span class="p">{</span>
@@ -243,7 +243,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>For <code class="highlighter-rouge">convertOutputGame</code>, it’s trickier. Here’s a very simplified <code class="highlighter-rouge">OutputGame</code>:</p>
+<p>For <code class="language-plaintext highlighter-rouge">convertOutputGame</code>, it’s trickier. Here’s a very simplified <code class="language-plaintext highlighter-rouge">OutputGame</code>:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">OutputGame</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="n">FENString</span> <span class="kt">string</span>         <span class="s">`json:"fenString"`</span>
@@ -256,9 +256,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>How do we map a struct with a slice of structs to something that <code class="highlighter-rouge">js.ValueOf</code> can receive? For this, first review <a href="https://golang.org/pkg/syscall/js/#ValueOf">the docs</a>:</p>
+<p>How do we map a struct with a slice of structs to something that <code class="language-plaintext highlighter-rouge">js.ValueOf</code> can receive? For this, first review <a href="https://golang.org/pkg/syscall/js/#ValueOf">the docs</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func ValueOf(x interface{}) Value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func ValueOf(x interface{}) Value
 
 ValueOf returns x as a JavaScript value:
 
@@ -276,9 +276,9 @@ map[string]interface{}| new object
 Panics if x is not one of the expected types.
 </code></pre></div></div>
 
-<p>Go struct =&gt; JS object, so top-layer we must send a <code class="highlighter-rouge">map[string]interface{}</code>.</p>
+<p>Go struct =&gt; JS object, so top-layer we must send a <code class="language-plaintext highlighter-rouge">map[string]interface{}</code>.</p>
 
-<p>The trick is: the map’s values (i.e. the <code class="highlighter-rouge">interface{}</code> part) follow the same rules from those docs. That’s how we achieve the nesting.</p>
+<p>The trick is: the map’s values (i.e. the <code class="language-plaintext highlighter-rouge">interface{}</code> part) follow the same rules from those docs. That’s how we achieve the nesting.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">convertOutputGame</span><span class="p">(</span><span class="n">og</span> <span class="n">api</span><span class="o">.</span><span class="n">OutputGame</span><span class="p">)</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
@@ -311,38 +311,38 @@ Panics if x is not one of the expected types.
 	previous declaration at ./main.go:17:6
 </code></pre></div></div>
 
-<p>Oh, right. We have two <code class="highlighter-rouge">main()</code>. We can use build constraints.</p>
+<p>Oh, right. We have two <code class="language-plaintext highlighter-rouge">main()</code>. We can use build constraints.</p>
 
-<p>Put this on the first line of <code class="highlighter-rouge">main.go</code>:</p>
+<p>Put this on the first line of <code class="language-plaintext highlighter-rouge">main.go</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">//</span> <span class="p">+</span><span class="n">build</span> <span class="c1">!js
-</span>
-<span class="k">package</span> <span class="n">main</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// +build !js
+
+package main
 </code></pre></div></div>
 
-<p>And this on the first line of <code class="highlighter-rouge">main_js.go</code>:</p>
+<p>And this on the first line of <code class="language-plaintext highlighter-rouge">main_js.go</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">//</span> <span class="p">+</span><span class="n">build</span> <span class="n">js</span><span class="p">,</span><span class="n">wasm</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// +build js,wasm
 
-<span class="k">package</span> <span class="n">main</span>
+package main
 </code></pre></div></div>
 
-<p>Don’t forget to leave a <strong>newline</strong> between the <code class="highlighter-rouge">//</code> and <code class="highlighter-rouge"><span class="k">package</span> <span class="n">main</span></code>. That’s <a href="https://golang.org/pkg/go/build/#hdr-Build_Constraints">not optional</a> and fails silently.</p>
+<p>Don’t forget to leave a <strong>newline</strong> between the <code class="language-plaintext highlighter-rouge">//</code> and <code class="language-plaintext highlighter-rouge">package main</code>. That’s <a href="https://golang.org/pkg/go/build/#hdr-Build_Constraints">not optional</a> and fails silently.</p>
 
-<p>Also, don’t do <code class="highlighter-rouge">+build !js,wasm</code>. That doesn’t work either. There’s only <code class="highlighter-rouge">wasm</code> anyway, right?</p>
+<p>Also, don’t do <code class="language-plaintext highlighter-rouge">+build !js,wasm</code>. That doesn’t work either. There’s only <code class="language-plaintext highlighter-rouge">wasm</code> anyway, right?</p>
 
 <h2 id="ok-compile-time-2">Ok, compile time! #2</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>✔ $ GOOS=js GOARCH=wasm go build -o poc/main.wasm
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>✔ $ GOOS=js GOARCH=wasm go build -o poc/main.wasm
 ✔ $
 </code></pre></div></div>
 <p>🎉</p>
 
-<p>Follow <a href="https://github.com/golang/go/wiki/WebAssembly#getting-started">these instructions</a> on how to load the <code class="highlighter-rouge">main.wasm</code> into an <code class="highlighter-rouge">index.html</code> file.</p>
+<p>Follow <a href="https://github.com/golang/go/wiki/WebAssembly#getting-started">these instructions</a> on how to load the <code class="language-plaintext highlighter-rouge">main.wasm</code> into an <code class="language-plaintext highlighter-rouge">index.html</code> file.</p>
 
-<p>If you try to open the <code class="highlighter-rouge">index.html</code> directly on your browser you’ll get this error on the browser’s Developer Console:</p>
+<p>If you try to open the <code class="language-plaintext highlighter-rouge">index.html</code> directly on your browser you’ll get this error on the browser’s Developer Console:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Fetch API cannot load file:///.../poc/main.wasm.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Fetch API cannot load file:///.../poc/main.wasm.
 URL scheme must be "http" or "https" for CORS request.
 </code></pre></div></div>
 
@@ -350,20 +350,20 @@ URL scheme must be "http" or "https" for CORS request.
 
 <h2 id="serving-the-files">Serving the files</h2>
 
-<p>Your favourite one-liner server (is it Python’s <code class="highlighter-rouge">SimpleHTTPServer</code> for all of us?), might give you this error:</p>
+<p>Your favourite one-liner server (is it Python’s <code class="language-plaintext highlighter-rouge">SimpleHTTPServer</code> for all of us?), might give you this error:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TypeError: Response has unsupported MIME type
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TypeError: Response has unsupported MIME type
 </code></pre></div></div>
 
 <p>You need a server that knows about WebAssembly’s MIME type.</p>
 
 <p>The easy way:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install goexec: go get -u github.com/shurcooL/goexec
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install goexec: go get -u github.com/shurcooL/goexec
 $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 </code></pre></div></div>
 
-<p>If you really want to use <code class="highlighter-rouge">SimpleHTTPServer</code> there’s a solution that I validated to work <a href="https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/">here</a>.</p>
+<p>If you really want to use <code class="language-plaintext highlighter-rouge">SimpleHTTPServer</code> there’s a solution that I validated to work <a href="https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/">here</a>.</p>
 
 <h2 id="did-it-work">Did it work?</h2>
 
@@ -383,13 +383,13 @@ $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 
 <p>Drop-in replacement for the Go compiler, right?</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
 error: requires go version 1.11, 1.12, or 1.13, got go1.14
 </code></pre></div></div>
 
 <p>Ok, that’s not that bad. Go 1.14 is gonna be supported <a href="https://github.com/tinygo-org/tinygo/pull/901">soon</a>, but for now we’ll have to downgrade:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install go@1.13
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install go@1.13
 ...
 $ echo 'export PATH="/usr/local/opt/go@1.13/bin:$PATH"' &gt;&gt; ~/.bash_profile
 ...
@@ -417,18 +417,18 @@ usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:483:103: t.
 
 <p><a href="https://tinygo.org/lang-support/stdlib/">https://tinygo.org/lang-support/stdlib/</a></p>
 
-<p>Some key unsupported packages: <code class="highlighter-rouge">encoding/json</code> &amp; <code class="highlighter-rouge">net/http</code> (I assume <code class="highlighter-rouge">encoding/asn1</code> is a dependency of <code class="highlighter-rouge">net/http</code>).</p>
+<p>Some key unsupported packages: <code class="language-plaintext highlighter-rouge">encoding/json</code> &amp; <code class="language-plaintext highlighter-rouge">net/http</code> (I assume <code class="language-plaintext highlighter-rouge">encoding/asn1</code> is a dependency of <code class="language-plaintext highlighter-rouge">net/http</code>).</p>
 
-<p>I was using both. Since I don’t need them for the JS part, the solution is to use a TinyGo-specific build constraint instead of <code class="highlighter-rouge">// +build !js</code>:</p>
+<p>I was using both. Since I don’t need them for the JS part, the solution is to use a TinyGo-specific build constraint instead of <code class="language-plaintext highlighter-rouge">// +build !js</code>:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// +build !tinygo</span>
 </code></pre></div></div>
 
-<p>And vice-versa for <code class="highlighter-rouge">main_js.go</code>.</p>
+<p>And vice-versa for <code class="language-plaintext highlighter-rouge">main_js.go</code>.</p>
 
 <h2 id="tinygo-round-3">TinyGo, Round 3!</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
 # github.com/marianogappa/cheesse
 main_js.go:102:7: j.IsUndefined undefined (type js.Value has no field or method IsUndefined)
 main_js.go:102:26: j.IsNull undefined (type js.Value has no field or method IsNull)
@@ -436,7 +436,7 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 ...
 </code></pre></div></div>
 
-<p>Unsupported <code class="highlighter-rouge">js/syscall</code> methods?</p>
+<p>Unsupported <code class="language-plaintext highlighter-rouge">js/syscall</code> methods?</p>
 
 <p>Nah, this one is not on TinyGo. We’ve downgraded Go to 1.13.9, so those methods don’t exist anymore.</p>
 
@@ -452,7 +452,7 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 
 <h2 id="tinygo-round-4">TinyGo, Round 4!</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tinygo build -o poc/main.wasm -target wasm .
 # github.com/marianogappa/cheesse/api
 /usr/local/Cellar/tinygo/0.12.0/src/sync/pool.go:14:14 unsupported instruction during init evaluation:
   %23 = inttoptr i32 %22 to %runtime._interface (i8*, i8*)*, !dbg !1864
@@ -460,18 +460,18 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 
 <p>Huh?</p>
 
-<p>Ok, that’s confusing, but it’s something to do with an instruction that runs during an <code class="highlighter-rouge">init()</code> that indirectly ends up in <code class="highlighter-rouge">sync/pool</code>, that must be unsupported or something.</p>
+<p>Ok, that’s confusing, but it’s something to do with an instruction that runs during an <code class="language-plaintext highlighter-rouge">init()</code> that indirectly ends up in <code class="language-plaintext highlighter-rouge">sync/pool</code>, that must be unsupported or something.</p>
 
-<p>I don’t use <code class="highlighter-rouge">init()</code>, and <a href="https://github.com/leighmcculloch/gochecknoinits">neither should you</a>. But if you have a <code class="highlighter-rouge">var</code> in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an <code class="highlighter-rouge">init()</code>.</p>
+<p>I don’t use <code class="language-plaintext highlighter-rouge">init()</code>, and <a href="https://github.com/leighmcculloch/gochecknoinits">neither should you</a>. But if you have a <code class="language-plaintext highlighter-rouge">var</code> in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an <code class="language-plaintext highlighter-rouge">init()</code>.</p>
 
 <p>You shouldn’t have globals either, but we make some exceptions, and in my case it was like a million error literals like this one:</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">errBlackCastle</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"impossible for black to castle since king has moved"</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>It turns out <code class="highlighter-rouge">fmt.Errorf</code> ends up calling <code class="highlighter-rouge">sync/pool</code>. A brilliant workaround for this one is to replace <code class="highlighter-rouge">fmt.Errorf</code> with <code class="highlighter-rouge">errors.New</code>. This only works if you have nothing to interpolate, but since it’s a global, you probably don’t.</p>
+<p>It turns out <code class="language-plaintext highlighter-rouge">fmt.Errorf</code> ends up calling <code class="language-plaintext highlighter-rouge">sync/pool</code>. A brilliant workaround for this one is to replace <code class="language-plaintext highlighter-rouge">fmt.Errorf</code> with <code class="language-plaintext highlighter-rouge">errors.New</code>. This only works if you have nothing to interpolate, but since it’s a global, you probably don’t.</p>
 
-<p>If you have other globals that call things, keep the <code class="highlighter-rouge">var</code>, but initialise the value in your <code class="highlighter-rouge">main()</code>.</p>
+<p>If you have other globals that call things, keep the <code class="language-plaintext highlighter-rouge">var</code>, but initialise the value in your <code class="language-plaintext highlighter-rouge">main()</code>.</p>
 
 <h2 id="tinygo-round-5">TinyGo: Round 5!</h2>
 
@@ -488,7 +488,7 @@ error: optimizations caused a verification failure
 </code></pre></div></div>
 
 <p>WAT.
-Ok, I don’t know. But if you get this, the workaround is to add the <code class="highlighter-rouge">-no-debug</code> flag to the compile line.</p>
+Ok, I don’t know. But if you get this, the workaround is to add the <code class="language-plaintext highlighter-rouge">-no-debug</code> flag to the compile line.</p>
 
 <h2 id="tinygo-round-6">TinyGo, Round 6!</h2>
 
@@ -500,10 +500,10 @@ Ok, I don’t know. But if you get this, the workaround is to add the <code clas
 
 <p>Nope. If you get an error in the Developer Console on your browser, perhaps this one:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TypeError: import object field 'wasi_unstable' is not an Object
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TypeError: import object field 'wasi_unstable' is not an Object
 </code></pre></div></div>
 
-<p>You need to take into account that every compiler you use, and every version of that compiler might have a different companion <code class="highlighter-rouge">wasm_exec.js</code>. For TinyGo, do this:</p>
+<p>You need to take into account that every compiler you use, and every version of that compiler might have a different companion <code class="language-plaintext highlighter-rouge">wasm_exec.js</code>. For TinyGo, do this:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> <span class="si">$(</span>tinygo <span class="nb">env </span>TINYGOROOT<span class="si">)</span>/targets/wasm_exec.js <span class="nb">.</span>
 </code></pre></div></div>
@@ -512,13 +512,13 @@ Ok, I don’t know. But if you get this, the workaround is to add the <code clas
 
 <p>You might do absolutely everything right, get it compiled and then go to your browser’s Developer Console and see this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>panic: syscall/js: Value.Call: property _makeFuncWrapper is not a function, got undefined [wasm_exec.js:201:19](http://localhost:8000/wasm_exec.js)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>panic: syscall/js: Value.Call: property _makeFuncWrapper is not a function, got undefined [wasm_exec.js:201:19](http://localhost:8000/wasm_exec.js)
 </code></pre></div></div>
 
 <p>That one is this issue:
 <a href="https://github.com/tinygo-org/tinygo/issues/716">https://github.com/tinygo-org/tinygo/issues/716</a></p>
 
-<p>It might be solved by the time you read this, but the workaround at the time of this writing is to switch to the <code class="highlighter-rouge">dev</code> version of TinyGo, which is pretty bleeding edge but seems to work well.</p>
+<p>It might be solved by the time you read this, but the workaround at the time of this writing is to switch to the <code class="language-plaintext highlighter-rouge">dev</code> version of TinyGo, which is pretty bleeding edge but seems to work well.</p>
 
 <p>Follow the <a href="https://tinygo.org/getting-started/macos/">Source Install instructions</a> and change branch before installing.</p>
 
@@ -539,7 +539,7 @@ Ok, I don’t know. But if you get this, the workaround is to add the <code clas
 <span class="err">$</span>
 </code></pre></div></div>
 
-<p>Before testing on the browser, remember that you’ve changed the version of TinyGo, so you must copy <code class="highlighter-rouge">wasm_exec.js</code> again, only this time the file is in a different place because you’ve built from source:</p>
+<p>Before testing on the browser, remember that you’ve changed the version of TinyGo, so you must copy <code class="language-plaintext highlighter-rouge">wasm_exec.js</code> again, only this time the file is in a different place because you’ve built from source:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> <span class="nv">$GOPATH</span>/src/github.com/tinygo-org/tinygo/targets/wasm_exec.js <span class="nb">.</span>
 </code></pre></div></div>

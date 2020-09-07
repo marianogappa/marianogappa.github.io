@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -207,7 +207,7 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sbt pack
 </code></pre></div></div>
 
-<p>We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just <code class="highlighter-rouge">ls</code> the folder and find the ostinato_2.12-*.jar):</p>
+<p>We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just <code class="language-plaintext highlighter-rouge">ls</code> the folder and find the ostinato_2.12-*.jar):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scala <span class="nt">-cp</span> target/pack/lib/ostinato_2.12-1.0.2.jar
 </code></pre></div></div>
@@ -218,7 +218,7 @@
 <span class="k">import</span> <span class="nn">ostinato.chess.core._</span>
 </code></pre></div></div>
 
-<p>OK. Let’s generate a <code class="highlighter-rouge">ChessBoard</code> identical to the one in the puzzle:</p>
+<p>OK. Let’s generate a <code class="language-plaintext highlighter-rouge">ChessBoard</code> identical to the one in the puzzle:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">b</span> <span class="k">=</span> <span class="nv">ChessGame</span><span class="o">.</span><span class="py">fromGridString</span><span class="o">(</span>
    <span class="s">"""........
@@ -240,11 +240,11 @@
 <span class="o">........</span>
 </code></pre></div></div>
 
-<p>All the <code class="highlighter-rouge">ChessGame.from...</code> <a href="https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString">methods</a> return a <code class="highlighter-rouge">Try[ChessGame]</code>, because parsing could fail. In this case, I know it’ll work so I just <code class="highlighter-rouge">.get</code>, and get the board from it.</p>
+<p>All the <code class="language-plaintext highlighter-rouge">ChessGame.from...</code> <a href="https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString">methods</a> return a <code class="language-plaintext highlighter-rouge">Try[ChessGame]</code>, because parsing could fail. In this case, I know it’ll work so I just <code class="language-plaintext highlighter-rouge">.get</code>, and get the board from it.</p>
 
 <p>Note that the Unicode symbols were made with the assumption of black foreground and white background. In the REPL, this is often times backwards. This might confuse you as to which colour is which. Use <a href="https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode">this</a> as a safe copy-paste.</p>
 
-<p>We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include <code class="highlighter-rouge">White resigns</code> and <code class="highlighter-rouge">White claims draw</code>, which we’re not interested in. Same will apply for the next moves. Let’s create a <code class="highlighter-rouge">ChessOptimisations</code> instance and pass it around:</p>
+<p>We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include <code class="language-plaintext highlighter-rouge">White resigns</code> and <code class="language-plaintext highlighter-rouge">White claims draw</code>, which we’re not interested in. Same will apply for the next moves. Let’s create a <code class="language-plaintext highlighter-rouge">ChessOptimisations</code> instance and pass it around:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">o</span> <span class="k">=</span> <span class="nv">ChessOptimisations</span><span class="o">.</span><span class="py">beOptimistic</span>
 </code></pre></div></div>
@@ -275,17 +275,17 @@
 <span class="o">........)</span>
 </code></pre></div></div>
 
-<p>Yes! There’s exactly one <code class="highlighter-rouge">ChessBoard</code> in the resulting <code class="highlighter-rouge">Set</code>!</p>
+<p>Yes! There’s exactly one <code class="language-plaintext highlighter-rouge">ChessBoard</code> in the resulting <code class="language-plaintext highlighter-rouge">Set</code>!</p>
 
-<p>Let’s extract the action so we can apply it to our <code class="highlighter-rouge">ChessBoard</code>. That can be accomplished by appending <code class="highlighter-rouge">.head.history.head.action.get</code> to our previous line (i.e. getting the first action in the history).</p>
+<p>Let’s extract the action so we can apply it to our <code class="language-plaintext highlighter-rouge">ChessBoard</code>. That can be accomplished by appending <code class="language-plaintext highlighter-rouge">.head.history.head.action.get</code> to our previous line (i.e. getting the first action in the history).</p>
 
-<p><code class="highlighter-rouge">ChessAction</code> has a nice <code class="highlighter-rouge">toString</code> implementation.</p>
+<p><code class="language-plaintext highlighter-rouge">ChessAction</code> has a nice <code class="language-plaintext highlighter-rouge">toString</code> implementation.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">a</span> <span class="k">=</span> <span class="nv">res1</span><span class="o">.</span><span class="py">head</span><span class="o">.</span><span class="py">history</span><span class="o">.</span><span class="py">head</span><span class="o">.</span><span class="py">action</span><span class="o">.</span><span class="py">get</span>
 <span class="n">a</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessAction</span> <span class="o">=</span> <span class="nc">White</span><span class="ss">'s</span> <span class="nc">Queen</span> <span class="n">moves</span> <span class="n">to</span> <span class="n">f8</span>
 </code></pre></div></div>
 
-<p>Let’s apply the action on the board. Not all actions can be applied on a board, so <a href="https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction">doAction</a> returns an <code class="highlighter-rouge">Option[ChessBoard]</code>. For brevity we’ll just <code class="highlighter-rouge">.get</code> it here:</p>
+<p>Let’s apply the action on the board. Not all actions can be applied on a board, so <a href="https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction">doAction</a> returns an <code class="language-plaintext highlighter-rouge">Option[ChessBoard]</code>. For brevity we’ll just <code class="language-plaintext highlighter-rouge">.get</code> it here:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">b2</span> <span class="k">=</span> <span class="nv">b</span><span class="o">.</span><span class="py">doAction</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="py">get</span>
 <span class="n">b2</span><span class="k">:</span> <span class="kt">ostinato.chess.core.ChessBoard</span> <span class="o">=</span>
@@ -304,7 +304,7 @@
 <p>We’ll have to:</p>
 
 <ul>
-  <li>pick any black action (<code class="highlighter-rouge">head</code> in this case)</li>
+  <li>pick any black action (<code class="language-plaintext highlighter-rouge">head</code> in this case)</li>
   <li>filter the white checkmate action</li>
   <li>retrieve the action history</li>
   <li>history is stored backwards so we’ll have to reverse it to read it properly</li>
@@ -365,7 +365,7 @@
 <span class="nt">&lt;/script&gt;</span>
 </code></pre></div></div>
 
-<p>The only ostinato line in there is <code class="highlighter-rouge">ostinato.chess.js.Js().randomAiMove(board)</code>. The rest is ChessboardJS and plain JavaScript.</p>
+<p>The only ostinato line in there is <code class="language-plaintext highlighter-rouge">ostinato.chess.js.Js().randomAiMove(board)</code>. The rest is ChessboardJS and plain JavaScript.</p>
 
 <p>Here’s what’s available at the moment from JavaScript: <a href="https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala">Js.scala</a></p>
 
@@ -390,7 +390,7 @@
 
 <p>You can check if it’s working by trying the healthcheck:</p>
 
-<p>(which could be used as a <code class="highlighter-rouge">livenessProbe</code> on a Kubernetes deployment)</p>
+<p>(which could be used as a <code class="language-plaintext highlighter-rouge">livenessProbe</code> on a Kubernetes deployment)</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl localhost:51234/healthcheck
 OK!
@@ -427,7 +427,7 @@ OK!
 
 <p>I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found <a href="https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;rdid=com.fimetech.chessfimee&amp;pli=1">this Android app</a> that OCRs the board and producess the FEN, which was:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
 </code></pre></div></div>
 
 <p>I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the checkmate:</p>
@@ -449,13 +449,13 @@ OK!
 
 <p>From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.</p>
 
-<p>Also, I recently switched the JSON engine to <a href="https://github.com/spray/spray-json">spray-json</a> which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to <a href="https://github.com/sirthias">Mathias</a>. If somebody could please ask him how can I unmarshal the request’s JSON payload when the <code class="highlighter-rouge">Content-Type</code> is not <code class="highlighter-rouge">application/json</code>, I’d really appreciate it. I’ve asked around on Gitter and SO and couldn’t get a good solution.</p>
+<p>Also, I recently switched the JSON engine to <a href="https://github.com/spray/spray-json">spray-json</a> which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to <a href="https://github.com/sirthias">Mathias</a>. If somebody could please ask him how can I unmarshal the request’s JSON payload when the <code class="language-plaintext highlighter-rouge">Content-Type</code> is not <code class="language-plaintext highlighter-rouge">application/json</code>, I’d really appreciate it. I’ve asked around on Gitter and SO and couldn’t get a good solution.</p>
 
 <h2 id="playing-a-demo-game-using-the-jvm-as-back-end">Playing a demo game using the JVM as back-end</h2>
 
 <p>Simply use the provided <a href="https://marianogappa.github.io/ostinato-examples/play">demo chess game</a> and add the following query parameters:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato back-end
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useServer=localhost:51234 // location of your ostinato back-end
 depth=1 // complexity of the AI (from 0, but 3 is already slow)
 debug=1 // optional: logs AI rationale to STDOUT
 </code></pre></div></div>
@@ -471,16 +471,16 @@ debug=1 // optional: logs AI rationale to STDOUT
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>docker run <span class="nt">-p</span> 51234:51234 marianogappa/ostinato:latest
 </code></pre></div></div>
 
-<p>Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on <code class="highlighter-rouge">localhost</code>; this depends on your Docker installation.</p>
+<p>Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on <code class="language-plaintext highlighter-rouge">localhost</code>; this depends on your Docker installation.</p>
 
 <p>If you want to experiment with the code and build the image locally (for which you will need sbt &amp; Docker), you can use the provided script on the root folder:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>./docker-build.sh
 </code></pre></div></div>
 
-<p>The script will kindly ask you to run <code class="highlighter-rouge">sbt packArchiveZip</code> if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.</p>
+<p>The script will kindly ask you to run <code class="language-plaintext highlighter-rouge">sbt packArchiveZip</code> if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.</p>
 
-<p>The script always builds the <code class="highlighter-rouge">ostinato</code> image with the tag <code class="highlighter-rouge">latest</code>. If you want to specify a custom tag, you can do it like this:</p>
+<p>The script always builds the <code class="language-plaintext highlighter-rouge">ostinato</code> image with the tag <code class="language-plaintext highlighter-rouge">latest</code>. If you want to specify a custom tag, you can do it like this:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ TAG</span><span class="o">=</span>v1.2.3 ./docker-build.sh
 </code></pre></div></div>
@@ -574,7 +574,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>Follow the auto-scaling guidelines for dynamic scaling. Here’s a quick trick:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl autoscale deployment ostinato --min=2 --max=5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl autoscale deployment ostinato --min=2 --max=5
 </code></pre></div></div>
 
 <h2 id="developing-ostinato-and-final-thoughts">Developing ostinato and final thoughts</h2>
@@ -583,7 +583,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 <p>I believe ostinato has enabled some free and open source chess-related use cases that were unavailable before; if you find them useful I’d be very happy to <a href="https://twitter.com/MarianoGappa">hear about it</a>.</p>
 
-<p>One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous <a href="http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end">OOP blogpost</a>). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where <code class="highlighter-rouge">ChessGame</code> extended <code class="highlighter-rouge">Game</code> and <code class="highlighter-rouge">ChessAction</code> extended <code class="highlighter-rouge">Action</code> and so on. The resulting code <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala">scares me still</a>.</p>
+<p>One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous <a href="http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end">OOP blogpost</a>). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where <code class="language-plaintext highlighter-rouge">ChessGame</code> extended <code class="language-plaintext highlighter-rouge">Game</code> and <code class="language-plaintext highlighter-rouge">ChessAction</code> extended <code class="language-plaintext highlighter-rouge">Action</code> and so on. The resulting code <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala">scares me still</a>.</p>
 
 <p>Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurring mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some <a href="https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199">compromises I’ve made</a> to gain acceptable response times.</p>
 

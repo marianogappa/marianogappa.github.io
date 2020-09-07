@@ -188,13 +188,9 @@ hr { border: 0; border-bottom-style: solid; border-bottom-width: 1px; border-bot
 
 .h0 { font-size: 3rem; }
 
-@media (min-width: 52em) { .h00-responsive { font-size: 8vw; }
-  .h0-responsive { font-size: 6vw; }
-  .h1-responsive { font-size: 4vw; } }
+@media (min-width: 52em) { .h00-responsive { font-size: 8vw; } .h0-responsive { font-size: 6vw; } .h1-responsive { font-size: 4vw; } }
 
-@media (min-width: 96em) { .h00-responsive { font-size: 7.68rem; }
-  .h0-responsive { font-size: 5.76rem; }
-  .h1-responsive { font-size: 3.84rem; } }
+@media (min-width: 96em) { .h00-responsive { font-size: 7.68rem; } .h0-responsive { font-size: 5.76rem; } .h1-responsive { font-size: 3.84rem; } }
 
 /* Basscss Utility Typography */
 .bold { font-weight: bold; }
@@ -512,14 +508,7 @@ h3.post-title { margin-bottom: .5em; }
 
 .related-post-title { /* border-bottom: thin solid #f3f3f3; */ }
 
-@media screen and (min-width: 32em) { html { font-size: 16px; }
-  h1, .h1 { font-size: 2.5rem; }
-  .site-header { text-align: left; }
-  .site-nav { margin-top: 0; }
-  .site-header a { font-size: 1rem; }
-  .site-header .site-title { font-size: 1.25rem; float: left; }
-  .site-header .site-nav { float: right; margin-top: .25rem; }
-  blockquote { margin-left: 2rem; padding: 2rem; } }
+@media screen and (min-width: 32em) { html { font-size: 16px; } h1, .h1 { font-size: 2.5rem; } .site-header { text-align: left; } .site-nav { margin-top: 0; } .site-header a { font-size: 1rem; } .site-header .site-title { font-size: 1.25rem; float: left; } .site-header .site-nav { float: right; margin-top: .25rem; } blockquote { margin-left: 2rem; padding: 2rem; } }
 
 @media screen and (min-width: 48em) { html { font-size: 18px; } }
 

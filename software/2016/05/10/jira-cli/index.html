@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -152,7 +152,7 @@
 
 <ul>
   <li>
-    <p>Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a <code class="highlighter-rouge">git diff ... | grep ... | sort | uniq</code> between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!</p>
+    <p>Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a <code class="language-plaintext highlighter-rouge">git diff ... | grep ... | sort | uniq</code> between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!</p>
   </li>
   <li>
     <p>Then there’s looking for tickets. It’s easy enough on JIRA, with JQL and the UI tools. But it’s slow!</p>
@@ -171,11 +171,11 @@
 
 <p>Note that jira-cli requires the awesome <a href="https://stedolan.github.io/jq/">jq</a> tool, which if you don’t have installed, you really should! jira-cli will remind you to install it if it doesn’t find it.</p>
 
-<p>When you first run <code class="highlighter-rouge">jira</code>, it’ll open <code class="highlighter-rouge">~/.jiraconfig</code> on your default editor:</p>
+<p>When you first run <code class="language-plaintext highlighter-rouge">jira</code>, it’ll open <code class="language-plaintext highlighter-rouge">~/.jiraconfig</code> on your default editor:</p>
 
 <p><img src="https://marianogappa.github.io/images/jira-cli-first-run.png" alt="Running jira-cli for the first time" /></p>
 
-<p>After you configure your credentials you should be good to go. Try <code class="highlighter-rouge">jira ok</code> one last time to double-check:</p>
+<p>After you configure your credentials you should be good to go. Try <code class="language-plaintext highlighter-rouge">jira ok</code> one last time to double-check:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>jira ok
 OK
@@ -208,8 +208,8 @@ OK
   </table>
 </blockquote>
 
-<p>(To clarify: you don’t have to be so hacker: <code class="highlighter-rouge">jira me | jira open</code> works just as well.
-For more info just type: <code class="highlighter-rouge">jira</code>.)</p>
+<p>(To clarify: you don’t have to be so hacker: <code class="language-plaintext highlighter-rouge">jira me | jira open</code> works just as well.
+For more info just type: <code class="language-plaintext highlighter-rouge">jira</code>.)</p>
 
 <p>If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:</p>
 
@@ -219,7 +219,7 @@ DEF-456     Do some more work
 GHI-789     Do very urgent work
 </code></pre></div></div>
 
-<p>When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s <code class="highlighter-rouge">text</code> filter, all bound to the projects you configured on <code class="highlighter-rouge">~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code class="highlighter-rouge">| j o 3</code>:</p>
+<p>When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s <code class="language-plaintext highlighter-rouge">text</code> filter, all bound to the projects you configured on <code class="language-plaintext highlighter-rouge">~/.jiraconfig</code>. You can then choose to open one by adding e.g. <code class="language-plaintext highlighter-rouge">| j o 3</code>:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span>j s <span class="nb">cat
 </span>JKL-012     Feed the <span class="nb">cat
@@ -231,7 +231,7 @@ GHI-789     Do very urgent work
 
 <h2 id="in-closing">In closing</h2>
 
-<p>Try it, it’s free and open source! It’s not the new <code class="highlighter-rouge">grep</code>, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!</p>
+<p>Try it, it’s free and open source! It’s not the new <code class="language-plaintext highlighter-rouge">grep</code>, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!</p>
 
 </article>
 

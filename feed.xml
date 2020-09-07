@@ -60,14 +60,14 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If you don’t do that &lt;code class=&quot;highlighter-rouge&quot;&gt;select{}&lt;/code&gt;, or something to that effect, you’ll find this error in the Developer console of your browser:&lt;/p&gt;
+&lt;p&gt;If you don’t do that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;select{}&lt;/code&gt;, or something to that effect, you’ll find this error in the Developer console of your browser:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: Go program has already exited
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;mapping-values-from-js-to-go-and-vice-versa&quot;&gt;Mapping values from JS to Go and vice-versa&lt;/h2&gt;
 
-&lt;p&gt;This is the implementation of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; function defined above:&lt;/p&gt;
+&lt;p&gt;This is the implementation of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; function defined above:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;og&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ParseGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertToInputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
@@ -78,16 +78,16 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Basically just mapping the API’s inputs and outputs to &lt;code class=&quot;highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt;’s interfaces.&lt;/p&gt;
+&lt;p&gt;Basically just mapping the API’s inputs and outputs to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt;’s interfaces.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; follows &lt;a href=&quot;https://golang.org/pkg/syscall/js/#FuncOf&quot;&gt;js.FuncOf()&lt;/a&gt;’s interface:&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; follows &lt;a href=&quot;https://golang.org/pkg/syscall/js/#FuncOf&quot;&gt;js.FuncOf()&lt;/a&gt;’s interface:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Where &lt;code class=&quot;highlighter-rouge&quot;&gt;args&lt;/code&gt; are the arguments supplied to &lt;code class=&quot;highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; from JavaScript.&lt;/p&gt;
+&lt;p&gt;Where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;args&lt;/code&gt; are the arguments supplied to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParseGame&lt;/code&gt; from JavaScript.&lt;/p&gt;
 
-&lt;p&gt;Here’s a simplified implementation of &lt;code class=&quot;highlighter-rouge&quot;&gt;convertToInputGame&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Here’s a simplified implementation of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;convertToInputGame&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;convertToInputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InputGame&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -111,7 +111,7 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;convertOutputGame&lt;/code&gt;, it’s trickier. Here’s a very simplified &lt;code class=&quot;highlighter-rouge&quot;&gt;OutputGame&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;For &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;convertOutputGame&lt;/code&gt;, it’s trickier. Here’s a very simplified &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OutputGame&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OutputGame&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;FENString&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;         &lt;span class=&quot;s&quot;&gt;`json:&quot;fenString&quot;`&lt;/span&gt;
@@ -124,9 +124,9 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;How do we map a struct with a slice of structs to something that &lt;code class=&quot;highlighter-rouge&quot;&gt;js.ValueOf&lt;/code&gt; can receive? For this, first review &lt;a href=&quot;https://golang.org/pkg/syscall/js/#ValueOf&quot;&gt;the docs&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;How do we map a struct with a slice of structs to something that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;js.ValueOf&lt;/code&gt; can receive? For this, first review &lt;a href=&quot;https://golang.org/pkg/syscall/js/#ValueOf&quot;&gt;the docs&lt;/a&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func ValueOf(x interface{}) Value
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func ValueOf(x interface{}) Value
 
 ValueOf returns x as a JavaScript value:
 
@@ -144,9 +144,9 @@ map[string]interface{}| new object
 Panics if x is not one of the expected types.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Go struct =&amp;gt; JS object, so top-layer we must send a &lt;code class=&quot;highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Go struct =&amp;gt; JS object, so top-layer we must send a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;The trick is: the map’s values (i.e. the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt; part) follow the same rules from those docs. That’s how we achieve the nesting.&lt;/p&gt;
+&lt;p&gt;The trick is: the map’s values (i.e. the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interface{}&lt;/code&gt; part) follow the same rules from those docs. That’s how we achieve the nesting.&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;convertOutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;og&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutputGame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;
@@ -179,38 +179,38 @@ Panics if x is not one of the expected types.
 	previous declaration at ./main.go:17:6
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Oh, right. We have two &lt;code class=&quot;highlighter-rouge&quot;&gt;main()&lt;/code&gt;. We can use build constraints.&lt;/p&gt;
+&lt;p&gt;Oh, right. We have two &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main()&lt;/code&gt;. We can use build constraints.&lt;/p&gt;
 
-&lt;p&gt;Put this on the first line of &lt;code class=&quot;highlighter-rouge&quot;&gt;main.go&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Put this on the first line of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.go&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;!js
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// +build !js
+
+package main
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And this on the first line of &lt;code class=&quot;highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;And this on the first line of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wasm&lt;/span&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// +build js,wasm
 
-&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+package main
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Don’t forget to leave a &lt;strong&gt;newline&lt;/strong&gt; between the &lt;code class=&quot;highlighter-rouge&quot;&gt;//&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;/code&gt;. That’s &lt;a href=&quot;https://golang.org/pkg/go/build/#hdr-Build_Constraints&quot;&gt;not optional&lt;/a&gt; and fails silently.&lt;/p&gt;
+&lt;p&gt;Don’t forget to leave a &lt;strong&gt;newline&lt;/strong&gt; between the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;//&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;package main&lt;/code&gt;. That’s &lt;a href=&quot;https://golang.org/pkg/go/build/#hdr-Build_Constraints&quot;&gt;not optional&lt;/a&gt; and fails silently.&lt;/p&gt;
 
-&lt;p&gt;Also, don’t do &lt;code class=&quot;highlighter-rouge&quot;&gt;+build !js,wasm&lt;/code&gt;. That doesn’t work either. There’s only &lt;code class=&quot;highlighter-rouge&quot;&gt;wasm&lt;/code&gt; anyway, right?&lt;/p&gt;
+&lt;p&gt;Also, don’t do &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+build !js,wasm&lt;/code&gt;. That doesn’t work either. There’s only &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; anyway, right?&lt;/p&gt;
 
 &lt;h2 id=&quot;ok-compile-time-2&quot;&gt;Ok, compile time! #2&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;✔ $ GOOS=js GOARCH=wasm go build -o poc/main.wasm
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;✔ $ GOOS=js GOARCH=wasm go build -o poc/main.wasm
 ✔ $
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;🎉&lt;/p&gt;
 
-&lt;p&gt;Follow &lt;a href=&quot;https://github.com/golang/go/wiki/WebAssembly#getting-started&quot;&gt;these instructions&lt;/a&gt; on how to load the &lt;code class=&quot;highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; into an &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;Follow &lt;a href=&quot;https://github.com/golang/go/wiki/WebAssembly#getting-started&quot;&gt;these instructions&lt;/a&gt; on how to load the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; into an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.html&lt;/code&gt; file.&lt;/p&gt;
 
-&lt;p&gt;If you try to open the &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; directly on your browser you’ll get this error on the browser’s Developer Console:&lt;/p&gt;
+&lt;p&gt;If you try to open the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.html&lt;/code&gt; directly on your browser you’ll get this error on the browser’s Developer Console:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Fetch API cannot load file:///.../poc/main.wasm.
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Fetch API cannot load file:///.../poc/main.wasm.
 URL scheme must be &quot;http&quot; or &quot;https&quot; for CORS request.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -218,20 +218,20 @@ URL scheme must be &quot;http&quot; or &quot;https&quot; for CORS request.
 
 &lt;h2 id=&quot;serving-the-files&quot;&gt;Serving the files&lt;/h2&gt;
 
-&lt;p&gt;Your favourite one-liner server (is it Python’s &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; for all of us?), might give you this error:&lt;/p&gt;
+&lt;p&gt;Your favourite one-liner server (is it Python’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; for all of us?), might give you this error:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: Response has unsupported MIME type
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: Response has unsupported MIME type
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You need a server that knows about WebAssembly’s MIME type.&lt;/p&gt;
 
 &lt;p&gt;The easy way:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# install goexec: go get -u github.com/shurcooL/goexec
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# install goexec: go get -u github.com/shurcooL/goexec
 $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If you really want to use &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; there’s a solution that I validated to work &lt;a href=&quot;https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you really want to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SimpleHTTPServer&lt;/code&gt; there’s a solution that I validated to work &lt;a href=&quot;https://curiousprog.com/2018/10/08/serving-webassembly-files-with-a-development-web-server/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;did-it-work&quot;&gt;Did it work?&lt;/h2&gt;
 
@@ -251,13 +251,13 @@ $ goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
 
 &lt;p&gt;Drop-in replacement for the Go compiler, right?&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
 error: requires go version 1.11, 1.12, or 1.13, got go1.14
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Ok, that’s not that bad. Go 1.14 is gonna be supported &lt;a href=&quot;https://github.com/tinygo-org/tinygo/pull/901&quot;&gt;soon&lt;/a&gt;, but for now we’ll have to downgrade:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ brew install go@1.13
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ brew install go@1.13
 ...
 $ echo 'export PATH=&quot;/usr/local/opt/go@1.13/bin:$PATH&quot;' &amp;gt;&amp;gt; ~/.bash_profile
 ...
@@ -285,18 +285,18 @@ usr/local/Cellar/go@1.13/1.13.9/libexec/src/encoding/asn1/marshal.go:483:103: t.
 
 &lt;p&gt;&lt;a href=&quot;https://tinygo.org/lang-support/stdlib/&quot;&gt;https://tinygo.org/lang-support/stdlib/&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Some key unsupported packages: &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding/json&lt;/code&gt; &amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;net/http&lt;/code&gt; (I assume &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding/asn1&lt;/code&gt; is a dependency of &lt;code class=&quot;highlighter-rouge&quot;&gt;net/http&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Some key unsupported packages: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encoding/json&lt;/code&gt; &amp;amp; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net/http&lt;/code&gt; (I assume &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encoding/asn1&lt;/code&gt; is a dependency of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net/http&lt;/code&gt;).&lt;/p&gt;
 
-&lt;p&gt;I was using both. Since I don’t need them for the JS part, the solution is to use a TinyGo-specific build constraint instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;// +build !js&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;I was using both. Since I don’t need them for the JS part, the solution is to use a TinyGo-specific build constraint instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;// +build !js&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// +build !tinygo&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And vice-versa for &lt;code class=&quot;highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;And vice-versa for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main_js.go&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;tinygo-round-3&quot;&gt;TinyGo, Round 3!&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
 # github.com/marianogappa/cheesse
 main_js.go:102:7: j.IsUndefined undefined (type js.Value has no field or method IsUndefined)
 main_js.go:102:26: j.IsNull undefined (type js.Value has no field or method IsNull)
@@ -304,7 +304,7 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Unsupported &lt;code class=&quot;highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt; methods?&lt;/p&gt;
+&lt;p&gt;Unsupported &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;js/syscall&lt;/code&gt; methods?&lt;/p&gt;
 
 &lt;p&gt;Nah, this one is not on TinyGo. We’ve downgraded Go to 1.13.9, so those methods don’t exist anymore.&lt;/p&gt;
 
@@ -320,7 +320,7 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 
 &lt;h2 id=&quot;tinygo-round-4&quot;&gt;TinyGo, Round 4!&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tinygo build -o poc/main.wasm -target wasm .
 # github.com/marianogappa/cheesse/api
 /usr/local/Cellar/tinygo/0.12.0/src/sync/pool.go:14:14 unsupported instruction during init evaluation:
   %23 = inttoptr i32 %22 to %runtime._interface (i8*, i8*)*, !dbg !1864
@@ -328,18 +328,18 @@ main_js.go:95:7: j.IsUndefined undefined (type js.Value has no field or method I
 
 &lt;p&gt;Huh?&lt;/p&gt;
 
-&lt;p&gt;Ok, that’s confusing, but it’s something to do with an instruction that runs during an &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt; that indirectly ends up in &lt;code class=&quot;highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;, that must be unsupported or something.&lt;/p&gt;
+&lt;p&gt;Ok, that’s confusing, but it’s something to do with an instruction that runs during an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init()&lt;/code&gt; that indirectly ends up in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;, that must be unsupported or something.&lt;/p&gt;
 
-&lt;p&gt;I don’t use &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt;, and &lt;a href=&quot;https://github.com/leighmcculloch/gochecknoinits&quot;&gt;neither should you&lt;/a&gt;. But if you have a &lt;code class=&quot;highlighter-rouge&quot;&gt;var&lt;/code&gt; in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I don’t use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init()&lt;/code&gt;, and &lt;a href=&quot;https://github.com/leighmcculloch/gochecknoinits&quot;&gt;neither should you&lt;/a&gt;. But if you have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var&lt;/code&gt; in the global scope (i.e. a global variable) that calls something, then the Go compiler will put that in an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init()&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;You shouldn’t have globals either, but we make some exceptions, and in my case it was like a million error literals like this one:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;errBlackCastle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Errorf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;impossible for black to castle since king has moved&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;It turns out &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; ends up calling &lt;code class=&quot;highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;. A brilliant workaround for this one is to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;errors.New&lt;/code&gt;. This only works if you have nothing to interpolate, but since it’s a global, you probably don’t.&lt;/p&gt;
+&lt;p&gt;It turns out &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; ends up calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sync/pool&lt;/code&gt;. A brilliant workaround for this one is to replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fmt.Errorf&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;errors.New&lt;/code&gt;. This only works if you have nothing to interpolate, but since it’s a global, you probably don’t.&lt;/p&gt;
 
-&lt;p&gt;If you have other globals that call things, keep the &lt;code class=&quot;highlighter-rouge&quot;&gt;var&lt;/code&gt;, but initialise the value in your &lt;code class=&quot;highlighter-rouge&quot;&gt;main()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you have other globals that call things, keep the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var&lt;/code&gt;, but initialise the value in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main()&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;tinygo-round-5&quot;&gt;TinyGo: Round 5!&lt;/h2&gt;
 
@@ -356,7 +356,7 @@ error: optimizations caused a verification failure
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;WAT.
-Ok, I don’t know. But if you get this, the workaround is to add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-no-debug&lt;/code&gt; flag to the compile line.&lt;/p&gt;
+Ok, I don’t know. But if you get this, the workaround is to add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-no-debug&lt;/code&gt; flag to the compile line.&lt;/p&gt;
 
 &lt;h2 id=&quot;tinygo-round-6&quot;&gt;TinyGo, Round 6!&lt;/h2&gt;
 
@@ -368,10 +368,10 @@ Ok, I don’t know. But if you get this, the workaround is to add the &lt;code c
 
 &lt;p&gt;Nope. If you get an error in the Developer Console on your browser, perhaps this one:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: import object field 'wasi_unstable' is not an Object
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TypeError: import object field 'wasi_unstable' is not an Object
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;You need to take into account that every compiler you use, and every version of that compiler might have a different companion &lt;code class=&quot;highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt;. For TinyGo, do this:&lt;/p&gt;
+&lt;p&gt;You need to take into account that every compiler you use, and every version of that compiler might have a different companion &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt;. For TinyGo, do this:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;tinygo &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;TINYGOROOT&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;/targets/wasm_exec.js &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -380,13 +380,13 @@ Ok, I don’t know. But if you get this, the workaround is to add the &lt;code c
 
 &lt;p&gt;You might do absolutely everything right, get it compiled and then go to your browser’s Developer Console and see this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: syscall/js: Value.Call: property _makeFuncWrapper is not a function, got undefined [wasm_exec.js:201:19](http://localhost:8000/wasm_exec.js)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: syscall/js: Value.Call: property _makeFuncWrapper is not a function, got undefined [wasm_exec.js:201:19](http://localhost:8000/wasm_exec.js)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;That one is this issue:
 &lt;a href=&quot;https://github.com/tinygo-org/tinygo/issues/716&quot;&gt;https://github.com/tinygo-org/tinygo/issues/716&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;It might be solved by the time you read this, but the workaround at the time of this writing is to switch to the &lt;code class=&quot;highlighter-rouge&quot;&gt;dev&lt;/code&gt; version of TinyGo, which is pretty bleeding edge but seems to work well.&lt;/p&gt;
+&lt;p&gt;It might be solved by the time you read this, but the workaround at the time of this writing is to switch to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev&lt;/code&gt; version of TinyGo, which is pretty bleeding edge but seems to work well.&lt;/p&gt;
 
 &lt;p&gt;Follow the &lt;a href=&quot;https://tinygo.org/getting-started/macos/&quot;&gt;Source Install instructions&lt;/a&gt; and change branch before installing.&lt;/p&gt;
 
@@ -407,7 +407,7 @@ Ok, I don’t know. But if you get this, the workaround is to add the &lt;code c
 &lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Before testing on the browser, remember that you’ve changed the version of TinyGo, so you must copy &lt;code class=&quot;highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt; again, only this time the file is in a different place because you’ve built from source:&lt;/p&gt;
+&lt;p&gt;Before testing on the browser, remember that you’ve changed the version of TinyGo, so you must copy &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm_exec.js&lt;/code&gt; again, only this time the file is in a different place because you’ve built from source:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$GOPATH&lt;/span&gt;/src/github.com/tinygo-org/tinygo/targets/wasm_exec.js &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -443,6 +443,55 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
         <pubDate>Wed, 01 Apr 2020 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
+      </item>
+    
+      <item>
+        <title>A chess story</title>
+        <description>&lt;p&gt;On the last week of October of 2015, whilst working as a software engineer for the film industry in Auckland, New Zealand, my company announced that we were going to host a full-day “hackathon”. A hackathon is an event in which a large number of people meet to engage in collaborative computer programming.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-hackathon.png&quot; alt=&quot;Chess Story: Hackathon&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;My favourite hackathon idea was to come up with a game similar to chess, but with a large board and no turns, that is, a real-time chess World game! I was incredibly excited, so I gathered my dream team of engineers for an impromptu meeting where I pitched the project. Unfortunately, no one liked the idea. The most senior engineer on the team rightfully pointed out that such a project would take months, and we only had 24 hours. I was disappointed, but nowhere near giving up!&lt;/p&gt;
+
+&lt;p&gt;On November 2nd, 2015, I started a timid open source project code-named “ostinato”. Ostinato is an italian noun that plays with the adjective “obstinate”, meaning “stubbornly refusing to change one’s opinion or chosen course of action, despite attempts to persuade one to do so”, which is exactly what this project was all about. At the time, the project was an attempt to build a generic engine for board games:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-initial-commit.png&quot; alt=&quot;Chess Story: Initial commit&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It turned out that making a computer engine for chess was not quite a walk in the park. Over the next 5 months I spent most of my free time working on it; notably the whole Easter long weekend:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-easter.png&quot; alt=&quot;Chess Story: Easter&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;By the time the bulk of the development was finished, ostinato was quite a unique project. Sure, there were faster, smarter, more beautiful chess sites available on the Internet, but ostinato was one of the few free and open source tools online that would allow people to input chess matches from a book or a magazine and playing them back on screen, or converting them to different notations.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-converter.png&quot; alt=&quot;Chess Story: Converter&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;From a technical standpoint, it is still the only publicly available chess engine I know that works both as a server and standalone within the browser. On March 27th, 2019, I realised that the top Google result for converting chess notations is the ostinato library!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-google.png&quot; alt=&quot;Chess Story: Google&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On September 12th, 2017, I received an email from a 79-year-old man from San Pedro, California whose name was Ken Pauley. In it there was a polite request for fixing a few issues with the conversion from Descriptive to Algebraic Notation. Excited to see traction on a near-abandoned project, I eagerly replied and tried to work out some of the issues pointed out in the email thread.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-ken-email.png&quot; alt=&quot;Chess Story: Ken's email&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To my surprise, the interactions between Ken and me never stopped. At the time of this writing, we’ve shared 161 email threads in the last 3 years, and have formed quite the long-distance and inter-generational friendship. Some perks of this newfound friendship have included receiving a few treats of Hawaian provenance!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-treats.png&quot; alt=&quot;Chess Story: Treats&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On March 6th, 2019, Ken floated the idea of converting Irving Chernev’s 1962 classic Practical Chess Endings to Algebraic notation. Then on June 20th, 2019, I was asked to be a co-author, to which I agreed.&lt;/p&gt;
+
+&lt;p&gt;Because there is no digitised version of the existing book (although there is an image-only scanned version on Google Books), Ken had to do the complete digitising effort himself, which has been an arduous process.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-arduous.jpg&quot; alt=&quot;Chess Story: Arduous&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However, thanks to the chess engine available and the long hours sitting at the computer, Ken was able to find and fix countless errors in the original publication. In turn, I was able to produce a website counterpart to the book where one can browse through the games by looking at an actual board and watching the endings unfold.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/chess-story-website.png&quot; alt=&quot;Chess Story: Website&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Despite the many lost weekends and the long nights figuring out obscure technical issues, this has been a unique and exciting 5-year experience, and I’m very proud of sharing the unlikely story of how an American aerospace engineer in his 80s and an Argentine software engineer in his 30s with a common passion found each other on the Internet and published a chess book together; a story worth sharing.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 03 Jan 2020 00:00:00 +0000</pubDate>
+        <link>https://marianogappa.github.io/software/2020/01/03/chess-story/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/01/03/chess-story/</guid>
       </item>
     
       <item>
@@ -482,7 +531,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;h3 id=&quot;syntactic-analysis&quot;&gt;Syntactic Analysis&lt;/h3&gt;
 
-&lt;p&gt;This part is where we actually look at the tokens, make sure they make sense and interpret them to construct some product &lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt; that represents the query in a way that is convenient for the application that is gonna use it (e.g. for executing the query, colour highlighting it). After this step, we’d end up with something like:&lt;/p&gt;
+&lt;p&gt;This part is where we actually look at the tokens, make sure they make sense and interpret them to construct some product &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;struct&lt;/code&gt; that represents the query in a way that is convenient for the application that is gonna use it (e.g. for executing the query, colour highlighting it). After this step, we’d end up with something like:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Select&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
@@ -495,7 +544,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;h2 id=&quot;strategy&quot;&gt;Strategy&lt;/h2&gt;
 
-&lt;p&gt;We’ll define a &lt;code class=&quot;highlighter-rouge&quot;&gt;parser&lt;/code&gt; that looks like this:&lt;/p&gt;
+&lt;p&gt;We’ll define a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parser&lt;/code&gt; that looks like this:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt;             &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;        &lt;span class=&quot;c&quot;&gt;// The query to parse&lt;/span&gt;
@@ -534,7 +583,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And we can basically fill in the &lt;code class=&quot;highlighter-rouge&quot;&gt;TODO&lt;/code&gt;s and profit! However, the diligent reader will see that the code for parsing the whole &lt;code class=&quot;highlighter-rouge&quot;&gt;SELECT&lt;/code&gt; query can get messy really quickly, and we have many types of queries to parse. We’re gonna need some structure.&lt;/p&gt;
+&lt;p&gt;And we can basically fill in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TODO&lt;/code&gt;s and profit! However, the diligent reader will see that the code for parsing the whole &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SELECT&lt;/code&gt; query can get messy really quickly, and we have many types of queries to parse. We’re gonna need some structure.&lt;/p&gt;
 
 &lt;h2 id=&quot;finite-state-machines&quot;&gt;Finite-state Machines&lt;/h2&gt;
 
@@ -548,7 +597,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sql_parser_table.png&quot; alt=&quot;SQL Parser Table&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;We can directly translate this table to a really large switch statement. We’ll use that sneaky &lt;code class=&quot;highlighter-rouge&quot;&gt;parser.step&lt;/code&gt; property we defined before:&lt;/p&gt;
+&lt;p&gt;We can directly translate this table to a really large switch statement. We’ll use that sneaky &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parser.step&lt;/code&gt; property we defined before:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stepType&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// initial step&lt;/span&gt;
@@ -580,11 +629,11 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And there we go! Note that some steps might conditionally cycle back to previous ones, like a comma on the &lt;code class=&quot;highlighter-rouge&quot;&gt;SELECT&lt;/code&gt; field definition. This strategy scales well for basic parsers. As the grammar grows complex, though, the number of states will increase dramatically, so it can get tedious to write. I recommend testing as you code; more on that below.&lt;/p&gt;
+&lt;p&gt;And there we go! Note that some steps might conditionally cycle back to previous ones, like a comma on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SELECT&lt;/code&gt; field definition. This strategy scales well for basic parsers. As the grammar grows complex, though, the number of states will increase dramatically, so it can get tedious to write. I recommend testing as you code; more on that below.&lt;/p&gt;
 
 &lt;h2 id=&quot;peek-implementation&quot;&gt;Peek() implementation&lt;/h2&gt;
 
-&lt;p&gt;Remember that we need to implement both &lt;code class=&quot;highlighter-rouge&quot;&gt;peek()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;pop()&lt;/code&gt;. Since they do almost the same, let’s use an auxiliary function to keep things &lt;a href=&quot;https://en.wikipedia.org/wiki/Don%27t_repeat_yourself&quot;&gt;DRY&lt;/a&gt;. Also, &lt;code class=&quot;highlighter-rouge&quot;&gt;pop()&lt;/code&gt; should further advance the index to avoid peeking whitespace.&lt;/p&gt;
+&lt;p&gt;Remember that we need to implement both &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;peek()&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pop()&lt;/code&gt;. Since they do almost the same, let’s use an auxiliary function to keep things &lt;a href=&quot;https://en.wikipedia.org/wiki/Don%27t_repeat_yourself&quot;&gt;DRY&lt;/a&gt;. Also, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pop()&lt;/code&gt; should further advance the index to avoid peeking whitespace.&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peek&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;peeked&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;peekWithLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
@@ -613,7 +662,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;In addition to those, we might come across quoted strings or plain identifiers (e.g. field names). Here’s a hopefully complete &lt;code class=&quot;highlighter-rouge&quot;&gt;peekWithLength()&lt;/code&gt; implementation:&lt;/p&gt;
+&lt;p&gt;In addition to those, we might come across quoted strings or plain identifiers (e.g. field names). Here’s a hopefully complete &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;peekWithLength()&lt;/code&gt; implementation:&lt;/p&gt;
 
 &lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peekWithLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -637,7 +686,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;h2 id=&quot;final-validation&quot;&gt;Final validation&lt;/h2&gt;
 
-&lt;p&gt;The parser might find the end of the string before arriving at a complete query definition. It’s probably a good idea to implement a &lt;code class=&quot;highlighter-rouge&quot;&gt;parser.validate()&lt;/code&gt; function that looks at the generated “query” struct, and returns an error if it’s incomplete or otherwise wrong.&lt;/p&gt;
+&lt;p&gt;The parser might find the end of the string before arriving at a complete query definition. It’s probably a good idea to implement a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parser.validate()&lt;/code&gt; function that looks at the generated “query” struct, and returns an error if it’s incomplete or otherwise wrong.&lt;/p&gt;
 
 &lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
 
@@ -702,7 +751,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
   &lt;li&gt;Custom parsing simple grammars with zero dependencies&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;However, this approach can get tedious and it’s somewhat limiting. Think about how to parse arbitrarily complex compound expressions (e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;sqrt(a) = (1 * (2 + 3))&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;However, this approach can get tedious and it’s somewhat limiting. Think about how to parse arbitrarily complex compound expressions (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sqrt(a) = (1 * (2 + 3))&lt;/code&gt;).&lt;/p&gt;
 
 &lt;p&gt;For a more powerful parsing model, look into &lt;a href=&quot;https://en.wikipedia.org/wiki/Parser_combinator&quot;&gt;parser combinators&lt;/a&gt;. &lt;a href=&quot;https://godoc.org/golang.org/x/tools/cmd/goyacc&quot;&gt;goyacc&lt;/a&gt; is a popular Go implementation.&lt;/p&gt;
 
@@ -1024,14 +1073,14 @@ By my calculation, we will save more than $50,000 this year and a similar amount
 &lt;p&gt;We can work around these impediments:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; obviously allows us to connect to a remote database, provided you grant the (appropriate permissions)[https://dev.mysql.com/doc/refman/5.7/en/grant.html] to the user within the MySQL server and allow the remote incoming connection on the server’s firewall.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; obviously allows us to connect to a remote database, provided you grant the (appropriate permissions)[https://dev.mysql.com/doc/refman/5.7/en/grant.html] to the user within the MySQL server and allow the remote incoming connection on the server’s firewall.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; remote.movio.co &lt;span class=&quot;nt&quot;&gt;-P3306&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; mariano &lt;span class=&quot;nt&quot;&gt;-pmypass&lt;/span&gt; db
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;We can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;-e&lt;/code&gt; flag to supply a query to the client. When this flag is supplied, the client is not interactive.&lt;/li&gt;
+  &lt;li&gt;We can use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-e&lt;/code&gt; flag to supply a query to the client. When this flag is supplied, the client is not interactive.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; remote.movio.co &lt;span class=&quot;nt&quot;&gt;-P3306&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; mariano &lt;span class=&quot;nt&quot;&gt;-pmypass&lt;/span&gt; db &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -1044,7 +1093,7 @@ By my calculation, we will save more than $50,000 this year and a similar amount
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;To get an output we can use, we can add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-N&lt;/code&gt; (skip column names), &lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt; (silent, less output) and &lt;code class=&quot;highlighter-rouge&quot;&gt;-r&lt;/code&gt; (raw output, tabular format) flags.&lt;/li&gt;
+  &lt;li&gt;To get an output we can use, we can add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-N&lt;/code&gt; (skip column names), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-s&lt;/code&gt; (silent, less output) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-r&lt;/code&gt; (raw output, tabular format) flags.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; remote.movio.co &lt;span class=&quot;nt&quot;&gt;-P3306&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; mariano &lt;span class=&quot;nt&quot;&gt;-pmypass&lt;/span&gt; db &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -1052,7 +1101,7 @@ By my calculation, we will save more than $50,000 this year and a similar amount
 1 2 3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;That’s much better. We can now, as an example, pipe the output to &lt;code class=&quot;highlighter-rouge&quot;&gt;tr&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bc&lt;/code&gt; to sum them up:&lt;/p&gt;
+&lt;p&gt;That’s much better. We can now, as an example, pipe the output to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tr&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bc&lt;/code&gt; to sum them up:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; remote.movio.co &lt;span class=&quot;nt&quot;&gt;-P3306&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; mariano &lt;span class=&quot;nt&quot;&gt;-pmypass&lt;/span&gt; db &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;-Nsre&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;SELECT * FROM (SELECT 1, 2, 3) t&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; | bc
@@ -1089,15 +1138,15 @@ By my calculation, we will save more than $50,000 this year and a similar amount
 
 &lt;p&gt;Hoping to address all these issues, we built a simple Go CLI tool called &lt;a href=&quot;https://github.com/marianogappa/sql&quot;&gt;sql&lt;/a&gt;. At the time of this writing, it was basically a ~200 LoC main.go.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; reads from standard input until an EOF (it assumes the content is a MySQL query) and then sends the query to one or multiple databases, and outputs the results in a tabulated format.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; reads from standard input until an EOF (it assumes the content is a MySQL query) and then sends the query to one or multiple databases, and outputs the results in a tabulated format.&lt;/p&gt;
 
-&lt;p&gt;Using &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;, the previous example becomes:&lt;/p&gt;
+&lt;p&gt;Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt;, the previous example becomes:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT * FROM (SELECT 1, 2, 3) t&quot;&lt;/span&gt; | sql remote | &lt;span class=&quot;nb&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; | bc
 6
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; requires a configuration file with the database locations and credentials. The previous example assumes you have a configuration file that looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; requires a configuration file with the database locations and credentials. The previous example assumes you have a configuration file that looks like this:&lt;/p&gt;
 
 &lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;remote&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
@@ -1120,13 +1169,13 @@ remote2    Mikhail
 remote2    Am
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;sql all&lt;/code&gt; to query all the databases in your configuration file.&lt;/p&gt;
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql all&lt;/code&gt; to query all the databases in your configuration file.&lt;/p&gt;
 
-&lt;p&gt;Additionally it supports the case where your local machine doesn’t have permission to connect remotely but you have ssh access to a server that does; in this case &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; will first &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to the server, and then connect to &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Additionally it supports the case where your local machine doesn’t have permission to connect remotely but you have ssh access to a server that does; in this case &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; will first &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to the server, and then connect to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sql_and_chart_diagram.jpg&quot; alt=&quot;sql diagram&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; depends on the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client and optionally &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt;. When &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; is used, the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client must be installed on the remote server.&lt;/p&gt;
+&lt;p&gt;Note that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; depends on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client and optionally &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;. When &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt; is used, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; client must be installed on the remote server.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-happened-next&quot;&gt;What happened next&lt;/h2&gt;
 
@@ -1178,7 +1227,7 @@ remote2    Am
 
 &lt;p&gt;Unfortunately, the resulting dataset is relatively hard to read and interpret:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ABC  184063  2017-05-20 15:08:37
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ABC  184063  2017-05-20 15:08:37
 JKL  14161 2017-05-20 12:02:49
 DEF  1510620 2017-05-20 11:02:59
 DEF  16923 2017-05-17 17:58:23
@@ -1196,9 +1245,9 @@ GHI  16959 2017-05-17 17:32:21
 
 &lt;p&gt;Linux has a world-class charting tool called &lt;a href=&quot;http://www.gnuplot.info/&quot;&gt;gnuplot&lt;/a&gt;. It’s super powerful and covers all chart types and features exhaustively, but it’s also slightly inconvenient for quick ad-hoc charting. It’s &lt;a href=&quot;http://www.gnuplot.info/docs_4.0/gpcard.pdf&quot;&gt;a little hard to learn&lt;/a&gt;. I must admit, I haven’t given it a fair shot as I find it too complex.&lt;/p&gt;
 
-&lt;p&gt;Instead, we built a very simple charting tool called &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;. It reads data from standard input (e.g. the output from &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;), figures out the format and opens a browser tab with a chart of the data. For the actual charting it uses &lt;a href=&quot;http://www.chartjs.org/&quot;&gt;Chart.js&lt;/a&gt;, which is the simplest, most lightweight decent charting library we could find.&lt;/p&gt;
+&lt;p&gt;Instead, we built a very simple charting tool called &lt;a href=&quot;https://github.com/marianogappa/chart&quot;&gt;chart&lt;/a&gt;. It reads data from standard input (e.g. the output from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt;), figures out the format and opens a browser tab with a chart of the data. For the actual charting it uses &lt;a href=&quot;http://www.chartjs.org/&quot;&gt;Chart.js&lt;/a&gt;, which is the simplest, most lightweight decent charting library we could find.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; has only a very limited set of smarts and modifiers. The key is to keep it simple and only implement what we use.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; has only a very limited set of smarts and modifiers. The key is to keep it simple and only implement what we use.&lt;/p&gt;
 
 &lt;p&gt;For step one (de-risking), we need a scatter plot of send counts from the last week of every customer:&lt;/p&gt;
 
@@ -1217,7 +1266,7 @@ GHI  16959 2017-05-17 17:32:21
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;All this is remarkably simple to do in &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;All this is remarkably simple to do in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT sentCount, utcSent FROM Campaigns&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
  &lt;span class=&quot;s2&quot;&gt;&quot;WHERE utcSent &amp;gt; &quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -1225,7 +1274,7 @@ GHI  16959 2017-05-17 17:32:21
  chart scatter log mysql
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;(the &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; argument is an alias of &lt;code class=&quot;highlighter-rouge&quot;&gt;--date-format &quot;2006-01-02 15:04:05&quot;&lt;/code&gt;, and was added because it’s a very common occurrence)&lt;/p&gt;
+&lt;p&gt;(the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; argument is an alias of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--date-format &quot;2006-01-02 15:04:05&quot;&lt;/code&gt;, and was added because it’s a very common occurrence)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sql_and_chart_send_campaigns_scatter.png&quot; alt=&quot;Email campaign send scatter plot&quot; /&gt;&lt;/p&gt;
 
@@ -1247,7 +1296,7 @@ GHI  16959 2017-05-17 17:32:21
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;With a little &lt;code class=&quot;highlighter-rouge&quot;&gt;jq&lt;/code&gt; magic we can filter out the logs we’re not interested in, and just output the reason for each failure:&lt;/p&gt;
+&lt;p&gt;With a little &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jq&lt;/code&gt; magic we can filter out the logs we’re not interested in, and just output the reason for each failure:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jq &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'select(.customer == &quot;ABC&quot; and .campaignId == &quot;123&quot;)` \
 `| .reason'&lt;/span&gt; /var/log/failures.log
@@ -1259,7 +1308,7 @@ soft_bounce
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Identifier frequency is also a very common use case, so when &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; receives a list of strings it assumes you want a pie chart with each distinct string as a category and its frequency as a slice of the total.&lt;/p&gt;
+&lt;p&gt;Identifier frequency is also a very common use case, so when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; receives a list of strings it assumes you want a pie chart with each distinct string as a category and its frequency as a slice of the total.&lt;/p&gt;
 
 &lt;p&gt;We can just pipe that output to chart:&lt;/p&gt;
 
@@ -1298,19 +1347,19 @@ soft_bounce
 
 &lt;h2 id=&quot;gotchas&quot;&gt;Gotchas&lt;/h2&gt;
 
-&lt;p&gt;If you plan to try &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; for your workflow, you should probably read this section first.&lt;/p&gt;
+&lt;p&gt;If you plan to try &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; for your workflow, you should probably read this section first.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Read-only is best&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; should be used with care; especially against multiple databases. Everyone makes mistakes, and &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; allows you to multiply your destructive power! If you don’t have it already, create a database username with read-only permissions, and use this one with &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; should be used with care; especially against multiple databases. Everyone makes mistakes, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; allows you to multiply your destructive power! If you don’t have it already, create a database username with read-only permissions, and use this one with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Even read-only can be dangerous&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Remember that MyISAM tables will perform a &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/internal-locking.html#internal-table-level-locking&quot;&gt;table-level lock on reads&lt;/a&gt;. Even on InnoDB, please don’t &lt;code class=&quot;highlighter-rouge&quot;&gt;SELECT * FROM users&lt;/code&gt; on your entire set of databases!&lt;/p&gt;
+&lt;p&gt;Remember that MyISAM tables will perform a &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/internal-locking.html#internal-table-level-locking&quot;&gt;table-level lock on reads&lt;/a&gt;. Even on InnoDB, please don’t &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SELECT * FROM users&lt;/code&gt; on your entire set of databases!&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Timing queries&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; doesn’t output query running time like the MySQL client does. However, you can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;time&lt;/code&gt; coreutils tool like this:&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; doesn’t output query running time like the MySQL client does. However, you can use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;time&lt;/code&gt; coreutils tool like this:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;sql test_db &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;SELECT COUNT(*) FROM users&quot;&lt;/span&gt;
 real    0m6.624s
@@ -1322,7 +1371,7 @@ sys     0m0.034s
 
 &lt;p&gt;&lt;strong&gt;Watching SHOW PROCESSLIST&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;If you want to double-check that a query is running on some database server, &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; gives you an easy way to inspect queries running for that schema:&lt;/p&gt;
+&lt;p&gt;If you want to double-check that a query is running on some database server, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; gives you an easy way to inspect queries running for that schema:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;watch &lt;span class=&quot;s2&quot;&gt;&quot;echo 'show processlist' | sql my_db&quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1334,7 +1383,7 @@ sys     0m0.034s
 
 &lt;p&gt;&lt;strong&gt;Learning chart should be very easy&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; encourages you to learn on demand and by example.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; encourages you to learn on demand and by example.&lt;/p&gt;
 
 &lt;p&gt;There are 3 simple ways to learn how to use it:&lt;/p&gt;
 
@@ -1346,7 +1395,7 @@ sys     0m0.034s
     &lt;p&gt;Try it! Pipe your data to chart and try the few available options.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Distrust it. Add the &lt;code class=&quot;highlighter-rouge&quot;&gt;--debug&lt;/code&gt; option to check how &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; interpreted your input. You’ll get an intuition for how it works.&lt;/p&gt;
+    &lt;p&gt;Distrust it. Add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--debug&lt;/code&gt; option to check how &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; interpreted your input. You’ll get an intuition for how it works.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
 
@@ -1354,13 +1403,13 @@ sys     0m0.034s
 
 &lt;h2 id=&quot;closing-thoughts&quot;&gt;Closing thoughts&lt;/h2&gt;
 
-&lt;p&gt;With &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt;, we’ve found a convenient pattern for quickly diagnosing our support issues. If your work revolves around databases, I think it might be useful for you. Data Scientists might draw a parallel to using &lt;a href=&quot;https://matplotlib.org/&quot;&gt;matplotlib&lt;/a&gt; on Jupyter Notebooks.&lt;/p&gt;
+&lt;p&gt;With &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt;, we’ve found a convenient pattern for quickly diagnosing our support issues. If your work revolves around databases, I think it might be useful for you. Data Scientists might draw a parallel to using &lt;a href=&quot;https://matplotlib.org/&quot;&gt;matplotlib&lt;/a&gt; on Jupyter Notebooks.&lt;/p&gt;
 
-&lt;p&gt;Currently, only MySQL is supported. It looks like adding support for PostgreSQL, for example, would be a two hour job. However, I’m not planning on it as we wouldn’t be able to test it on a daily basis, like we do with MySQL now. But you can! &lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; are &lt;a href=&quot;https://github.com/marianogappa/sql#contribute&quot;&gt;open&lt;/a&gt; for &lt;a href=&quot;https://github.com/marianogappa/chart#contribute&quot;&gt;contributions&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Currently, only MySQL is supported. It looks like adding support for PostgreSQL, for example, would be a two hour job. However, I’m not planning on it as we wouldn’t be able to test it on a daily basis, like we do with MySQL now. But you can! &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; are &lt;a href=&quot;https://github.com/marianogappa/sql#contribute&quot;&gt;open&lt;/a&gt; for &lt;a href=&quot;https://github.com/marianogappa/chart#contribute&quot;&gt;contributions&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;In the same vein, &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; will probably not support complex use cases. In those cases, you’re better off with gnuplot, Excel or Google Sheets; use the right tool for the job.&lt;/p&gt;
+&lt;p&gt;In the same vein, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; will probably not support complex use cases. In those cases, you’re better off with gnuplot, Excel or Google Sheets; use the right tool for the job.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;chart&lt;/code&gt; are free and open source. We hope you find them useful! If you can, please help us to keep them simple and useful as time goes on and we face new interesting challenges. Thank you for reading this blogpost. KISS!&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sql&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chart&lt;/code&gt; are free and open source. We hope you find them useful! If you can, please help us to keep them simple and useful as time goes on and we face new interesting challenges. Thank you for reading this blogpost. KISS!&lt;/p&gt;
 </description>
         <pubDate>Wed, 28 Jun 2017 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link>
@@ -1432,7 +1481,7 @@ sys     0m0.034s
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sbt pack
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; the folder and find the ostinato_2.12-*.jar):&lt;/p&gt;
+&lt;p&gt;We should be able to start a REPL with the ostinato jar in the classpath (the exact path could change over time so just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ls&lt;/code&gt; the folder and find the ostinato_2.12-*.jar):&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scala &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; target/pack/lib/ostinato_2.12-1.0.2.jar
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1443,7 +1492,7 @@ sys     0m0.034s
 &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ostinato.chess.core._&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;OK. Let’s generate a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; identical to the one in the puzzle:&lt;/p&gt;
+&lt;p&gt;OK. Let’s generate a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; identical to the one in the puzzle:&lt;/p&gt;
 
 &lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ChessGame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;fromGridString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;........
@@ -1465,11 +1514,11 @@ sys     0m0.034s
 &lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;All the &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame.from...&lt;/code&gt; &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString&quot;&gt;methods&lt;/a&gt; return a &lt;code class=&quot;highlighter-rouge&quot;&gt;Try[ChessGame]&lt;/code&gt;, because parsing could fail. In this case, I know it’ll work so I just &lt;code class=&quot;highlighter-rouge&quot;&gt;.get&lt;/code&gt;, and get the board from it.&lt;/p&gt;
+&lt;p&gt;All the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessGame.from...&lt;/code&gt; &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/chess/core/ChessGame$.html#fromGridString&quot;&gt;methods&lt;/a&gt; return a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Try[ChessGame]&lt;/code&gt;, because parsing could fail. In this case, I know it’ll work so I just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.get&lt;/code&gt;, and get the board from it.&lt;/p&gt;
 
 &lt;p&gt;Note that the Unicode symbols were made with the assumption of black foreground and white background. In the REPL, this is often times backwards. This might confuse you as to which colour is which. Use &lt;a href=&quot;https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode&quot;&gt;this&lt;/a&gt; as a safe copy-paste.&lt;/p&gt;
 
-&lt;p&gt;We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include &lt;code class=&quot;highlighter-rouge&quot;&gt;White resigns&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;White claims draw&lt;/code&gt;, which we’re not interested in. Same will apply for the next moves. Let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessOptimisations&lt;/code&gt; instance and pass it around:&lt;/p&gt;
+&lt;p&gt;We’re gonna need to ask ostinato to be optimistic. If we calculate all actions on this board, ostinato will include &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;White resigns&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;White claims draw&lt;/code&gt;, which we’re not interested in. Same will apply for the next moves. Let’s create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessOptimisations&lt;/code&gt; instance and pass it around:&lt;/p&gt;
 
 &lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ChessOptimisations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;beOptimistic&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1500,17 +1549,17 @@ sys     0m0.034s
 &lt;span class=&quot;o&quot;&gt;........)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Yes! There’s exactly one &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; in the resulting &lt;code class=&quot;highlighter-rouge&quot;&gt;Set&lt;/code&gt;!&lt;/p&gt;
+&lt;p&gt;Yes! There’s exactly one &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt; in the resulting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set&lt;/code&gt;!&lt;/p&gt;
 
-&lt;p&gt;Let’s extract the action so we can apply it to our &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt;. That can be accomplished by appending &lt;code class=&quot;highlighter-rouge&quot;&gt;.head.history.head.action.get&lt;/code&gt; to our previous line (i.e. getting the first action in the history).&lt;/p&gt;
+&lt;p&gt;Let’s extract the action so we can apply it to our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessBoard&lt;/code&gt;. That can be accomplished by appending &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.head.history.head.action.get&lt;/code&gt; to our previous line (i.e. getting the first action in the history).&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; has a nice &lt;code class=&quot;highlighter-rouge&quot;&gt;toString&lt;/code&gt; implementation.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; has a nice &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;toString&lt;/code&gt; implementation.&lt;/p&gt;
 
 &lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;history&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;get&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessAction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;White&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'s&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Queen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f8&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Let’s apply the action on the board. Not all actions can be applied on a board, so &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction&quot;&gt;doAction&lt;/a&gt; returns an &lt;code class=&quot;highlighter-rouge&quot;&gt;Option[ChessBoard]&lt;/code&gt;. For brevity we’ll just &lt;code class=&quot;highlighter-rouge&quot;&gt;.get&lt;/code&gt; it here:&lt;/p&gt;
+&lt;p&gt;Let’s apply the action on the board. Not all actions can be applied on a board, so &lt;a href=&quot;https://marianogappa.github.io/ostinato/docs/ostinato/core/Board.html#doAction&quot;&gt;doAction&lt;/a&gt; returns an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Option[ChessBoard]&lt;/code&gt;. For brevity we’ll just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.get&lt;/code&gt; it here:&lt;/p&gt;
 
 &lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;scala&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;doAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;get&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ostinato.chess.core.ChessBoard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
@@ -1529,7 +1578,7 @@ sys     0m0.034s
 &lt;p&gt;We’ll have to:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;pick any black action (&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; in this case)&lt;/li&gt;
+  &lt;li&gt;pick any black action (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;head&lt;/code&gt; in this case)&lt;/li&gt;
   &lt;li&gt;filter the white checkmate action&lt;/li&gt;
   &lt;li&gt;retrieve the action history&lt;/li&gt;
   &lt;li&gt;history is stored backwards so we’ll have to reverse it to read it properly&lt;/li&gt;
@@ -1590,7 +1639,7 @@ sys     0m0.034s
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The only ostinato line in there is &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato.chess.js.Js().randomAiMove(board)&lt;/code&gt;. The rest is ChessboardJS and plain JavaScript.&lt;/p&gt;
+&lt;p&gt;The only ostinato line in there is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ostinato.chess.js.Js().randomAiMove(board)&lt;/code&gt;. The rest is ChessboardJS and plain JavaScript.&lt;/p&gt;
 
 &lt;p&gt;Here’s what’s available at the moment from JavaScript: &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/master/js/src/main/scala/ostinato/chess/js/Js.scala&quot;&gt;Js.scala&lt;/a&gt;&lt;/p&gt;
 
@@ -1615,7 +1664,7 @@ sys     0m0.034s
 
 &lt;p&gt;You can check if it’s working by trying the healthcheck:&lt;/p&gt;
 
-&lt;p&gt;(which could be used as a &lt;code class=&quot;highlighter-rouge&quot;&gt;livenessProbe&lt;/code&gt; on a Kubernetes deployment)&lt;/p&gt;
+&lt;p&gt;(which could be used as a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;livenessProbe&lt;/code&gt; on a Kubernetes deployment)&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl localhost:51234/healthcheck
 OK!
@@ -1652,7 +1701,7 @@ OK!
 
 &lt;p&gt;I’m too lazy to translate a board to FEN manually, so I looked around (for way longer that it would have taken me to just do it manually -.-) and I found &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.fimetech.chessfimee&amp;amp;rdid=com.fimetech.chessfimee&amp;amp;pli=1&quot;&gt;this Android app&lt;/a&gt; that OCRs the board and producess the FEN, which was:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;r1b1qb1r/1p1n2pp/p2P4/4N2k/7n/1Q4P1/PP2NP1P/R1B2RK1 w - - 0 1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;I would expect the basic AI to want to win as soon as possible, so let’s see if it finds the checkmate:&lt;/p&gt;
@@ -1674,13 +1723,13 @@ OK!
 
 &lt;p&gt;From a geeky perspective, I find it useful to have this decoupled mini-tool at my disposal.&lt;/p&gt;
 
-&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; is not &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it. I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
+&lt;p&gt;Also, I recently switched the JSON engine to &lt;a href=&quot;https://github.com/spray/spray-json&quot;&gt;spray-json&lt;/a&gt; which patiently reminded me of the JSON object names and types I was supposed to provide to the API call until I got them right. Props to &lt;a href=&quot;https://github.com/sirthias&quot;&gt;Mathias&lt;/a&gt;. If somebody could please ask him how can I unmarshal the request’s JSON payload when the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; is not &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;application/json&lt;/code&gt;, I’d really appreciate it. I’ve asked around on Gitter and SO and couldn’t get a good solution.&lt;/p&gt;
 
 &lt;h2 id=&quot;playing-a-demo-game-using-the-jvm-as-back-end&quot;&gt;Playing a demo game using the JVM as back-end&lt;/h2&gt;
 
 &lt;p&gt;Simply use the provided &lt;a href=&quot;https://marianogappa.github.io/ostinato-examples/play&quot;&gt;demo chess game&lt;/a&gt; and add the following query parameters:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useServer=localhost:51234 // location of your ostinato back-end
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useServer=localhost:51234 // location of your ostinato back-end
 depth=1 // complexity of the AI (from 0, but 3 is already slow)
 debug=1 // optional: logs AI rationale to STDOUT
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1696,16 +1745,16 @@ debug=1 // optional: logs AI rationale to STDOUT
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker run &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 51234:51234 marianogappa/ostinato:latest
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;; this depends on your Docker installation.&lt;/p&gt;
+&lt;p&gt;Once it’s up, you can try the healthcheck and other examples described above. Note that Docker may not open the port on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt;; this depends on your Docker installation.&lt;/p&gt;
 
 &lt;p&gt;If you want to experiment with the code and build the image locally (for which you will need sbt &amp;amp; Docker), you can use the provided script on the root folder:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./docker-build.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The script will kindly ask you to run &lt;code class=&quot;highlighter-rouge&quot;&gt;sbt packArchiveZip&lt;/code&gt; if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.&lt;/p&gt;
+&lt;p&gt;The script will kindly ask you to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sbt packArchiveZip&lt;/code&gt; if you haven’t done so, or if the last produced artifact was last modified half and hour ago or more.&lt;/p&gt;
 
-&lt;p&gt;The script always builds the &lt;code class=&quot;highlighter-rouge&quot;&gt;ostinato&lt;/code&gt; image with the tag &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt;. If you want to specify a custom tag, you can do it like this:&lt;/p&gt;
+&lt;p&gt;The script always builds the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ostinato&lt;/code&gt; image with the tag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;latest&lt;/code&gt;. If you want to specify a custom tag, you can do it like this:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nv&quot;&gt;$ TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;v1.2.3 ./docker-build.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1799,7 +1848,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;p&gt;Follow the auto-scaling guidelines for dynamic scaling. Here’s a quick trick:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl autoscale deployment ostinato --min=2 --max=5
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl autoscale deployment ostinato --min=2 --max=5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;developing-ostinato-and-final-thoughts&quot;&gt;Developing ostinato and final thoughts&lt;/h2&gt;
@@ -1808,7 +1857,7 @@ debug=1 // optional: logs AI rationale to STDOUT
 
 &lt;p&gt;I believe ostinato has enabled some free and open source chess-related use cases that were unavailable before; if you find them useful I’d be very happy to &lt;a href=&quot;https://twitter.com/MarianoGappa&quot;&gt;hear about it&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;OOP blogpost&lt;/a&gt;). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessGame&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Game&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; extended &lt;code class=&quot;highlighter-rouge&quot;&gt;Action&lt;/code&gt; and so on. The resulting code &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala&quot;&gt;scares me still&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;One thing I wanted to learn was how much I was profiting from OOP (after reading Lawrence Krubner’s famous &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;OOP blogpost&lt;/a&gt;). Seeing chess as a poster child for OOP, I started the library as a “turn-based game library” rather than just a “chess library”, where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessGame&lt;/code&gt; extended &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Game&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ChessAction&lt;/code&gt; extended &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Action&lt;/code&gt; and so on. The resulting code &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/core/Game.scala&quot;&gt;scares me still&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Another thing I’ve learnt is that OOP and immutable design meet the hardware in a blurring mist, and while the succintness and elegance can aid in real-life problem solving, they also hide big O complexity greatly. At some inflection point, the indirection trade-off is not worth it. While not proud about it, I must link you to some &lt;a href=&quot;https://github.com/marianogappa/ostinato/blob/d653c83fa79d33a3ab2238f42f6bef474f0ff490/shared/src/main/scala/ostinato/chess/core/package.scala#L199&quot;&gt;compromises I’ve made&lt;/a&gt; to gain acceptable response times.&lt;/p&gt;
 
@@ -1956,9 +2005,9 @@ This blogpost has received a lot of attention since it’s been published, inclu
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/scala_to_go_stream.jpg&quot; alt=&quot;Stream diagram&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;First, we made the mistake of making the &lt;code class=&quot;highlighter-rouge&quot;&gt;persist&lt;/code&gt; function &lt;a href=&quot;https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html&quot;&gt;synchronized&lt;/a&gt;. This guaranteed that buffer-full-based invocations would not run concurrently with timeout-based invocations. However, because the stream digest and the &lt;code class=&quot;highlighter-rouge&quot;&gt;persist&lt;/code&gt; functions did run concurrently and manipulated the buffer, we had to further synchronize those functions to each other!&lt;/p&gt;
+&lt;p&gt;First, we made the mistake of making the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;persist&lt;/code&gt; function &lt;a href=&quot;https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html&quot;&gt;synchronized&lt;/a&gt;. This guaranteed that buffer-full-based invocations would not run concurrently with timeout-based invocations. However, because the stream digest and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;persist&lt;/code&gt; functions did run concurrently and manipulated the buffer, we had to further synchronize those functions to each other!&lt;/p&gt;
 
-&lt;p&gt;In the end, we resorted to the &lt;a href=&quot;http://doc.akka.io/docs/akka/current/general/actor-systems.html&quot;&gt;Actor system&lt;/a&gt; as we had Akka in the module’s dependencies anyway, and it did the job. We just had to ensure that adding to the buffer and clearing the buffer were messages processed by the same Actor, and would never run concurrently. This is just fine, but to get there we needed to; learn the Actor System, teach it to the newcomers, import those dependencies, have Akka properly configured in the code and in the configuration files, etc. Furthermore, the stream came from a Kafka Consumer, and in our wrapper we needed to provide a &lt;code class=&quot;highlighter-rouge&quot;&gt;digest&lt;/code&gt; function for each consumed message that ran in a &lt;code class=&quot;highlighter-rouge&quot;&gt;Future&lt;/code&gt;. Circumventing the issue of mixing Futures and Actors required extra head scratching time.&lt;/p&gt;
+&lt;p&gt;In the end, we resorted to the &lt;a href=&quot;http://doc.akka.io/docs/akka/current/general/actor-systems.html&quot;&gt;Actor system&lt;/a&gt; as we had Akka in the module’s dependencies anyway, and it did the job. We just had to ensure that adding to the buffer and clearing the buffer were messages processed by the same Actor, and would never run concurrently. This is just fine, but to get there we needed to; learn the Actor System, teach it to the newcomers, import those dependencies, have Akka properly configured in the code and in the configuration files, etc. Furthermore, the stream came from a Kafka Consumer, and in our wrapper we needed to provide a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;digest&lt;/code&gt; function for each consumed message that ran in a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Future&lt;/code&gt;. Circumventing the issue of mixing Futures and Actors required extra head scratching time.&lt;/p&gt;
 
 &lt;p&gt;Enter channels.&lt;/p&gt;
 
@@ -2104,7 +2153,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Another (slower but nevertheless popular) way to accomplish the same task is with &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).&lt;/p&gt;
+&lt;p&gt;Another (slower but nevertheless popular) way to accomplish the same task is with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).&lt;/p&gt;
 
 &lt;p&gt;Diffing with grep&lt;/p&gt;
 
@@ -2116,7 +2165,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;I discourage the use of &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt; for two good reasons:&lt;/p&gt;
+&lt;p&gt;I discourage the use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt; for two good reasons:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -2127,7 +2176,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Alpine (&lt;code class=&quot;highlighter-rouge&quot;&gt;grep 2.25-r0&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;Alpine (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep 2.25-r0&lt;/code&gt;):&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Fxvf&lt;/span&gt; b a
 1
@@ -2137,7 +2186,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;OS X (&lt;code class=&quot;highlighter-rouge&quot;&gt;grep (BSD grep) 2.5.1-FreeBSD&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;OS X (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep (BSD grep) 2.5.1-FreeBSD&lt;/code&gt;):&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Fxvf&lt;/span&gt; b a
 1
@@ -2164,7 +2213,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 
 &lt;p&gt;Infinite streams are ok on the left side stream of the diff, but you can’t start diffing until the right side stream finishes.&lt;/p&gt;
 
-&lt;p&gt;Note that you can’t &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; an infinite stream, so if you plan to diff an infinite stream on the left side, &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; is not an option; you have to use &lt;code class=&quot;highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Note that you can’t &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; an infinite stream, so if you plan to diff an infinite stream on the left side, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; is not an option; you have to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Moreover, if you diff with an infinite stream on the left side, your diff will work but will still never finish. This is fine, unless you want your diff to be part of a script.&lt;/p&gt;
 
@@ -2187,7 +2236,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 4
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;(for brevity, let’s assume that &lt;code class=&quot;highlighter-rouge&quot;&gt;seq 10000000000&lt;/code&gt; takes infinite time; to be fair it does take an impractical amount of time)&lt;/p&gt;
+&lt;p&gt;(for brevity, let’s assume that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seq 10000000000&lt;/code&gt; takes infinite time; to be fair it does take an impractical amount of time)&lt;/p&gt;
 
 &lt;p&gt;Then there is &lt;a href=&quot;http://man7.org/linux/man-pages/man1/timeout.1.html&quot;&gt;timeout&lt;/a&gt; in the Linux coreutils package for timing out a command after a specified duration. Note that it doesn’t come installed in OS X.&lt;/p&gt;
 
@@ -2202,11 +2251,11 @@ This blogpost has received a lot of attention since it’s been published, inclu
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If you want &lt;code class=&quot;highlighter-rouge&quot;&gt;timeout&lt;/code&gt; on OS X, your best bet is to install coreutils from Homebrew, with:&lt;/p&gt;
+&lt;p&gt;If you want &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timeout&lt;/code&gt; on OS X, your best bet is to install coreutils from Homebrew, with:&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;coreutils
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;and then all coreutils commands are available, with a &lt;code class=&quot;highlighter-rouge&quot;&gt;g&lt;/code&gt; prepended to their names (e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;gtimeout&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;and then all coreutils commands are available, with a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g&lt;/code&gt; prepended to their names (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gtimeout&lt;/code&gt;)&lt;/p&gt;
 
 &lt;h2 id=&quot;the-problem-with-these-strategies&quot;&gt;The problem with these strategies&lt;/h2&gt;
 
@@ -2224,7 +2273,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 
 &lt;ul&gt;
   &lt;li&gt;A Kafka console consumer, like &lt;a href=&quot;https://github.com/fgeller/kt&quot;&gt;kt&lt;/a&gt; (my originating use case)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail -f&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tail -f&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;Any poll-forever scheme, e.g.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2234,13 +2283,13 @@ This blogpost has received a lot of attention since it’s been published, inclu
 &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;my-current-solution-sd-stream-differ&quot;&gt;My current solution: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; (stream differ)&lt;/h2&gt;
+&lt;h2 id=&quot;my-current-solution-sd-stream-differ&quot;&gt;My current solution: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; (stream differ)&lt;/h2&gt;
 
 &lt;p&gt;I developed a very simple, well-tested, modern and efficient tool for diffing two newline-separated streams, timing them out if necessary. It’s written in &lt;a href=&quot;https://golang.org/&quot;&gt;Go&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/sd&quot;&gt;sd repo @ Github&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;The initial example, with &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The initial example, with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt;&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100 | sd &lt;span class=&quot;s1&quot;&gt;'seq 6 100'&lt;/span&gt;
 2
@@ -2250,11 +2299,11 @@ This blogpost has received a lot of attention since it’s been published, inclu
 4
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end.&lt;/p&gt;
+&lt;p&gt;Note that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end.&lt;/p&gt;
 
-&lt;p&gt;If you do add &lt;code class=&quot;highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end, even though &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; will diff right away, you won’t see results until &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; has finished; this is just how sorting works. Also, &lt;code class=&quot;highlighter-rouge&quot;&gt;sort&lt;/code&gt; will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.&lt;/p&gt;
+&lt;p&gt;If you do add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end, even though &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; will diff right away, you won’t see results until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; has finished; this is just how sorting works. Also, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sort&lt;/code&gt; will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.&lt;/p&gt;
 
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100 | sd &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 1 &lt;span class=&quot;s1&quot;&gt;'tail -fn 100 &amp;lt;(seq 6 100)'&lt;/span&gt;
 1
@@ -2264,7 +2313,7 @@ This blogpost has received a lot of attention since it’s been published, inclu
 5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--timeout&lt;/code&gt; to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.&lt;/p&gt;
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-t&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timeout&lt;/code&gt; to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;uuids.txt | sd &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 10 &lt;span class=&quot;s1&quot;&gt;'./kafka-consumer.sh uuids_topic'&lt;/span&gt;
 a5aff766-564a-11e6-beb8-9e71128cae77
@@ -2274,7 +2323,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Usually, tools like &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--patience&lt;/code&gt; for this.&lt;/p&gt;
+&lt;p&gt;Usually, tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--patience&lt;/code&gt; for this.&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;uuids.txt | sd &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 20 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 10 &lt;span class=&quot;s1&quot;&gt;'./kafka-consumer.sh uuids_topic'&lt;/span&gt;
 a5aff766-564a-11e6-beb8-9e71128cae77
@@ -2284,17 +2333,17 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;-p 0&lt;/code&gt; for waiting indefinitely for the initial message.&lt;/p&gt;
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p 0&lt;/code&gt; for waiting indefinitely for the initial message.&lt;/p&gt;
 
-&lt;p&gt;If you’re sure the second stream will finish, use &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--infinite&lt;/code&gt;; this way you can be confident that &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; will wait until the second stream finishes to start diffing.&lt;/p&gt;
+&lt;p&gt;If you’re sure the second stream will finish, use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--infinite&lt;/code&gt;; this way you can be confident that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; will wait until the second stream finishes to start diffing.&lt;/p&gt;
 
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.&lt;/p&gt;
 
-&lt;p&gt;It’s not perfect: I wouldn’t choose it over &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; for streams that finish, because even though &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is fast, it does have to check every line of &lt;code class=&quot;highlighter-rouge&quot;&gt;STDIN&lt;/code&gt; against every line of the second stream where &lt;code class=&quot;highlighter-rouge&quot;&gt;comm&lt;/code&gt; does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; can’t be used.&lt;/p&gt;
+&lt;p&gt;It’s not perfect: I wouldn’t choose it over &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; for streams that finish, because even though &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is fast, it does have to check every line of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;STDIN&lt;/code&gt; against every line of the second stream where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; can’t be used.&lt;/p&gt;
 
-&lt;p&gt;Please, consider &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Please, consider &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Sat, 30 Jul 2016 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
@@ -2315,7 +2364,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a &lt;code class=&quot;highlighter-rouge&quot;&gt;git diff ... | grep ... | sort | uniq&lt;/code&gt; between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!&lt;/p&gt;
+    &lt;p&gt;Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git diff ... | grep ... | sort | uniq&lt;/code&gt; between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Then there’s looking for tickets. It’s easy enough on JIRA, with JQL and the UI tools. But it’s slow!&lt;/p&gt;
@@ -2334,11 +2383,11 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 
 &lt;p&gt;Note that jira-cli requires the awesome &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; tool, which if you don’t have installed, you really should! jira-cli will remind you to install it if it doesn’t find it.&lt;/p&gt;
 
-&lt;p&gt;When you first run &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
+&lt;p&gt;When you first run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
+&lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jira ok
 OK
@@ -2371,8 +2420,8 @@ OK
   &lt;/table&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.
-For more info just type: &lt;code class=&quot;highlighter-rouge&quot;&gt;jira&lt;/code&gt;.)&lt;/p&gt;
+&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.
+For more info just type: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira&lt;/code&gt;.)&lt;/p&gt;
 
 &lt;p&gt;If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:&lt;/p&gt;
 
@@ -2382,7 +2431,7 @@ DEF-456     Do some more work
 GHI-789     Do very urgent work
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s &lt;code class=&quot;highlighter-rouge&quot;&gt;text&lt;/code&gt; filter, all bound to the projects you configured on &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt;. You can then choose to open one by adding e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;| j o 3&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;text&lt;/code&gt; filter, all bound to the projects you configured on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt;. You can then choose to open one by adding e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| j o 3&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s &lt;span class=&quot;nb&quot;&gt;cat
 &lt;/span&gt;JKL-012     Feed the &lt;span class=&quot;nb&quot;&gt;cat
@@ -2394,7 +2443,7 @@ GHI-789     Do very urgent work
 
 &lt;h2 id=&quot;in-closing&quot;&gt;In closing&lt;/h2&gt;
 
-&lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
+&lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
@@ -2453,10 +2502,10 @@ GHI-789     Do very urgent work
 
 &lt;p&gt;Within Sublime’s Command Palette, type:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PackageResouceViewer: Open Resource
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PackageResouceViewer: Open Resource
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Then select the &lt;code class=&quot;highlighter-rouge&quot;&gt;PHP&lt;/code&gt; resource and then finally &lt;code class=&quot;highlighter-rouge&quot;&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Then select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PHP&lt;/code&gt; resource and then finally &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;You’ll find a very scary xml file. This is the annoying part. The guides recommend that you use &lt;a href=&quot;https://packagecontrol.io/packages/AAAPackageDev&quot;&gt;the AAAPackageDev package&lt;/a&gt; to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn’t convert perfectly, and this defeats the purpose of using it! I did something different.&lt;/p&gt;
 
@@ -2467,13 +2516,13 @@ GHI-789     Do very urgent work
 &lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
 Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.&lt;/p&gt;
 
-&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
+&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
 
-&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;?&amp;lt;=&lt;/code&gt;). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lt;&lt;/code&gt;)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&amp;lt;=&lt;/code&gt;). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;lt;&lt;/code&gt;)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
 
 &lt;h2 id=&quot;lastly&quot;&gt;Lastly&lt;/h2&gt;
 

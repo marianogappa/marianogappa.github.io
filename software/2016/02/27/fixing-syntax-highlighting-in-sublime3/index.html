@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -190,10 +190,10 @@
 
 <p>Within Sublime’s Command Palette, type:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PackageResouceViewer: Open Resource
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PackageResouceViewer: Open Resource
 </code></pre></div></div>
 
-<p>Then select the <code class="highlighter-rouge">PHP</code> resource and then finally <code class="highlighter-rouge">PHP.tmLanguage</code>.</p>
+<p>Then select the <code class="language-plaintext highlighter-rouge">PHP</code> resource and then finally <code class="language-plaintext highlighter-rouge">PHP.tmLanguage</code>.</p>
 
 <p>You’ll find a very scary xml file. This is the annoying part. The guides recommend that you use <a href="https://packagecontrol.io/packages/AAAPackageDev">the AAAPackageDev package</a> to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn’t convert perfectly, and this defeats the purpose of using it! I did something different.</p>
 
@@ -204,13 +204,13 @@
 <p>To make sense of the xml monster, just look up <a href="https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax">the yaml file on the Github repository</a>. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
 Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.</p>
 
-<p>After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (<code class="highlighter-rouge">array</code> and <code class="highlighter-rouge">(</code>) or 1 group (<code class="highlighter-rouge">[</code>), so I needed a wrapping group with two cases (i.e. <code class="highlighter-rouge">(a|b)</code>) that wasn’t actually capturing anything per se. The solution to this was <code class="highlighter-rouge">Passive (non-capturing) groups</code> (i.e. <code class="highlighter-rouge">(?:...)</code>). I mention this because you might need it; when you see how the classes are picked you’ll understand why.</p>
+<p>After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (<code class="language-plaintext highlighter-rouge">array</code> and <code class="language-plaintext highlighter-rouge">(</code>) or 1 group (<code class="language-plaintext highlighter-rouge">[</code>), so I needed a wrapping group with two cases (i.e. <code class="language-plaintext highlighter-rouge">(a|b)</code>) that wasn’t actually capturing anything per se. The solution to this was <code class="language-plaintext highlighter-rouge">Passive (non-capturing) groups</code> (i.e. <code class="language-plaintext highlighter-rouge">(?:...)</code>). I mention this because you might need it; when you see how the classes are picked you’ll understand why.</p>
 
 <p><img src="https://marianogappa.github.io/images/sublime-highlighting-after.png" alt="Highlighting Issue - Before" /></p>
 
 <h2 id="fun-fact">Fun fact</h2>
 
-<p>Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. <code class="highlighter-rouge">?&lt;=</code>). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. <code class="highlighter-rouge">&amp;lt;</code>)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (<a href="http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds">Javascript</a>, <a href="http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1">Ruby &lt; 1.9</a>).</p>
+<p>Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. <code class="language-plaintext highlighter-rouge">?&lt;=</code>). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. <code class="language-plaintext highlighter-rouge">&amp;lt;</code>)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (<a href="http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds">Javascript</a>, <a href="http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1">Ruby &lt; 1.9</a>).</p>
 
 <h2 id="lastly">Lastly</h2>
 

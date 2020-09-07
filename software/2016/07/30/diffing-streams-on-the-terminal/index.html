@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202006291747" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?202009072144" type="text/css">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
@@ -162,7 +162,7 @@
 5
 </code></pre></div></div>
 
-<p>Another (slower but nevertheless popular) way to accomplish the same task is with <code class="highlighter-rouge">grep -Fxvf</code>. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).</p>
+<p>Another (slower but nevertheless popular) way to accomplish the same task is with <code class="language-plaintext highlighter-rouge">grep -Fxvf</code>. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).</p>
 
 <p>Diffing with grep</p>
 
@@ -174,7 +174,7 @@
 5
 </code></pre></div></div>
 
-<p>I discourage the use of <code class="highlighter-rouge">grep -Fxvf</code> for two good reasons:</p>
+<p>I discourage the use of <code class="language-plaintext highlighter-rouge">grep -Fxvf</code> for two good reasons:</p>
 
 <ul>
   <li>
@@ -185,7 +185,7 @@
   </li>
 </ul>
 
-<p>Alpine (<code class="highlighter-rouge">grep 2.25-r0</code>):</p>
+<p>Alpine (<code class="language-plaintext highlighter-rouge">grep 2.25-r0</code>):</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">seq </span>20 <span class="o">&gt;</span> a <span class="o">&amp;&amp;</span> <span class="nb">seq </span>6 20 <span class="o">&gt;</span> b <span class="o">&amp;&amp;</span> <span class="nb">grep</span> <span class="nt">-Fxvf</span> b a
 1
@@ -195,7 +195,7 @@
 5
 </code></pre></div></div>
 
-<p>OS X (<code class="highlighter-rouge">grep (BSD grep) 2.5.1-FreeBSD</code>):</p>
+<p>OS X (<code class="language-plaintext highlighter-rouge">grep (BSD grep) 2.5.1-FreeBSD</code>):</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">seq </span>20 <span class="o">&gt;</span> a <span class="o">&amp;&amp;</span> <span class="nb">seq </span>6 20 <span class="o">&gt;</span> b <span class="o">&amp;&amp;</span> <span class="nb">grep</span> <span class="nt">-Fxvf</span> b a
 1
@@ -222,7 +222,7 @@
 
 <p>Infinite streams are ok on the left side stream of the diff, but you can’t start diffing until the right side stream finishes.</p>
 
-<p>Note that you can’t <code class="highlighter-rouge">| sort</code> an infinite stream, so if you plan to diff an infinite stream on the left side, <code class="highlighter-rouge">comm</code> is not an option; you have to use <code class="highlighter-rouge">grep -Fxvf</code>.</p>
+<p>Note that you can’t <code class="language-plaintext highlighter-rouge">| sort</code> an infinite stream, so if you plan to diff an infinite stream on the left side, <code class="language-plaintext highlighter-rouge">comm</code> is not an option; you have to use <code class="language-plaintext highlighter-rouge">grep -Fxvf</code>.</p>
 
 <p>Moreover, if you diff with an infinite stream on the left side, your diff will work but will still never finish. This is fine, unless you want your diff to be part of a script.</p>
 
@@ -245,7 +245,7 @@
 4
 5
 </code></pre></div></div>
-<p>(for brevity, let’s assume that <code class="highlighter-rouge">seq 10000000000</code> takes infinite time; to be fair it does take an impractical amount of time)</p>
+<p>(for brevity, let’s assume that <code class="language-plaintext highlighter-rouge">seq 10000000000</code> takes infinite time; to be fair it does take an impractical amount of time)</p>
 
 <p>Then there is <a href="http://man7.org/linux/man-pages/man1/timeout.1.html">timeout</a> in the Linux coreutils package for timing out a command after a specified duration. Note that it doesn’t come installed in OS X.</p>
 
@@ -260,11 +260,11 @@
 5
 </code></pre></div></div>
 
-<p>If you want <code class="highlighter-rouge">timeout</code> on OS X, your best bet is to install coreutils from Homebrew, with:</p>
+<p>If you want <code class="language-plaintext highlighter-rouge">timeout</code> on OS X, your best bet is to install coreutils from Homebrew, with:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>coreutils
 </code></pre></div></div>
-<p>and then all coreutils commands are available, with a <code class="highlighter-rouge">g</code> prepended to their names (e.g. <code class="highlighter-rouge">gtimeout</code>)</p>
+<p>and then all coreutils commands are available, with a <code class="language-plaintext highlighter-rouge">g</code> prepended to their names (e.g. <code class="language-plaintext highlighter-rouge">gtimeout</code>)</p>
 
 <h2 id="the-problem-with-these-strategies">The problem with these strategies</h2>
 
@@ -282,7 +282,7 @@
 
 <ul>
   <li>A Kafka console consumer, like <a href="https://github.com/fgeller/kt">kt</a> (my originating use case)</li>
-  <li><code class="highlighter-rouge">tail -f</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tail -f</code></li>
   <li>Any poll-forever scheme, e.g.</li>
 </ul>
 
@@ -292,13 +292,13 @@
 <span class="k">done</span>
 </code></pre></div></div>
 
-<h2 id="my-current-solution-sd-stream-differ">My current solution: <code class="highlighter-rouge">sd</code> (stream differ)</h2>
+<h2 id="my-current-solution-sd-stream-differ">My current solution: <code class="language-plaintext highlighter-rouge">sd</code> (stream differ)</h2>
 
 <p>I developed a very simple, well-tested, modern and efficient tool for diffing two newline-separated streams, timing them out if necessary. It’s written in <a href="https://golang.org/">Go</a>.</p>
 
 <p><a href="https://github.com/MarianoGappa/sd">sd repo @ Github</a></p>
 
-<p>The initial example, with <code class="highlighter-rouge">sd</code></p>
+<p>The initial example, with <code class="language-plaintext highlighter-rouge">sd</code></p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">seq </span>100 | sd <span class="s1">'seq 6 100'</span>
 2
@@ -308,11 +308,11 @@
 4
 </code></pre></div></div>
 
-<p>Note that <code class="highlighter-rouge">sd</code> does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add <code class="highlighter-rouge">| sort</code> at the end.</p>
+<p>Note that <code class="language-plaintext highlighter-rouge">sd</code> does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add <code class="language-plaintext highlighter-rouge">| sort</code> at the end.</p>
 
-<p>If you do add <code class="highlighter-rouge">| sort</code> at the end, even though <code class="highlighter-rouge">sd</code> will diff right away, you won’t see results until <code class="highlighter-rouge">sd</code> has finished; this is just how sorting works. Also, <code class="highlighter-rouge">sort</code> will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.</p>
+<p>If you do add <code class="language-plaintext highlighter-rouge">| sort</code> at the end, even though <code class="language-plaintext highlighter-rouge">sd</code> will diff right away, you won’t see results until <code class="language-plaintext highlighter-rouge">sd</code> has finished; this is just how sorting works. Also, <code class="language-plaintext highlighter-rouge">sort</code> will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.</p>
 
-<p>Use <code class="highlighter-rouge">-h</code> or <code class="highlighter-rouge">--hard-timeout</code> to timeout after a number of seconds</p>
+<p>Use <code class="language-plaintext highlighter-rouge">-h</code> or <code class="language-plaintext highlighter-rouge">--hard-timeout</code> to timeout after a number of seconds</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">seq </span>100 | sd <span class="nt">-h</span> 1 <span class="s1">'tail -fn 100 &lt;(seq 6 100)'</span>
 1
@@ -322,7 +322,7 @@
 5
 </code></pre></div></div>
 
-<p>Use <code class="highlighter-rouge">-t</code> or <code class="highlighter-rouge">--timeout</code> to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.</p>
+<p>Use <code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">--timeout</code> to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>uuids.txt | sd <span class="nt">-t</span> 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
 a5aff766-564a-11e6-beb8-9e71128cae77
@@ -332,7 +332,7 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 ...
 </code></pre></div></div>
 
-<p>Usually, tools like <code class="highlighter-rouge">mysql</code> or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use <code class="highlighter-rouge">-p</code> or <code class="highlighter-rouge">--patience</code> for this.</p>
+<p>Usually, tools like <code class="language-plaintext highlighter-rouge">mysql</code> or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use <code class="language-plaintext highlighter-rouge">-p</code> or <code class="language-plaintext highlighter-rouge">--patience</code> for this.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>uuids.txt | sd <span class="nt">-p</span> 20 <span class="nt">-t</span> 10 <span class="s1">'./kafka-consumer.sh uuids_topic'</span>
 a5aff766-564a-11e6-beb8-9e71128cae77
@@ -342,17 +342,17 @@ a5b00328-564a-11e6-beb8-9e71128cae77
 ...
 </code></pre></div></div>
 
-<p>Use <code class="highlighter-rouge">-p 0</code> for waiting indefinitely for the initial message.</p>
+<p>Use <code class="language-plaintext highlighter-rouge">-p 0</code> for waiting indefinitely for the initial message.</p>
 
-<p>If you’re sure the second stream will finish, use <code class="highlighter-rouge">-i</code> or <code class="highlighter-rouge">--infinite</code>; this way you can be confident that <code class="highlighter-rouge">sd</code> will wait until the second stream finishes to start diffing.</p>
+<p>If you’re sure the second stream will finish, use <code class="language-plaintext highlighter-rouge">-i</code> or <code class="language-plaintext highlighter-rouge">--infinite</code>; this way you can be confident that <code class="language-plaintext highlighter-rouge">sd</code> will wait until the second stream finishes to start diffing.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p><code class="highlighter-rouge">sd</code> is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.</p>
+<p><code class="language-plaintext highlighter-rouge">sd</code> is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.</p>
 
-<p>It’s not perfect: I wouldn’t choose it over <code class="highlighter-rouge">comm</code> for streams that finish, because even though <code class="highlighter-rouge">sd</code> is fast, it does have to check every line of <code class="highlighter-rouge">STDIN</code> against every line of the second stream where <code class="highlighter-rouge">comm</code> does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, <code class="highlighter-rouge">sd</code> can’t be used.</p>
+<p>It’s not perfect: I wouldn’t choose it over <code class="language-plaintext highlighter-rouge">comm</code> for streams that finish, because even though <code class="language-plaintext highlighter-rouge">sd</code> is fast, it does have to check every line of <code class="language-plaintext highlighter-rouge">STDIN</code> against every line of the second stream where <code class="language-plaintext highlighter-rouge">comm</code> does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, <code class="language-plaintext highlighter-rouge">sd</code> can’t be used.</p>
 
-<p>Please, consider <code class="highlighter-rouge">sd</code> for your stream diffing needs. <a href="https://github.com/MarianoGappa/sd/issues">Issues</a> and <a href="https://github.com/MarianoGappa/sd/issues#fork-destination-box">PRs</a> are welcome and encouraged: <code class="highlighter-rouge">sd</code> is <a href="https://github.com/MarianoGappa/sd/blob/master/LICENSE">MIT licensed</a>.</p>
+<p>Please, consider <code class="language-plaintext highlighter-rouge">sd</code> for your stream diffing needs. <a href="https://github.com/MarianoGappa/sd/issues">Issues</a> and <a href="https://github.com/MarianoGappa/sd/issues#fork-destination-box">PRs</a> are welcome and encouraged: <code class="language-plaintext highlighter-rouge">sd</code> is <a href="https://github.com/MarianoGappa/sd/blob/master/LICENSE">MIT licensed</a>.</p>
 
 </article>
 
