@@ -6,9 +6,9 @@ const cv = {
     "short": "Senior Software Engineer",
     "experience_start": "2010-03-01",
     "languages": [
-      {"id": 1, "name": "English", "image":"images/gb.svg", "level": "(fluent)", "color": "white"},
-      {"id": 2, "name": "Spanish", "image":"images/es.svg", "level": "(native)", "color": "white"},
-      {"id": 3, "name": "Japanese", "image":"images/jp.svg", "level": "(JLPT N4)", "color": "white"}
+      { "id": 1, "name": "English", "image": "images/gb.svg", "level": "(fluent)", "color": "white" },
+      { "id": 2, "name": "Spanish", "image": "images/es.svg", "level": "(native)", "color": "white" },
+      { "id": 3, "name": "Japanese", "image": "images/jp.svg", "level": "(JLPT N4)", "color": "white" }
     ],
     "links": [
       {
@@ -28,25 +28,51 @@ const cv = {
         "type": "Twitter"
       }
     ],
-    "current_location": {"text": "London, UK", "image": "images/uk.svg", "color": "white"},
-    "born_location": {"text": "Buenos Aires, Argentina", "image": "images/ar.svg", "color": "white"},
+    "current_location": { "text": "London, UK", "image": "images/uk.svg", "color": "white" },
+    "born_location": { "text": "Buenos Aires, Argentina", "image": "images/ar.svg", "color": "white" },
     "expertise_bullets": [
-      {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
-      {"id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg"},
-      {"id": 3, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-      {"id": 4, "text": "MySQL", "color": "blue", "image": "images/mariadb.svg"},
-      {"id": 5, "text": "Kubernetes", "color": "blue", "image": "images/kubernetes.svg"},
-      {"id": 6, "text": "AWS", "color": "yellow", "image": "images/aws.svg"},
-      {"id": 7, "text": "Kafka", "color": "blue", "image": "images/kafka.svg"},
-      {"id": 8, "text": "Microservices", "color": "white", "image": ""},
+      { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+      { "id": 2, "text": "Python", "color": "red", "image": "images/python.svg" },
+      { "id": 3, "text": "Databases", "color": "blue", "image": "images/mariadb.svg" },
+      { "id": 4, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
+      { "id": 5, "text": "Kubernetes", "color": "blue", "image": "images/kubernetes.svg" },
+      { "id": 6, "text": "Microservices", "color": "white", "image": "" },
+      { "id": 7, "text": "Kafka", "color": "blue", "image": "images/kafka.svg" },
     ],
     "interest_bullets": [
-      {"id": 1, "text": "Machine Learning", "color": "white", "image": ""},
-      {"id": 2, "text": "Rust", "color": "white", "image": ""},
-      {"id": 3, "text": "Music Industry", "color": "white", "image": ""}
+      { "id": 1, "text": "Machine Learning", "color": "white", "image": "" },
+      { "id": 2, "text": "Rust", "color": "white", "image": "" },
+      { "id": 3, "text": "Music Industry", "color": "white", "image": "" }
     ]
   },
   "open_source_projects": [
+    {
+      "name": "Crypto Predictions",
+      "short": "accountability for social media predictions",
+      "github": "https://github.com/marianogappa/crypto-predictions",
+      "blogpost": "",
+      "bullets": [
+        "State machine-based engine for tracking crypto-related predictions on social media posts.",
+      ],
+      "stack": [
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+        { "id": 2, "text": "Postgres", "color": "light_blue", "image": "images/postgres.svg" }
+      ],
+      "special": true
+    },
+    {
+      "name": "Signal Checker",
+      "short": "crypto signal fact-checking",
+      "github": "https://github.com/marianogappa/signal-checker",
+      "blogpost": "",
+      "bullets": [
+        "CLI tool, server & importable Go library to check the results of crypto signals against an exchange's historical data.",
+      ],
+      "stack": [
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+      ],
+      "special": true
+    },
     {
       "name": "chart",
       "short": "quick & smart charting for STDIN",
@@ -58,10 +84,9 @@ const cv = {
         "Squads at Movio use it for reports & ad-hoc charting; teams around the world have reported use-cases",
       ],
       "stack": [
-        {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
-        {"id": 2, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"}
-      ],
-      "special": true
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+        { "id": 2, "text": "Javascript", "color": "yellow", "image": "images/javascript.png" }
+      ]
     },
     {
       "type": "open_source_project",
@@ -74,8 +99,9 @@ const cv = {
         "Widely adopted within Movio for ad-hoc querying and used in combination with chart"
       ],
       "stack": [
-        {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
-      ]
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+      ],
+      "hidable": true
     },
     {
       "type": "open_source_project",
@@ -88,9 +114,9 @@ const cv = {
         "#1 Google result for Chess Notation Converter"
       ],
       "stack": [
-        {"id": 1, "text": "Scala", "color": "red", "image": "images/scala.svg"},
-        {"id": 2, "text": "Scala JS", "color": "red", "image": "images/scala.svg"},
-        {"id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"},
+        { "id": 1, "text": "Scala", "color": "red", "image": "images/scala.svg" },
+        { "id": 2, "text": "Scala JS", "color": "red", "image": "images/scala.svg" },
+        { "id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png" },
       ]
     },
     {
@@ -105,8 +131,8 @@ const cv = {
         "Used within Movio to monitor and support the company's main distributed system"
       ],
       "stack": [
-        {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
-        {"id": 2, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"}
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+        { "id": 2, "text": "Javascript", "color": "yellow", "image": "images/javascript.png" }
       ],
       "hidable": true
     },
@@ -117,7 +143,7 @@ const cv = {
       "github": "https://github.com/marianogappa/jira-cli",
       "blogpost": "http://marianogappa.github.io/software/2016/05/10/jira-cli/",
       "stack": [
-        {"id": 1, "text": "Bash", "color": "black", "image": "images/bash.png"},
+        { "id": 1, "text": "Bash", "color": "black", "image": "images/bash.png" },
       ],
       "hidable": true
     },
@@ -128,7 +154,7 @@ const cv = {
       "github": "https://github.com/marianogappa/sd",
       "blogpost": "http://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/",
       "stack": [
-        {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
       ],
       "hidable": true
     }
@@ -137,19 +163,36 @@ const cv = {
     {
       "type": "work_experience",
       "role": "Software Engineer",
+      "company": "Oaknorth",
+      "country": "images/uk.svg",
+      "company_link": "https://www.oaknorth.co.uk/",
+      "started": "2021-01",
+      "ended": "Present",
+      "bullets": [
+        "Implemented significant (up to 25x) performance improvements on critical features on their largest client that were timing out."
+      ],
+      "stack": [
+        { "id": 1, "text": "Python", "color": "red", "image": "images/python.svg" },
+        { "id": 2, "text": "Typescript", "color": "red", "image": "images/typescript.png" },
+        { "id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
+      ]
+    },
+    {
+      "type": "work_experience",
+      "role": "Software Engineer",
       "company": "Fat Llama",
       "country": "images/uk.svg",
       "company_link": "https://fatllama.com",
       "started": "2019-01",
-      "ended": "Present",
+      "ended": "2020-01",
       "bullets": [
         "Senior engineer taking the startup from Series A to Series B.",
         "Designed and implemented core business processes e.g. inventory, seller payouts, logistics integration, stateful microservices, optimised CI pipelines, partnerships integrations, payment platform test modes."
       ],
       "stack": [
-        {"id": 1, "text": "Typescript", "color": "red", "image": "images/typescript.png"},
-        {"id": 2, "text": "Go", "color": "red", "image": "images/gopher.svg"},
-        {"id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg"},
+        { "id": 1, "text": "Typescript", "color": "red", "image": "images/typescript.png" },
+        { "id": 2, "text": "Go", "color": "red", "image": "images/gopher.svg" },
+        { "id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
       ]
     },
     {
@@ -162,9 +205,9 @@ const cv = {
       "ended": "2018-12",
       "bullets": ["Led the team that built Movio's Datawarehouse."],
       "stack": [
-        {"id": 1, "text": "Spark", "color": "red", "image": "images/spark.png"},
-        {"id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg"},
-        {"id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg"},
+        { "id": 1, "text": "Spark", "color": "red", "image": "images/spark.png" },
+        { "id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg" },
+        { "id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
       ]
     },
     {
@@ -183,14 +226,14 @@ const cv = {
         "Authored open source tools currently being used by the engineers, and many teams around the world"
       ],
       "stack": [
-        {"id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg"},
-        {"id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg"},
-        {"id": 3, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 4, "text": "MariaDB", "color": "blue", "image": "images/mariadb.svg"},
-        {"id": 5, "text": "AWS", "color": "yellow", "image": "images/aws.svg"},
-        {"id": 6, "text": "Kubernetes", "color": "blue", "image": "images/kubernetes.svg"},
-        {"id": 7, "text": "Kafka", "color": "blue", "image": "images/kafka.svg"},
-        {"id": 8, "text": "Cassandra", "color": "blue", "image": "images/cassandra.svg"},
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+        { "id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg" },
+        { "id": 3, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 4, "text": "MariaDB", "color": "blue", "image": "images/mariadb.svg" },
+        { "id": 5, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
+        { "id": 6, "text": "Kubernetes", "color": "blue", "image": "images/kubernetes.svg" },
+        { "id": 7, "text": "Kafka", "color": "blue", "image": "images/kafka.svg" },
+        { "id": 8, "text": "Cassandra", "color": "blue", "image": "images/cassandra.svg" },
       ],
       "special": true
     },
@@ -207,8 +250,9 @@ const cv = {
         "<a href='https://en.wikipedia.org/wiki/OLX#India'>\"OLX became the vernacular for 'selling' in India, in the form of [...] 'OLX it'.\"</a>"
       ],
       "stack": [
-        {"id": 1, "text": "Scala", "color": "red", "image": "images/scala.svg"},
-      ]
+        { "id": 1, "text": "Scala", "color": "red", "image": "images/scala.svg" },
+      ],
+      "hidable": true
     },
     {
       "type": "work_experience",
@@ -219,8 +263,8 @@ const cv = {
       "ended": "2012-11",
       "bullets": ["Co-designed a Pinterest-like project and maintained the #1 Argentinian forum (#1 by daily active users)"],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
       ],
       "hidable": true
     },
@@ -234,8 +278,8 @@ const cv = {
       "ended": "2012-06",
       "bullets": ["Implemented Rocket Internet e-commerce ventures throughout Latin America"],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
       ],
       "hidable": true
     },
@@ -249,8 +293,8 @@ const cv = {
         "Various short-lived projects while focusing on engineering thesis"
       ],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
       ],
       "hidable": true
     },
@@ -266,8 +310,8 @@ const cv = {
         "Backend Developer Leader of <a href='https://www.facebook.com/cocogirl'>Coco Girl</a>, the last big Metrogames' game project (60+ people involved)"
       ],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
       ],
       "hidable": true
     },
@@ -280,9 +324,9 @@ const cv = {
       "ended": "2007-12",
       "bullets": ["Designed, implemented and maintained hardware store accounting and inventory system"],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
-        {"id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
+        { "id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png" },
       ],
       "hidable": true
     },
@@ -295,9 +339,9 @@ const cv = {
       "ended": "2006-12",
       "bullets": ["Designed, implemented and maintained real-estate website"],
       "stack": [
-        {"id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg"},
-        {"id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg"},
-        {"id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png"},
+        { "id": 1, "text": "PHP", "color": "magenta", "image": "images/php.svg" },
+        { "id": 2, "text": "MySQL", "color": "orange", "image": "images/mysql.svg" },
+        { "id": 3, "text": "Javascript", "color": "yellow", "image": "images/javascript.png" },
       ],
       "hidable": true
     }
