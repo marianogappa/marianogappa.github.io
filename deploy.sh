@@ -8,7 +8,7 @@ if [ -z "$1" ]
     exit
 fi
 
-jekyll build
+bundle exec jekyll build
 rm -rf marianogappa.github.io/*
 cp -R _site/* marianogappa.github.io/
 pushd . 1>/dev/null

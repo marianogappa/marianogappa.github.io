@@ -47,16 +47,15 @@ const cv = {
   },
   "open_source_projects": [
     {
-      "name": "Crypto Predictions",
-      "short": "accountability for social media predictions",
-      "github": "https://github.com/marianogappa/crypto-predictions",
+      "name": "Crypto Candles",
+      "short": "universal crypto candlestick iterator library & CLI",
+      "github": "https://github.com/marianogappa/crypto-candles",
       "blogpost": "",
       "bullets": [
-        "State machine-based engine for tracking crypto-related predictions on social media posts.",
+        "Supports all major crypto exchanges, built-in caching, retries, patching data holes.",
       ],
       "stack": [
-        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
-        { "id": 2, "text": "Postgres", "color": "light_blue", "image": "images/postgres.svg" }
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" }
       ],
       "special": true
     },
@@ -71,7 +70,7 @@ const cv = {
       "stack": [
         { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
       ],
-      "special": true
+      "special": false
     },
     {
       "name": "chart",
