@@ -8,7 +8,9 @@
     
       <item>
         <title>10 Gotchas for building a universal crypto candlestick iterator in Go</title>
-        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+        <description>&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/candlesticks-background.jpg&quot; alt=&quot;Candlestick background&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
 &lt;p&gt;I’ve recently open sourced a universal crypto candlestick iterator library in Go called crypto-candles:&lt;/p&gt;
 
@@ -835,8 +837,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 </description>
         <pubDate>Wed, 01 Apr 2020 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse-copy/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse-copy/</guid>
+        <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
       </item>
     
       <item>
