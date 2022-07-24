@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>10 Gotchas for building a universal crypto candlestick iterator in Go &#8211; Mariano Gappa's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you&apos;ll face working with crypto exchanges&apos; APIs.">
+  <meta name="author" content="Mariano Gappa">
+  
+  <meta name="keywords" content="software">
+  <link rel="canonical" href="https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href=" /feed.xml" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href=" /css/pixyll.css?202207242123"
+    type="text/css">
+
+  <!-- Fonts -->
+  <link href='//fonts.googleapis.com/css?family=Roboto:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+  
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+  
+
+  <!-- Verifications -->
+  
+
+  <!-- Open Graph -->
+  <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:title"
+    content="10 Gotchas for building a universal crypto candlestick iterator in Go">
+  <meta property="og:description"
+    content="Blog about Software Engineering and Music Production.">
+  <meta property="og:url" content="https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/">
+  <meta property="og:site_name" content="Mariano Gappa&apos;s Blog">
+  
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  
+  <meta name="twitter:site" content="@MarianoGappa" />
+  
+  <meta name="twitter:title" content="10 Gotchas for building a universal crypto candlestick iterator in Go" />
+  <meta name="twitter:description"
+    content="My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you'll face working with crypto exchanges' APIs." />
+  <meta name="twitter:url" content="https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/" />
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+  <!-- Added by Mariano for syntax highlighting -->
+  <!-- <link href="/css/syntax.css" rel="stylesheet"> -->
+
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-58930438-4', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body class="site animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
+      <nav class="site-nav">
+        <!-- <a href="/cv/">CV</a> -->
+<!-- <a href="/cv/cv.pdf">CV (pdf)</a> -->
+<a href="/about/">About</a>
+<!-- <a href="http://www.gappamixing.com">Mixing</a> -->
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-github" href="https://github.com/MarianoGappa"></a>
+    
+    
+    
+    <a class="fa fa-rss" href="/feed.xml"></a>
+    
+      <a class="fa fa-twitter" href="https://twitter.com/MarianoGappa"></a>
+    
+    
+    
+      <a class="fa fa-envelope" href="mailto:mariano.gappa@gmail.com"></a>
+    
+    
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>10 Gotchas for building a universal crypto candlestick iterator in Go</h1>
+  
+  <span class="post-meta">Jul 24, 2022</span><br>
+  
+  <span class="post-meta small">
+  
+    11 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <h2 id="tldr">TL;DR</h2>
+
+<p>I’ve recently open sourced a universal crypto candlestick iterator library in Go called crypto-candles:</p>
+
+<p><a href="https://github.com/marianogappa/crypto-candles">https://github.com/marianogappa/crypto-candles</a></p>
+
+<p>It’s being used to power the <strong><a href="https://twitter.com/crypto_preds">Crypto Predictions Tracker</a></strong>: the only unbiased, automated accountability watchdog for crypto predictions on the Internet.</p>
+
+<p>There is no Go library alternative I’ve found, or I would have used it. There are some exchange SDKs, though.</p>
+
+<p>In this blogpost, I share all the interesting challenges I found while building this library over the past few months.</p>
+
+<h2 id="what-is-a-candlestick">What is a candlestick?</h2>
+
+<p><a href="https://www.investopedia.com/terms/c/candlestick.asp">Candlesticks</a>, also known as OHLC (i.e. Open, High, Low, Close), Klines and Bucketed Trades, are a way to display the high, low, open, and closing prices of crypto market pairs (and traditional securities) for a specific period.</p>
+
+<p><img src="https://www.investopedia.com/thmb/F9Gcg7_Is-0Pj7jILEMe9IIscm0=/660x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/CandlestickDefinition3-a768ecdaadc2440db427fe8207491819.png" alt="Candlestick" /></p>
+
+<p><a href="https://www.tradingview.com/chart/QVMg9Xmj/?symbol=BINANCE%3ABTCUSDT">Candlestick charts</a> are a common sight for crypto investors, and they are used to make buy/sell decisions, either manually or via bots or some other automated mechanisms.</p>
+
+<p>Crypto exchanges like <a href="https://www.binance.com">Binance</a> or <a href="https://www.coinbase.com/">Coinbase</a> expose APIs with market information for all their supported market pairs (e.g. BTC/USDT) and allow you to consume them for free within fair-use limits.</p>
+
+<p><img src="https://marianogappa.github.io/images/candlesticks.png" alt="Candlestick chart" /></p>
+
+<h2 id="what-is-a-crypto-candlestick-iterator">What is a crypto candlestick iterator?</h2>
+
+<p>A Crypto Candlestick Iterator is an <a href="https://en.wikipedia.org/wiki/Iterator_pattern">iterator</a> that you construct for:</p>
+<ul>
+  <li>a given provider (e.g. Binance, Coinbase)</li>
+  <li>a given market pair (e.g. BTC/USDT)</li>
+  <li>a given starting timestamp (e.g. “2020-07-04T01:02:03Z”, here represented in ISO8601 format)</li>
+  <li>and a given candlestick interval (e.g. minutely, hourly, daily).</li>
+</ul>
+
+<p>Example in crypto-candles:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">m</span> <span class="o">:=</span> <span class="n">candles</span><span class="o">.</span><span class="n">NewMarket</span><span class="p">()</span>
+	<span class="n">iter</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">m</span><span class="o">.</span><span class="n">Iterator</span><span class="p">(</span>
+		<span class="n">common</span><span class="o">.</span><span class="n">MarketSource</span><span class="p">{</span>
+			<span class="n">Type</span><span class="o">:</span> <span class="n">common</span><span class="o">.</span><span class="n">COIN</span><span class="p">,</span>
+			<span class="n">Provider</span><span class="o">:</span> <span class="n">common</span><span class="o">.</span><span class="n">BINANCE</span><span class="p">,</span>
+			<span class="n">BaseAsset</span><span class="o">:</span> <span class="s">"BTC"</span><span class="p">,</span>
+			<span class="n">QuoteAsset</span><span class="o">:</span> <span class="s">"USDT"</span>
+		<span class="p">},</span>
+		<span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="o">-</span><span class="m">12</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Hour</span><span class="p">),</span> <span class="c">// Start time</span>
+		<span class="m">1</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Hour</span><span class="p">,</span>                   <span class="c">// Candlestick interval</span>
+	<span class="p">)</span>
+</code></pre></div></div>
+
+<p>Once constructed, calling <code class="language-plaintext highlighter-rouge">.Next()</code> on it returns either the next available candlestick in your specified interval, or an error:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">candlestick</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">iter</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>A candlestick looks like this when marshalled to JSON:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"t"</span><span class="p">:</span><span class="mi">1641096000</span><span class="p">,</span><span class="nl">"o"</span><span class="p">:</span><span class="mf">47329.47</span><span class="p">,</span><span class="nl">"c"</span><span class="p">:</span><span class="mf">46910.3</span><span class="p">,</span><span class="nl">"l"</span><span class="p">:</span><span class="mf">46770.23</span><span class="p">,</span><span class="nl">"h"</span><span class="p">:</span><span class="mf">47415.73</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Where:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">o</code>: Open price</li>
+  <li><code class="language-plaintext highlighter-rouge">c</code>: Close price</li>
+  <li><code class="language-plaintext highlighter-rouge">l</code>: Low price</li>
+  <li><code class="language-plaintext highlighter-rouge">h</code>: High price</li>
+</ul>
+
+<p>…of the <code class="language-plaintext highlighter-rouge">BTC/USDT</code> market pair</p>
+
+<p>…on <code class="language-plaintext highlighter-rouge">BINANCE</code></p>
+
+<p>…at the hour spanning from the timestamp <code class="language-plaintext highlighter-rouge">t</code> and up to <code class="language-plaintext highlighter-rouge">t + candlestickInterval</code>.</p>
+
+<h2 id="what-does-universal-candlestick-iterator-mean">What does “universal” candlestick iterator mean?</h2>
+
+<p>It means that it supports all major exchanges.</p>
+
+<p>Usually, you use the API or SDK of the exchange you want to use. If you need to use more than one, it gets tricky.</p>
+
+<h2 id="whats-the-use-case-for-a-universal-candlestick-iterator">What’s the use case for a universal candlestick iterator?</h2>
+
+<ol>
+  <li>
+    <p>Data for plotting candlestick charts. If you need 2+ exchanges.</p>
+  </li>
+  <li>
+    <p>Data for backtesting trading strategies. If you need 2+ exchanges.</p>
+  </li>
+  <li>
+    <p>Data for being a watchdog for influencing statements <a href="https://twitter.com/rovercrc/status/1539710164697227267">like this one</a>.</p>
+  </li>
+</ol>
+
+<p>And with crypto-candles, you get caching, retrying on errors, patching of data gaps and concurrency-safety for free.</p>
+
+<h2 id="the-meaty-part-gotchas">The meaty part: gotchas!</h2>
+
+<p>Building this library through the months has been a big challenge, and in this section I’ll list all of the important gotchas I’ve found during this process.</p>
+
+<h3 id="gotcha-1-not-all-exchanges-provide-historical-candlesticks">Gotcha 1: Not all exchanges provide historical candlesticks</h3>
+
+<p>They all provide current prices. Not all provide historicals. Some do in very tricky ways.</p>
+
+<p><strong>FTX</strong> does:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s2">"https://ftx.com/api/markets/BTC/USDT/candles?resolution=60&amp;start_time="</span><span class="si">$(</span><span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-04-07 00:00:00"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">"&amp;end_time="</span><span class="si">$(</span><span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-04-07 00:02:00"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">""</span> | jq <span class="s1">'.result | .[]'</span>
+<span class="o">{</span>
+	<span class="s2">"startTime"</span>: <span class="s2">"2020-04-06T23:00:00+00:00"</span>,
+	<span class="s2">"time"</span>: 1586214000000,
+	<span class="s2">"open"</span>: 7274,
+	<span class="s2">"high"</span>: 7281.5,
+	<span class="s2">"low"</span>: 7272,
+	<span class="s2">"close"</span>: 7281.5,
+	<span class="s2">"volume"</span>: 0
+<span class="o">}</span>
+<span class="o">{</span>
+	<span class="s2">"startTime"</span>: <span class="s2">"2020-04-06T23:01:00+00:00"</span>,
+	<span class="s2">"time"</span>: 1586214060000,
+	<span class="s2">"open"</span>: 7281.5,
+	<span class="s2">"high"</span>: 7281.5,
+	<span class="s2">"low"</span>: 7277,
+	<span class="s2">"close"</span>: 7280,
+	<span class="s2">"volume"</span>: 0
+<span class="o">}</span>
+<span class="o">{</span>
+	<span class="s2">"startTime"</span>: <span class="s2">"2020-04-06T23:02:00+00:00"</span>,
+	<span class="s2">"time"</span>: 1586214120000,
+	<span class="s2">"open"</span>: 7280,
+	<span class="s2">"high"</span>: 7280,
+	<span class="s2">"low"</span>: 7271.5,
+	<span class="s2">"close"</span>: 7274,
+	<span class="s2">"volume"</span>: 0
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>But on <strong>Huobi</strong>, <a href="https://huobiapi.github.io/docs/spot/v1/en/#get-klines-candles">the docs</a> say:</p>
+
+<blockquote>
+  <p>This API doesn’t support customized period, refer to Websocket K line API to get the emurated period value.</p>
+</blockquote>
+
+<p>Not sure what that means, but I don’t think Websockets do either.</p>
+
+<p><strong>Kraken</strong> says they do, but they silently ignore their “since” parameter if you go over a very short threshold to the past. Details in <a href="https://stackoverflow.com/a/48618456/965724">this Stack Overflow answer</a>.</p>
+
+<p>You can still get them, if you calculate them yourself, by getting all trades and bucketing them yourself. It’s linear time. But you have no control on what <em>n</em> is, so don’t.</p>
+
+<p><strong>Phemex</strong> has only a <a href="https://github.com/phemex/phemex-api-docs/blob/master/Public-Spot-API-en.md#subscribe-kline">websocket-based “subscribe kline” endpoint</a>, but only gets you up to 1000 candlesticks to the past. Then you’re stuck with Kraken-style <a href="https://github.com/phemex/phemex-api-docs/blob/master/Public-Spot-API-en.md#query-trades-history">Query Trades History endpoint</a>.</p>
+
+<h3 id="gotcha-2-rate-limiting">Gotcha 2: Rate limiting</h3>
+
+<p>All exchanges must have a rate-limiting strategy to prevent malicious or buggy clients from <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">DDoSing</a> their APIs. Otherwise you’d kill them!</p>
+
+<p>In general (not always!), they give you an <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#429">HTTP 429 status code</a> when they want you to enhance your calm. If you don’t, <strong>they IP-ban</strong> you temporarily.</p>
+
+<p>In general, candlestick endpoints are “public market data” and don’t require an API Key. But if you get one, they might be more tolerant with rate-limiting.</p>
+
+<p>On <strong>Binance</strong>, <a href="https://binance-docs.github.io/apidocs/spot/en/#general-api-information">the docs</a> say that if you ignore the 429s, you get IP banned for 2 minutes, and up to 3 days for repeat offenders. They send a <code class="language-plaintext highlighter-rouge">Retry-After</code> header on the 429s with how many seconds you should sleep.</p>
+
+<p>On <strong>Coinbase</strong>, <a href="https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/rate-limiting">the docs here</a> and <a href="https://help.coinbase.com/en/pro/other-topics/api/faq-on-api">here</a> say they allow ~3-6 requests per second.</p>
+
+<p><strong>FTX</strong> <a href="https://help.ftx.com/hc/en-us/articles/360052595091-2020-11-20-Ratelimit-Updates">docs</a> make no sense. Don’t worry, you’re fine.</p>
+
+<p>On <strong>Kucoin</strong>, the docs lie, so you don’t need a link. You’re gonna get 429’d no matter what you do. Just back-off.</p>
+
+<p>The other ones are fine, more on that later.</p>
+
+<p>Ideally, don’t make them 429 you. Do this:</p>
+
+<ul>
+  <li>Calculate the truncated current minute of your request: <code class="language-plaintext highlighter-rouge">time.Now().Add(-1 * time.Minute).Truncate(time.Minute)</code></li>
+  <li>Keep track of the last requested minute, and a counter</li>
+  <li>If the current minute of your request equals the last, increment the counter (and reset it if not)</li>
+  <li>If the counter exceeds the exchange’s limits, sleep!</li>
+</ul>
+
+<p><strong>Don’t use concurrency</strong> unless:</p>
+<ol>
+  <li>Every goroutine talks to a different exchange</li>
+  <li>You have a pool of IPs and a proxy, and every goroutine talks to a separate (exchange, IP) tuple</li>
+  <li>You’re willing to mutex the hell out of your code</li>
+</ol>
+
+<h3 id="gotcha-3-some-exchanges-dont-respect-their-rate-limit-documentation">Gotcha 3: Some exchanges don’t respect their rate limit documentation</h3>
+
+<p>You’re following the rules? The rules are wrong.</p>
+
+<p>On <strong>Kucoin</strong>, <a href="https://docs.kucoin.com/#request-rate-limit">the docs</a> say that they allow an IP to make 10 requests per second. They don’t. There are <a href="https://www.reddit.com/r/kucoin/comments/q5blef/api_ratelimits_problems/">many</a>, <a href="https://www.reddit.com/r/kucoin/comments/q40ode/whats_the_request_rate_limit/">Reddit</a>, <a href="https://www.reddit.com/r/kucoin/comments/lmdld9/kucoin_api_limits/">links</a> out there with people fuming about their aggressive undocumented rate limiting practices.</p>
+
+<p>On <strong>Bitfinex</strong>, <a href="https://docs.bitfinex.com/docs/requirements-and-limitations">the docs</a> say they allow 10-90 requests per minute, but I ran this script that made ~140 requests per minute for many minutes and I cannot get it to rate limit me:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while [ TRUE ]; do echo $(curl "https://api-pub.bitfinex.com/v2/candles/trade:1m:tBTCUSD/hist?limit=3&amp;sort=1&amp;start=1564774820000" | jq .); done
+</code></pre></div></div>
+
+<h3 id="gotcha-4-candlestick-data-may-be-incomplete">Gotcha 4: Candlestick data may be incomplete</h3>
+
+<p><a href="https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles">Coinbase docs</a> explicitly say there are gaps in the data. And it’s true. More often in the 1 minute interval.</p>
+
+<p>Problems it causes:</p>
+
+<ol>
+  <li>
+    <p>You’re plotting a chart. Is it ok to leave a gap in it?</p>
+  </li>
+  <li>
+    <p>You’re sending candlesticks to something. The receiving end hardcodes the timestamp to <code class="language-plaintext highlighter-rouge">startTimestamp + i * interval</code>. Bug.</p>
+  </li>
+  <li>
+    <p>You’re backtesting a strategy. Your bot receives a candlestick with price 0 (or a gap) and freaks out. Bug.</p>
+  </li>
+</ol>
+
+<p>Possible solution: fill gaps by cloning previously known prices. Doesn’t work if the gap is at the start.</p>
+
+<h3 id="gotcha-5-you-wont-get-the-starting-candlestick-time-you-asked-for">Gotcha 5: You won’t get the starting candlestick time you asked for</h3>
+
+<p>The final boss! Trickiest gotcha.</p>
+
+<p>You request candlesticks starting at <code class="language-plaintext highlighter-rouge">2020-07-04T01:02:03Z</code>. But you won’t get that starting timestamp.</p>
+
+<p>Exchanges snap your starting time to the data they have, and they <em>mostly</em> do the same. <em>Mostly</em>.</p>
+
+<ul>
+  <li>For 1m interval: they will mostly start at <code class="language-plaintext highlighter-rouge">2020-07-04T01:03:00Z</code> (i.e. the next minute).</li>
+  <li>For 1h interval: they will mostly start at <code class="language-plaintext highlighter-rouge">2020-07-04T02:00:00Z</code> (i.e. the next hour).</li>
+  <li>For 1d interval: they will mostly start at <code class="language-plaintext highlighter-rouge">2020-07-05T00:00:00Z</code> (i.e. the next day).</li>
+</ul>
+
+<p>You get the point. Do this:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">snapTime</span> <span class="o">:=</span> <span class="n">startTime</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span><span class="o">.</span><span class="n">Truncate</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>FTX</strong> for minutely candlesticks:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s2">"https://ftx.com/api/markets/BTC/USDT/candles?resolution=60&amp;start_time="</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-04 00:00:33"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">"&amp;end_time="</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-04 00:03:33"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">""</span> | jq <span class="s1">'.result | .[] | .startTime'</span>
+<span class="s2">"2020-07-04T00:01:00+00:00"</span>
+<span class="s2">"2020-07-04T00:02:00+00:00"</span>
+<span class="s2">"2020-07-04T00:03:00+00:00"</span>
+</code></pre></div></div>
+
+<p><strong>Bitstamp</strong> is the only one that snaps to the past, here on minutely:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s2">"https://www.bitstamp.net/api/v2/ohlc/btcusd/?limit=3&amp;step=60&amp;start="</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-04 00:00:33"</span> <span class="s2">"+%s"</span><span class="si">)</span> | jq <span class="s1">'.data.ohlc | .[] | .timestamp | tonumber | todate'</span>
+<span class="s2">"2020-07-04T00:00:00Z"</span>
+<span class="s2">"2020-07-04T00:01:00Z"</span>
+<span class="s2">"2020-07-04T00:02:00Z"</span>
+</code></pre></div></div>
+
+<p>What about intervals that are not divisors of 24-hour, e.g. 5-hour? They don’t support them!</p>
+
+<p>And don’t get me started on weekly. Some support weekly. It’s important.</p>
+
+<p><strong>Binance</strong> &amp; <strong>Bitfinex</strong> work with the same truncation strategy:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">tm</span><span class="p">,</span> <span class="n">_</span>    <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">,</span> <span class="s">"2020-07-04T01:02:03Z"</span><span class="p">)</span>
+	<span class="n">interval</span> <span class="o">:=</span> <span class="m">7</span> <span class="o">*</span> <span class="m">24</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Hour</span>
+	<span class="n">snap</span>     <span class="o">:=</span> <span class="n">tm</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span><span class="o">.</span><span class="n">Truncate</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Which produces: <code class="language-plaintext highlighter-rouge">2020-07-06T00:00:00Z</code>. Let’s see if it’s true:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s1">'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&amp;interval=1w&amp;limit=3&amp;startTime='</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span><span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-04 01:02:03"</span> <span class="s2">"+%s000"</span><span class="si">)</span>| jq <span class="s1">'.[] | .[0] | . / 1000 | todate'</span>
+<span class="s2">"2020-07-06T00:00:00Z"</span>
+<span class="s2">"2020-07-13T00:00:00Z"</span>
+<span class="s2">"2020-07-20T00:00:00Z"</span>
+</code></pre></div></div>
+
+<p><strong>Kucoin</strong> snaps to Thursdays, and don’t ask me why!</p>
+
+<p><strong>FTX</strong> is a unique case. They support 1-day, 2-day, …, 30-day. On these, they snap your timestamp to next day (or same if it’s already start of day), and then give you multiples starting on that day. Here’s an example:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s2">"https://ftx.com/api/markets/BTC/USDT/candles?resolution=259200&amp;start_time="</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-04 01:02:03"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">"&amp;end_time="</span><span class="si">$(</span><span class="nv">TZ</span><span class="o">=</span>UTC <span class="nb">date</span> <span class="nt">-j</span> <span class="nt">-f</span> <span class="s2">"%Y-%m-%d %H:%M:%S"</span> <span class="s2">"2020-07-10 00:00:00"</span> <span class="s2">"+%s"</span><span class="si">)</span><span class="s2">""</span> | jq <span class="s1">'.result | .[] | .startTime'</span>
+<span class="s2">"2020-07-05T00:00:00+00:00"</span>
+<span class="s2">"2020-07-07T00:00:00+00:00"</span>
+<span class="s2">"2020-07-10T00:00:00+00:00"</span>
+</code></pre></div></div>
+
+<h3 id="gotcha-6-order-of-returned-candlesticks-varies-across-exchanges">Gotcha 6: Order of returned candlesticks varies across exchanges</h3>
+
+<p>Most exchanges return <em>ascending</em> order candlesticks. <strong>Coinbase</strong> and <strong>Kucoin</strong> return <em>descending</em>. <strong>Bitfinex</strong> returns <em>descending</em> by default, but can be changed.</p>
+
+<p>Just reverse them. <code class="language-plaintext highlighter-rouge">O(n)</code> time, <code class="language-plaintext highlighter-rouge">O(1)</code> space:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">:=</span> <span class="m">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">candles</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="m">1</span> <span class="p">{</span>
+		<span class="n">candles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">candles</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">candles</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">candles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="gotcha-7-exchanges-silently-ignoring-arguments">Gotcha 7: Exchanges silently ignoring arguments</h3>
+
+<p>From Gotcha #1: <strong>Kraken</strong> ignores the “since” parameter.</p>
+
+<p><strong>FTX</strong> is dangerous. In <a href="https://docs.ftx.com/#get-historical-prices">the FTX request</a>, you provide a <code class="language-plaintext highlighter-rouge">start_time</code> and an <code class="language-plaintext highlighter-rouge">end_time</code> for historical prices.</p>
+
+<ul>
+  <li>if <code class="language-plaintext highlighter-rouge">end_time</code> is not specified, <code class="language-plaintext highlighter-rouge">start_time</code> is ignored silently and recent data is returned.</li>
+  <li>if the range between <code class="language-plaintext highlighter-rouge">start_time</code> &amp; <code class="language-plaintext highlighter-rouge">end_time</code> is too broad, <code class="language-plaintext highlighter-rouge">start_time</code> will be pushed forward until the range spans 1500 candlesticks.</li>
+</ul>
+
+<h3 id="gotcha-8-invalid-market-pairs">Gotcha 8: Invalid market pairs</h3>
+
+<p>You can’t request candlesticks for <code class="language-plaintext highlighter-rouge">INVALID/USDT</code>. But all exchanges tell you this differently.</p>
+
+<p>HTTP status codes:</p>
+
+<ul>
+  <li><strong>Bitstamp</strong>: <code class="language-plaintext highlighter-rouge">404</code></li>
+  <li><strong>Kucoin</strong>: <code class="language-plaintext highlighter-rouge">200</code></li>
+  <li><strong>Binance</strong>: <code class="language-plaintext highlighter-rouge">400</code></li>
+  <li><strong>FTX</strong>: <code class="language-plaintext highlighter-rouge">404</code></li>
+  <li><strong>Coinbase</strong>: <code class="language-plaintext highlighter-rouge">404</code></li>
+  <li><strong>Bitfinex</strong>: <code class="language-plaintext highlighter-rouge">200</code></li>
+</ul>
+
+<p>HTTP Payloads:</p>
+
+<ul>
+  <li><strong>Bitstamp</strong>: no payload</li>
+  <li><strong>Kucoin</strong>: <code class="language-plaintext highlighter-rouge">{"code": "400100", "msg": "This pair is not provided at present."}</code></li>
+  <li><strong>Binance</strong>: <code class="language-plaintext highlighter-rouge">{"code": -1121, "msg": "Invalid symbol."}</code></li>
+  <li><strong>FTX</strong>: <code class="language-plaintext highlighter-rouge">{"success": false, "error": "No such market: INVALID/USDT "}</code></li>
+  <li><strong>Coinbase</strong>: <code class="language-plaintext highlighter-rouge">{"message": "NotFound"}</code></li>
+  <li><strong>Bitfinex</strong>: no payload</li>
+</ul>
+
+<p><strong>Bitfinex</strong> is the worst. It’s hard to tell it’s an invalid market pair. It could be that there are no new candlesticks, because your starting time is too recent.</p>
+
+<h3 id="gotcha-9-requesting-the-most-recent-candlesticks">Gotcha 9: Requesting the most recent candlesticks</h3>
+
+<p>Be careful! Exchanges mostly don’t care if you ask for non-historical starting times.</p>
+
+<p>Here’s <strong>Binance</strong> returning <code class="language-plaintext highlighter-rouge">200 OK</code> with the 3-minute <code class="language-plaintext highlighter-rouge">BTC/USDT</code> candlesticks for the year <strong>2286</strong>!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> <span class="s2">"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&amp;interval=3m&amp;limit=60&amp;startTime=9999999999000"</span> | jq <span class="s1">'.'</span>
+<span class="o">[]</span>
+</code></pre></div></div>
+
+<p>Note that if you ask for <code class="language-plaintext highlighter-rouge">time.Now().Add(-1*time.Hour)</code>, but for daily candlesticks, your day is not over yet!</p>
+
+<p>Even if it’s over, how over is it? Race condition! Your exchange hasn’t finalised bucketing the day yet!</p>
+
+<p>If you plan to cache results, danger zone! Recent candlesticks will change.</p>
+
+<p>I ran experiments to see in practical terms how much to “lag” to current candlesticks, and put that “patience configuration” in the library.</p>
+
+<h3 id="gotcha-10-caching-results">Gotcha 10: Caching results</h3>
+
+<p>An iterator has a buffer of results that came from the latest request. That’s all it needs.</p>
+
+<p>But real-world applications will create multiple iterators. A cache is probably needed there. <a href="https://en.wikipedia.org/wiki/Pareto_principle">The 80/20 rule</a> suggests 80% of created iterators will be for 20% of the options. You can imagine <strong>Binance</strong>’s <code class="language-plaintext highlighter-rouge">BTC/USDT</code> recent hourly candlesticks being popular.</p>
+
+<p><a href="https://martinfowler.com/bliki/TwoHardThings.html">Caching is hard</a>, but in this case it’s a very sensible architectural choice:</p>
+<ul>
+  <li>Historical candlesticks should not change (meh, except for Gotcha #9)</li>
+  <li>Each cache hit saves up to ~100 milliseconds in HTTP requests</li>
+  <li>Not making requests minimises rate-limiting issues</li>
+</ul>
+
+<p>What about storing cache on filesystem?</p>
+
+<p>Some exchanges even provide all of their historical data <a href="https://data.binance.vision/?prefix=data/spot/daily/klines/">as files</a>. Great, ~0 requests! But:</p>
+<ul>
+  <li>Only a few exchanges provide it</li>
+  <li>Cron to download new files, which will break</li>
+  <li>Parsing different file formats for different exchanges</li>
+  <li>Maybe 4-fallback level architecure (i.e. iterator buffer, in-memory cache, filesystem, HTTP request)</li>
+  <li>New challenges (e.g. out-of-disk, permissions, rotating, wholes in data)</li>
+</ul>
+
+<p>How about just an in-memory <a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)">LRU cache</a>?</p>
+<ul>
+  <li>LRU plays well with 80/20 request distribution</li>
+  <li>Has fixed-size memory (configurable)</li>
+  <li>Inefficient if you restart the process, but a non-invalidating cache scares me; let’s refresh it on restarts</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I started tinkering with the idea of building this more than a year ago in <a href="https://github.com/marianogappa/signal-checker/commit/ce6d9faddee7ff6e672d734b6eeb86abb63a5bd3">this commit</a> of a different repo, and I still feel like I don’t fully get it.</p>
+
+<p>Building this has been hard, but very fun too, and rewarding. It’s <a href="https://en.wikipedia.org/wiki/MIT_License">MIT licensed</a> so feel free to use it, profit from it, lose money with my bugs, file issues, contribute improvements, etc. <a href="https://pkg.go.dev/github.com/marianogappa/crypto-candles">Docs are here</a>, but go to the <code class="language-plaintext highlighter-rouge">candles</code> folder to see most of it.</p>
+
+<p>I also hope that the <strong><a href="https://twitter.com/crypto_preds">Crypto Predictions Tracker</a></strong> becomes popular, so that influencers get some accountability for their predictions. This is good: it will keep them honest, and improve their reputation.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/KISS_principle">K.I.S.S.</a>!</p>
+
+</article>
+
+
+  <div class="share-page">
+  
+
+  <div class="share-links">
+    
+
+    
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=10 Gotchas for building a universal crypto candlestick iterator in Go&url=https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/&title=10 Gotchas for building a universal crypto candlestick iterator in Go" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+    
+
+    
+
+    
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/&t=10 Gotchas for building a universal crypto candlestick iterator in Go" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'marianogappasblog';
+    var disqus_identifier = '/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go';
+    var disqus_title      = '';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>

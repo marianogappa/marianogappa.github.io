@@ -7,6 +7,400 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>10 Gotchas for building a universal crypto candlestick iterator in Go</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;I’ve recently open sourced a universal crypto candlestick iterator library in Go called crypto-candles:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/marianogappa/crypto-candles&quot;&gt;https://github.com/marianogappa/crypto-candles&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;It’s being used to power the &lt;strong&gt;&lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;&lt;/strong&gt;: the only unbiased, automated accountability watchdog for crypto predictions on the Internet.&lt;/p&gt;
+
+&lt;p&gt;There is no Go library alternative I’ve found, or I would have used it. There are some exchange SDKs, though.&lt;/p&gt;
+
+&lt;p&gt;In this blogpost, I share all the interesting challenges I found while building this library over the past few months.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-a-candlestick&quot;&gt;What is a candlestick?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/terms/c/candlestick.asp&quot;&gt;Candlesticks&lt;/a&gt;, also known as OHLC (i.e. Open, High, Low, Close), Klines and Bucketed Trades, are a way to display the high, low, open, and closing prices of crypto market pairs (and traditional securities) for a specific period.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://www.investopedia.com/thmb/F9Gcg7_Is-0Pj7jILEMe9IIscm0=/660x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/CandlestickDefinition3-a768ecdaadc2440db427fe8207491819.png&quot; alt=&quot;Candlestick&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.tradingview.com/chart/QVMg9Xmj/?symbol=BINANCE%3ABTCUSDT&quot;&gt;Candlestick charts&lt;/a&gt; are a common sight for crypto investors, and they are used to make buy/sell decisions, either manually or via bots or some other automated mechanisms.&lt;/p&gt;
+
+&lt;p&gt;Crypto exchanges like &lt;a href=&quot;https://www.binance.com&quot;&gt;Binance&lt;/a&gt; or &lt;a href=&quot;https://www.coinbase.com/&quot;&gt;Coinbase&lt;/a&gt; expose APIs with market information for all their supported market pairs (e.g. BTC/USDT) and allow you to consume them for free within fair-use limits.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/candlesticks.png&quot; alt=&quot;Candlestick chart&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-a-crypto-candlestick-iterator&quot;&gt;What is a crypto candlestick iterator?&lt;/h2&gt;
+
+&lt;p&gt;A Crypto Candlestick Iterator is an &lt;a href=&quot;https://en.wikipedia.org/wiki/Iterator_pattern&quot;&gt;iterator&lt;/a&gt; that you construct for:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;a given provider (e.g. Binance, Coinbase)&lt;/li&gt;
+  &lt;li&gt;a given market pair (e.g. BTC/USDT)&lt;/li&gt;
+  &lt;li&gt;a given starting timestamp (e.g. “2020-07-04T01:02:03Z”, here represented in ISO8601 format)&lt;/li&gt;
+  &lt;li&gt;and a given candlestick interval (e.g. minutely, hourly, daily).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example in crypto-candles:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewMarket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Iterator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MarketSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;COIN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;Provider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BINANCE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;BaseAsset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;BTC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;QuoteAsset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;USDT&quot;&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hour&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// Start time&lt;/span&gt;
+		&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hour&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;                   &lt;span class=&quot;c&quot;&gt;// Candlestick interval&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once constructed, calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.Next()&lt;/code&gt; on it returns either the next available candlestick in your specified interval, or an error:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;candlestick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A candlestick looks like this when marshalled to JSON:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;t&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1641096000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;o&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;47329.47&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;46910.3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;l&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;46770.23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;h&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;47415.73&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Where:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;o&lt;/code&gt;: Open price&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;c&lt;/code&gt;: Close price&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;l&lt;/code&gt;: Low price&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;h&lt;/code&gt;: High price&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;…of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BTC/USDT&lt;/code&gt; market pair&lt;/p&gt;
+
+&lt;p&gt;…on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BINANCE&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;…at the hour spanning from the timestamp &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;t&lt;/code&gt; and up to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;t + candlestickInterval&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-does-universal-candlestick-iterator-mean&quot;&gt;What does “universal” candlestick iterator mean?&lt;/h2&gt;
+
+&lt;p&gt;It means that it supports all major exchanges.&lt;/p&gt;
+
+&lt;p&gt;Usually, you use the API or SDK of the exchange you want to use. If you need to use more than one, it gets tricky.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-the-use-case-for-a-universal-candlestick-iterator&quot;&gt;What’s the use case for a universal candlestick iterator?&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Data for plotting candlestick charts. If you need 2+ exchanges.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Data for backtesting trading strategies. If you need 2+ exchanges.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Data for being a watchdog for influencing statements &lt;a href=&quot;https://twitter.com/rovercrc/status/1539710164697227267&quot;&gt;like this one&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;And with crypto-candles, you get caching, retrying on errors, patching of data gaps and concurrency-safety for free.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-meaty-part-gotchas&quot;&gt;The meaty part: gotchas!&lt;/h2&gt;
+
+&lt;p&gt;Building this library through the months has been a big challenge, and in this section I’ll list all of the important gotchas I’ve found during this process.&lt;/p&gt;
+
+&lt;h3 id=&quot;gotcha-1-not-all-exchanges-provide-historical-candlesticks&quot;&gt;Gotcha 1: Not all exchanges provide historical candlesticks&lt;/h3&gt;
+
+&lt;p&gt;They all provide current prices. Not all provide historicals. Some do in very tricky ways.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FTX&lt;/strong&gt; does:&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://ftx.com/api/markets/BTC/USDT/candles?resolution=60&amp;amp;start_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-04-07 00:00:00&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&amp;amp;end_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-04-07 00:02:00&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt; | jq &lt;span class=&quot;s1&quot;&gt;&apos;.result | .[]&apos;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;s2&quot;&gt;&quot;startTime&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;2020-04-06T23:00:00+00:00&quot;&lt;/span&gt;,
+	&lt;span class=&quot;s2&quot;&gt;&quot;time&quot;&lt;/span&gt;: 1586214000000,
+	&lt;span class=&quot;s2&quot;&gt;&quot;open&quot;&lt;/span&gt;: 7274,
+	&lt;span class=&quot;s2&quot;&gt;&quot;high&quot;&lt;/span&gt;: 7281.5,
+	&lt;span class=&quot;s2&quot;&gt;&quot;low&quot;&lt;/span&gt;: 7272,
+	&lt;span class=&quot;s2&quot;&gt;&quot;close&quot;&lt;/span&gt;: 7281.5,
+	&lt;span class=&quot;s2&quot;&gt;&quot;volume&quot;&lt;/span&gt;: 0
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;s2&quot;&gt;&quot;startTime&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;2020-04-06T23:01:00+00:00&quot;&lt;/span&gt;,
+	&lt;span class=&quot;s2&quot;&gt;&quot;time&quot;&lt;/span&gt;: 1586214060000,
+	&lt;span class=&quot;s2&quot;&gt;&quot;open&quot;&lt;/span&gt;: 7281.5,
+	&lt;span class=&quot;s2&quot;&gt;&quot;high&quot;&lt;/span&gt;: 7281.5,
+	&lt;span class=&quot;s2&quot;&gt;&quot;low&quot;&lt;/span&gt;: 7277,
+	&lt;span class=&quot;s2&quot;&gt;&quot;close&quot;&lt;/span&gt;: 7280,
+	&lt;span class=&quot;s2&quot;&gt;&quot;volume&quot;&lt;/span&gt;: 0
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;s2&quot;&gt;&quot;startTime&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;2020-04-06T23:02:00+00:00&quot;&lt;/span&gt;,
+	&lt;span class=&quot;s2&quot;&gt;&quot;time&quot;&lt;/span&gt;: 1586214120000,
+	&lt;span class=&quot;s2&quot;&gt;&quot;open&quot;&lt;/span&gt;: 7280,
+	&lt;span class=&quot;s2&quot;&gt;&quot;high&quot;&lt;/span&gt;: 7280,
+	&lt;span class=&quot;s2&quot;&gt;&quot;low&quot;&lt;/span&gt;: 7271.5,
+	&lt;span class=&quot;s2&quot;&gt;&quot;close&quot;&lt;/span&gt;: 7274,
+	&lt;span class=&quot;s2&quot;&gt;&quot;volume&quot;&lt;/span&gt;: 0
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;But on &lt;strong&gt;Huobi&lt;/strong&gt;, &lt;a href=&quot;https://huobiapi.github.io/docs/spot/v1/en/#get-klines-candles&quot;&gt;the docs&lt;/a&gt; say:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This API doesn’t support customized period, refer to Websocket K line API to get the emurated period value.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Not sure what that means, but I don’t think Websockets do either.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kraken&lt;/strong&gt; says they do, but they silently ignore their “since” parameter if you go over a very short threshold to the past. Details in &lt;a href=&quot;https://stackoverflow.com/a/48618456/965724&quot;&gt;this Stack Overflow answer&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can still get them, if you calculate them yourself, by getting all trades and bucketing them yourself. It’s linear time. But you have no control on what &lt;em&gt;n&lt;/em&gt; is, so don’t.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Phemex&lt;/strong&gt; has only a &lt;a href=&quot;https://github.com/phemex/phemex-api-docs/blob/master/Public-Spot-API-en.md#subscribe-kline&quot;&gt;websocket-based “subscribe kline” endpoint&lt;/a&gt;, but only gets you up to 1000 candlesticks to the past. Then you’re stuck with Kraken-style &lt;a href=&quot;https://github.com/phemex/phemex-api-docs/blob/master/Public-Spot-API-en.md#query-trades-history&quot;&gt;Query Trades History endpoint&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;gotcha-2-rate-limiting&quot;&gt;Gotcha 2: Rate limiting&lt;/h3&gt;
+
+&lt;p&gt;All exchanges must have a rate-limiting strategy to prevent malicious or buggy clients from &lt;a href=&quot;https://en.wikipedia.org/wiki/Denial-of-service_attack&quot;&gt;DDoSing&lt;/a&gt; their APIs. Otherwise you’d kill them!&lt;/p&gt;
+
+&lt;p&gt;In general (not always!), they give you an &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#429&quot;&gt;HTTP 429 status code&lt;/a&gt; when they want you to enhance your calm. If you don’t, &lt;strong&gt;they IP-ban&lt;/strong&gt; you temporarily.&lt;/p&gt;
+
+&lt;p&gt;In general, candlestick endpoints are “public market data” and don’t require an API Key. But if you get one, they might be more tolerant with rate-limiting.&lt;/p&gt;
+
+&lt;p&gt;On &lt;strong&gt;Binance&lt;/strong&gt;, &lt;a href=&quot;https://binance-docs.github.io/apidocs/spot/en/#general-api-information&quot;&gt;the docs&lt;/a&gt; say that if you ignore the 429s, you get IP banned for 2 minutes, and up to 3 days for repeat offenders. They send a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Retry-After&lt;/code&gt; header on the 429s with how many seconds you should sleep.&lt;/p&gt;
+
+&lt;p&gt;On &lt;strong&gt;Coinbase&lt;/strong&gt;, &lt;a href=&quot;https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/rate-limiting&quot;&gt;the docs here&lt;/a&gt; and &lt;a href=&quot;https://help.coinbase.com/en/pro/other-topics/api/faq-on-api&quot;&gt;here&lt;/a&gt; say they allow ~3-6 requests per second.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FTX&lt;/strong&gt; &lt;a href=&quot;https://help.ftx.com/hc/en-us/articles/360052595091-2020-11-20-Ratelimit-Updates&quot;&gt;docs&lt;/a&gt; make no sense. Don’t worry, you’re fine.&lt;/p&gt;
+
+&lt;p&gt;On &lt;strong&gt;Kucoin&lt;/strong&gt;, the docs lie, so you don’t need a link. You’re gonna get 429’d no matter what you do. Just back-off.&lt;/p&gt;
+
+&lt;p&gt;The other ones are fine, more on that later.&lt;/p&gt;
+
+&lt;p&gt;Ideally, don’t make them 429 you. Do this:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Calculate the truncated current minute of your request: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;time.Now().Add(-1 * time.Minute).Truncate(time.Minute)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Keep track of the last requested minute, and a counter&lt;/li&gt;
+  &lt;li&gt;If the current minute of your request equals the last, increment the counter (and reset it if not)&lt;/li&gt;
+  &lt;li&gt;If the counter exceeds the exchange’s limits, sleep!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Don’t use concurrency&lt;/strong&gt; unless:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Every goroutine talks to a different exchange&lt;/li&gt;
+  &lt;li&gt;You have a pool of IPs and a proxy, and every goroutine talks to a separate (exchange, IP) tuple&lt;/li&gt;
+  &lt;li&gt;You’re willing to mutex the hell out of your code&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;gotcha-3-some-exchanges-dont-respect-their-rate-limit-documentation&quot;&gt;Gotcha 3: Some exchanges don’t respect their rate limit documentation&lt;/h3&gt;
+
+&lt;p&gt;You’re following the rules? The rules are wrong.&lt;/p&gt;
+
+&lt;p&gt;On &lt;strong&gt;Kucoin&lt;/strong&gt;, &lt;a href=&quot;https://docs.kucoin.com/#request-rate-limit&quot;&gt;the docs&lt;/a&gt; say that they allow an IP to make 10 requests per second. They don’t. There are &lt;a href=&quot;https://www.reddit.com/r/kucoin/comments/q5blef/api_ratelimits_problems/&quot;&gt;many&lt;/a&gt;, &lt;a href=&quot;https://www.reddit.com/r/kucoin/comments/q40ode/whats_the_request_rate_limit/&quot;&gt;Reddit&lt;/a&gt;, &lt;a href=&quot;https://www.reddit.com/r/kucoin/comments/lmdld9/kucoin_api_limits/&quot;&gt;links&lt;/a&gt; out there with people fuming about their aggressive undocumented rate limiting practices.&lt;/p&gt;
+
+&lt;p&gt;On &lt;strong&gt;Bitfinex&lt;/strong&gt;, &lt;a href=&quot;https://docs.bitfinex.com/docs/requirements-and-limitations&quot;&gt;the docs&lt;/a&gt; say they allow 10-90 requests per minute, but I ran this script that made ~140 requests per minute for many minutes and I cannot get it to rate limit me:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;while [ TRUE ]; do echo $(curl &quot;https://api-pub.bitfinex.com/v2/candles/trade:1m:tBTCUSD/hist?limit=3&amp;amp;sort=1&amp;amp;start=1564774820000&quot; | jq .); done
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gotcha-4-candlestick-data-may-be-incomplete&quot;&gt;Gotcha 4: Candlestick data may be incomplete&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles&quot;&gt;Coinbase docs&lt;/a&gt; explicitly say there are gaps in the data. And it’s true. More often in the 1 minute interval.&lt;/p&gt;
+
+&lt;p&gt;Problems it causes:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;You’re plotting a chart. Is it ok to leave a gap in it?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You’re sending candlesticks to something. The receiving end hardcodes the timestamp to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;startTimestamp + i * interval&lt;/code&gt;. Bug.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You’re backtesting a strategy. Your bot receives a candlestick with price 0 (or a gap) and freaks out. Bug.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Possible solution: fill gaps by cloning previously known prices. Doesn’t work if the gap is at the start.&lt;/p&gt;
+
+&lt;h3 id=&quot;gotcha-5-you-wont-get-the-starting-candlestick-time-you-asked-for&quot;&gt;Gotcha 5: You won’t get the starting candlestick time you asked for&lt;/h3&gt;
+
+&lt;p&gt;The final boss! Trickiest gotcha.&lt;/p&gt;
+
+&lt;p&gt;You request candlesticks starting at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2020-07-04T01:02:03Z&lt;/code&gt;. But you won’t get that starting timestamp.&lt;/p&gt;
+
+&lt;p&gt;Exchanges snap your starting time to the data they have, and they &lt;em&gt;mostly&lt;/em&gt; do the same. &lt;em&gt;Mostly&lt;/em&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;For 1m interval: they will mostly start at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2020-07-04T01:03:00Z&lt;/code&gt; (i.e. the next minute).&lt;/li&gt;
+  &lt;li&gt;For 1h interval: they will mostly start at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2020-07-04T02:00:00Z&lt;/code&gt; (i.e. the next hour).&lt;/li&gt;
+  &lt;li&gt;For 1d interval: they will mostly start at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2020-07-05T00:00:00Z&lt;/code&gt; (i.e. the next day).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You get the point. Do this:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;snapTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Truncate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;FTX&lt;/strong&gt; for minutely candlesticks:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://ftx.com/api/markets/BTC/USDT/candles?resolution=60&amp;amp;start_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04 00:00:33&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&amp;amp;end_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04 00:03:33&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt; | jq &lt;span class=&quot;s1&quot;&gt;&apos;.result | .[] | .startTime&apos;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:01:00+00:00&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:02:00+00:00&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:03:00+00:00&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Bitstamp&lt;/strong&gt; is the only one that snaps to the past, here on minutely:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://www.bitstamp.net/api/v2/ohlc/btcusd/?limit=3&amp;amp;step=60&amp;amp;start=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04 00:00:33&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt; | jq &lt;span class=&quot;s1&quot;&gt;&apos;.data.ohlc | .[] | .timestamp | tonumber | todate&apos;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:00:00Z&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:01:00Z&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04T00:02:00Z&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What about intervals that are not divisors of 24-hour, e.g. 5-hour? They don’t support them!&lt;/p&gt;
+
+&lt;p&gt;And don’t get me started on weekly. Some support weekly. It’s important.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Binance&lt;/strong&gt; &amp;amp; &lt;strong&gt;Bitfinex&lt;/strong&gt; work with the same truncation strategy:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;tm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RFC3339&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;2020-07-04T01:02:03Z&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;24&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hour&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;snap&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Truncate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Which produces: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2020-07-06T00:00:00Z&lt;/code&gt;. Let’s see if it’s true:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;https://api.binance.com/api/v3/klines?symbol=BTCUSDT&amp;amp;interval=1w&amp;amp;limit=3&amp;amp;startTime=&apos;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04 01:02:03&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s000&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;| jq &lt;span class=&quot;s1&quot;&gt;&apos;.[] | .[0] | . / 1000 | todate&apos;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-06T00:00:00Z&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-13T00:00:00Z&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-20T00:00:00Z&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Kucoin&lt;/strong&gt; snaps to Thursdays, and don’t ask me why!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FTX&lt;/strong&gt; is a unique case. They support 1-day, 2-day, …, 30-day. On these, they snap your timestamp to next day (or same if it’s already start of day), and then give you multiples starting on that day. Here’s an example:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://ftx.com/api/markets/BTC/USDT/candles?resolution=259200&amp;amp;start_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-04 01:02:03&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&amp;amp;end_time=&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;UTC &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%Y-%m-%d %H:%M:%S&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2020-07-10 00:00:00&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;+%s&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt; | jq &lt;span class=&quot;s1&quot;&gt;&apos;.result | .[] | .startTime&apos;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-05T00:00:00+00:00&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-07T00:00:00+00:00&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;2020-07-10T00:00:00+00:00&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gotcha-6-order-of-returned-candlesticks-varies-across-exchanges&quot;&gt;Gotcha 6: Order of returned candlesticks varies across exchanges&lt;/h3&gt;
+
+&lt;p&gt;Most exchanges return &lt;em&gt;ascending&lt;/em&gt; order candlesticks. &lt;strong&gt;Coinbase&lt;/strong&gt; and &lt;strong&gt;Kucoin&lt;/strong&gt; return &lt;em&gt;descending&lt;/em&gt;. &lt;strong&gt;Bitfinex&lt;/strong&gt; returns &lt;em&gt;descending&lt;/em&gt; by default, but can be changed.&lt;/p&gt;
+
+&lt;p&gt;Just reverse them. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;O(n)&lt;/code&gt; time, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;O(1)&lt;/code&gt; space:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;candles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gotcha-7-exchanges-silently-ignoring-arguments&quot;&gt;Gotcha 7: Exchanges silently ignoring arguments&lt;/h3&gt;
+
+&lt;p&gt;From Gotcha #1: &lt;strong&gt;Kraken&lt;/strong&gt; ignores the “since” parameter.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FTX&lt;/strong&gt; is dangerous. In &lt;a href=&quot;https://docs.ftx.com/#get-historical-prices&quot;&gt;the FTX request&lt;/a&gt;, you provide a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;start_time&lt;/code&gt; and an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;end_time&lt;/code&gt; for historical prices.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;end_time&lt;/code&gt; is not specified, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;start_time&lt;/code&gt; is ignored silently and recent data is returned.&lt;/li&gt;
+  &lt;li&gt;if the range between &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;start_time&lt;/code&gt; &amp;amp; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;end_time&lt;/code&gt; is too broad, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;start_time&lt;/code&gt; will be pushed forward until the range spans 1500 candlesticks.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;gotcha-8-invalid-market-pairs&quot;&gt;Gotcha 8: Invalid market pairs&lt;/h3&gt;
+
+&lt;p&gt;You can’t request candlesticks for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INVALID/USDT&lt;/code&gt;. But all exchanges tell you this differently.&lt;/p&gt;
+
+&lt;p&gt;HTTP status codes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Bitstamp&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;404&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Kucoin&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;200&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Binance&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;400&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;FTX&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;404&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Coinbase&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;404&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Bitfinex&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;200&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;HTTP Payloads:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Bitstamp&lt;/strong&gt;: no payload&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Kucoin&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&quot;code&quot;: &quot;400100&quot;, &quot;msg&quot;: &quot;This pair is not provided at present.&quot;}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Binance&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&quot;code&quot;: -1121, &quot;msg&quot;: &quot;Invalid symbol.&quot;}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;FTX&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&quot;success&quot;: false, &quot;error&quot;: &quot;No such market: INVALID/USDT &quot;}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Coinbase&lt;/strong&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&quot;message&quot;: &quot;NotFound&quot;}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Bitfinex&lt;/strong&gt;: no payload&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Bitfinex&lt;/strong&gt; is the worst. It’s hard to tell it’s an invalid market pair. It could be that there are no new candlesticks, because your starting time is too recent.&lt;/p&gt;
+
+&lt;h3 id=&quot;gotcha-9-requesting-the-most-recent-candlesticks&quot;&gt;Gotcha 9: Requesting the most recent candlesticks&lt;/h3&gt;
+
+&lt;p&gt;Be careful! Exchanges mostly don’t care if you ask for non-historical starting times.&lt;/p&gt;
+
+&lt;p&gt;Here’s &lt;strong&gt;Binance&lt;/strong&gt; returning &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;200 OK&lt;/code&gt; with the 3-minute &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BTC/USDT&lt;/code&gt; candlesticks for the year &lt;strong&gt;2286&lt;/strong&gt;!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://api.binance.com/api/v3/klines?symbol=BTCUSDT&amp;amp;interval=3m&amp;amp;limit=60&amp;amp;startTime=9999999999000&quot;&lt;/span&gt; | jq &lt;span class=&quot;s1&quot;&gt;&apos;.&apos;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that if you ask for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;time.Now().Add(-1*time.Hour)&lt;/code&gt;, but for daily candlesticks, your day is not over yet!&lt;/p&gt;
+
+&lt;p&gt;Even if it’s over, how over is it? Race condition! Your exchange hasn’t finalised bucketing the day yet!&lt;/p&gt;
+
+&lt;p&gt;If you plan to cache results, danger zone! Recent candlesticks will change.&lt;/p&gt;
+
+&lt;p&gt;I ran experiments to see in practical terms how much to “lag” to current candlesticks, and put that “patience configuration” in the library.&lt;/p&gt;
+
+&lt;h3 id=&quot;gotcha-10-caching-results&quot;&gt;Gotcha 10: Caching results&lt;/h3&gt;
+
+&lt;p&gt;An iterator has a buffer of results that came from the latest request. That’s all it needs.&lt;/p&gt;
+
+&lt;p&gt;But real-world applications will create multiple iterators. A cache is probably needed there. &lt;a href=&quot;https://en.wikipedia.org/wiki/Pareto_principle&quot;&gt;The 80/20 rule&lt;/a&gt; suggests 80% of created iterators will be for 20% of the options. You can imagine &lt;strong&gt;Binance&lt;/strong&gt;’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BTC/USDT&lt;/code&gt; recent hourly candlesticks being popular.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://martinfowler.com/bliki/TwoHardThings.html&quot;&gt;Caching is hard&lt;/a&gt;, but in this case it’s a very sensible architectural choice:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Historical candlesticks should not change (meh, except for Gotcha #9)&lt;/li&gt;
+  &lt;li&gt;Each cache hit saves up to ~100 milliseconds in HTTP requests&lt;/li&gt;
+  &lt;li&gt;Not making requests minimises rate-limiting issues&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What about storing cache on filesystem?&lt;/p&gt;
+
+&lt;p&gt;Some exchanges even provide all of their historical data &lt;a href=&quot;https://data.binance.vision/?prefix=data/spot/daily/klines/&quot;&gt;as files&lt;/a&gt;. Great, ~0 requests! But:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Only a few exchanges provide it&lt;/li&gt;
+  &lt;li&gt;Cron to download new files, which will break&lt;/li&gt;
+  &lt;li&gt;Parsing different file formats for different exchanges&lt;/li&gt;
+  &lt;li&gt;Maybe 4-fallback level architecure (i.e. iterator buffer, in-memory cache, filesystem, HTTP request)&lt;/li&gt;
+  &lt;li&gt;New challenges (e.g. out-of-disk, permissions, rotating, wholes in data)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;How about just an in-memory &lt;a href=&quot;https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)&quot;&gt;LRU cache&lt;/a&gt;?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;LRU plays well with 80/20 request distribution&lt;/li&gt;
+  &lt;li&gt;Has fixed-size memory (configurable)&lt;/li&gt;
+  &lt;li&gt;Inefficient if you restart the process, but a non-invalidating cache scares me; let’s refresh it on restarts&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I started tinkering with the idea of building this more than a year ago in &lt;a href=&quot;https://github.com/marianogappa/signal-checker/commit/ce6d9faddee7ff6e672d734b6eeb86abb63a5bd3&quot;&gt;this commit&lt;/a&gt; of a different repo, and I still feel like I don’t fully get it.&lt;/p&gt;
+
+&lt;p&gt;Building this has been hard, but very fun too, and rewarding. It’s &lt;a href=&quot;https://en.wikipedia.org/wiki/MIT_License&quot;&gt;MIT licensed&lt;/a&gt; so feel free to use it, profit from it, lose money with my bugs, file issues, contribute improvements, etc. &lt;a href=&quot;https://pkg.go.dev/github.com/marianogappa/crypto-candles&quot;&gt;Docs are here&lt;/a&gt;, but go to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;candles&lt;/code&gt; folder to see most of it.&lt;/p&gt;
+
+&lt;p&gt;I also hope that the &lt;strong&gt;&lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;&lt;/strong&gt; becomes popular, so that influencers get some accountability for their predictions. This is good: it will keep them honest, and improve their reputation.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/KISS_principle&quot;&gt;K.I.S.S.&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 24 Jul 2022 00:00:00 +0100</pubDate>
+        <link>https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2022/07/24/12-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</guid>
+      </item>
+    
+      <item>
         <title>Running Golang on the browser with WebAssembly and TinyGo</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
@@ -441,8 +835,8 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 </description>
         <pubDate>Wed, 01 Apr 2020 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
+        <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse-copy/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse-copy/</guid>
       </item>
     
       <item>
@@ -2448,93 +2842,6 @@ GHI-789     Do very urgent work
         <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
-      </item>
-    
-      <item>
-        <title>Fixing syntax highlighting issues in Sublime Text 3</title>
-        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-
-&lt;p&gt;My two main IDEs nowadays are &lt;a href=&quot;https://www.jetbrains.com/idea/&quot;&gt;Intellij Idea&lt;/a&gt; and &lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text&lt;/a&gt;. I basically like to use IDEA for strongly-typed languages and Sublime for weakly-typed languages. However, not long ago I found a bug on Sublime!&lt;/p&gt;
-
-&lt;p&gt;In version 5.4 of PHP, they &lt;a href=&quot;http://php.net/manual/en/migration54.new-features.php&quot;&gt;introduced a new syntax for arrays&lt;/a&gt; that is reminiscent of the JSON notation:&lt;/p&gt;
-
-&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Old PHP Array syntax&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// New PHP Array syntax&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I’ve found a case where it’s not. This case was probably not discovered because PHP people don’t like type-hinting!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sublime-highlighting-before.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;now-heres-how-to-fix-it&quot;&gt;Now, here’s how to fix it&lt;/h2&gt;
-
-&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;This is the Language file for PHP&lt;/a&gt;.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;The syntax highlighting feature uses the &lt;a href=&quot;https://en.wikipedia.org/wiki/Oniguruma&quot;&gt;Oniguruma regular expression library&lt;/a&gt;.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;I recommend &lt;a href=&quot;https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;amp;ia=cheatsheet&amp;amp;iax=1&quot;&gt;this DuckDuckGo regex cheatsheet&lt;/a&gt; if you need a quick reference; it’s very good!&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Also, I recommend using &lt;a href=&quot;http://rubular.com/&quot;&gt;this online regex parser&lt;/a&gt; when you get into the regex hacking part. It’s not my favourite one but it’s Ruby-based.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Before we begin, you should skim through &lt;a href=&quot;http://www.sublimetext.com/docs/3/syntax.html&quot;&gt;this syntax guide&lt;/a&gt; to familiarise yourself with the code we’ll be editing.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Optionally, you might want to read &lt;a href=&quot;http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition&quot;&gt;this StackOverflow question&lt;/a&gt;, as it was very insightful to understand the process.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;opening-the-language-file&quot;&gt;Opening the language file&lt;/h3&gt;
-
-&lt;p&gt;The first thing we need to do is to open the Language package (in this case the PHP one). For this, we need to &lt;a href=&quot;https://packagecontrol.io/packages/PackageResourceViewer&quot;&gt;install the PackageResourceViewer plugin&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Within Sublime’s Command Palette, type:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PackageResouceViewer: Open Resource
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Then select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PHP&lt;/code&gt; resource and then finally &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PHP.tmLanguage&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;You’ll find a very scary xml file. This is the annoying part. The guides recommend that you use &lt;a href=&quot;https://packagecontrol.io/packages/AAAPackageDev&quot;&gt;the AAAPackageDev package&lt;/a&gt; to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn’t convert perfectly, and this defeats the purpose of using it! I did something different.&lt;/p&gt;
-
-&lt;h3 id=&quot;editing-the-language-file&quot;&gt;Editing the language file&lt;/h3&gt;
-
-&lt;p&gt;This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!&lt;/p&gt;
-
-&lt;p&gt;To make sense of the xml monster, just look up &lt;a href=&quot;https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax&quot;&gt;the yaml file on the Github repository&lt;/a&gt;. Make sure your Sublime and the GH code are for the same version; otherwise you’re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
-Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.&lt;/p&gt;
-
-&lt;p&gt;After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;array&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(&lt;/code&gt;) or 1 group (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[&lt;/code&gt;), so I needed a wrapping group with two cases (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(a|b)&lt;/code&gt;) that wasn’t actually capturing anything per se. The solution to this was &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Passive (non-capturing) groups&lt;/code&gt; (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(?:...)&lt;/code&gt;). I mention this because you might need it; when you see how the classes are picked you’ll understand why.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/sublime-highlighting-after.png&quot; alt=&quot;Highlighting Issue - Before&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;fun-fact&quot;&gt;Fun fact&lt;/h2&gt;
-
-&lt;p&gt;Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&amp;lt;=&lt;/code&gt;). When it didn’t work I facepalmed: “of course! it’s xml; I have to escape it (i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;lt;&lt;/code&gt;)”. When it didn’t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn’t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (&lt;a href=&quot;http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds&quot;&gt;Javascript&lt;/a&gt;, &lt;a href=&quot;http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1&quot;&gt;Ruby &amp;lt; 1.9&lt;/a&gt;).&lt;/p&gt;
-
-&lt;h2 id=&quot;lastly&quot;&gt;Lastly&lt;/h2&gt;
-
-&lt;p&gt;Once you are done and you’re sure it works properly, share your contribution to the World!
-&lt;a href=&quot;https://github.com/sublimehq/Packages/issues/98&quot;&gt;This&lt;/a&gt; was my Github issue for the PHP syntax fix.&lt;/p&gt;
-
-&lt;p&gt;Happy open sourcing!&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 27 Feb 2016 00:00:00 +0000</pubDate>
-        <link>https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
       </item>
     
   </channel>

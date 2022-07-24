@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Diffing streams on the terminal &#8211; Mariano Gappa's Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&apos;ve developed, sd, to address some of these limitations.">
-    <meta name="author" content="Mariano Gappa">
-    <meta name="keywords" content="software">
-    <link rel="canonical" href="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/">
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href="/feed.xml" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Diffing streams on the terminal &#8211; Mariano Gappa's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&apos;ve developed, sd, to address some of these limitations.">
+  <meta name="author" content="Mariano Gappa">
+  
+  <meta name="keywords" content="software">
+  <link rel="canonical" href="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href=" /feed.xml" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?202207171319" type="text/css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href=" /css/pixyll.css?202207242123"
+    type="text/css">
 
-    <!-- Fonts -->
-    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
-    
-      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    
+  <!-- Fonts -->
+  <link href='//fonts.googleapis.com/css?family=Roboto:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+  
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+  
 
-    <!-- Verifications -->
-    
+  <!-- Verifications -->
+  
 
-    <!-- Open Graph -->
-    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
-    <meta property="og:locale" content="en_US">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Diffing streams on the terminal">
-    <meta property="og:description" content="Blog about Software Engineering and Music Production.">
-    <meta property="og:url" content="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/">
-    <meta property="og:site_name" content="Mariano Gappa&apos;s Blog">
-    
+  <!-- Open Graph -->
+  <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:title"
+    content="Diffing streams on the terminal">
+  <meta property="og:description"
+    content="Blog about Software Engineering and Music Production.">
+  <meta property="og:url" content="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/">
+  <meta property="og:site_name" content="Mariano Gappa&apos;s Blog">
+  
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
-    
-        <meta name="twitter:site" content="@MarianoGappa" />
-    
-    <meta name="twitter:title" content="Diffing streams on the terminal" />
-    <meta name="twitter:description" content="In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I've developed, sd, to address some of these limitations." />
-    <meta name="twitter:url" content="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  
+  <meta name="twitter:site" content="@MarianoGappa" />
+  
+  <meta name="twitter:title" content="Diffing streams on the terminal" />
+  <meta name="twitter:description"
+    content="In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I've developed, sd, to address some of these limitations." />
+  <meta name="twitter:url" content="https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/" />
 
-    <!-- Icons -->
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
 
-    <!-- Added by Mariano for syntax highlighting -->
-    <link href="/css/syntax.css" rel="stylesheet">
+  <!-- Added by Mariano for syntax highlighting -->
+  <!-- <link href="/css/syntax.css" rel="stylesheet"> -->
 
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-58930438-4', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-58930438-4', 'auto');
+    ga('send', 'pageview');
 
-    </script>
+  </script>
 </head>
 
 <body class="site animated fade-in-down">
