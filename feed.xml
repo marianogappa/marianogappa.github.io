@@ -7,6 +7,335 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Cryptocurrency influencers are preying on millennials who found salvation in crypto</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;Wisely investing our savings has always been important, but in the recent inflationary environment it is a must: &lt;strong&gt;if we don’t grow our savings, we lose them&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, I briefly summarise the past &amp;amp; present of investing and then focus on a problem with the recent trend of cryptocurrency investments: the &lt;strong&gt;difficulty of finding reputable advice&lt;/strong&gt; on how to invest.&lt;/p&gt;
+
+&lt;p&gt;Finally, I present an engine I created to keep a track record for cryptocurrency influencers and beyond, starting with a Twitter account called &lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;. Please note that this is a completely-free project I created on my personal time, not a paid service I’m advertising.&lt;/p&gt;
+
+&lt;p&gt;Even if you’re not interested in the tool, I hope this blog post can give you a good summary of the opportunities and dangers of cryptocurrency investments.&lt;/p&gt;
+
+&lt;h2 id=&quot;investing-10-years-ago&quot;&gt;Investing, 10 years ago&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/terms/r/retailinvestor.asp&quot;&gt;Retail investors&lt;/a&gt;, that is, regular people who make investment decisions to grow their savings, traditionally used to have options like:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/terms/t/termdeposit.asp&quot;&gt;&lt;strong&gt;Term deposits&lt;/strong&gt;&lt;/a&gt;, where they give money to their bank and let them keep it for a term, after which they are guaranteed to receive a little more than they put in.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/terms/r/realestate.asp&quot;&gt;&lt;strong&gt;Real estate&lt;/strong&gt;&lt;/a&gt;, where they buy a house or a flat and rent it out for some extra income, or they don’t but the property value and/or land value sometimes appreciates over time.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/terms/i/investment-fund.asp&quot;&gt;&lt;strong&gt;Investment funds&lt;/strong&gt;&lt;/a&gt;, where they make monthly contributions or lump sum contributions to a large pool of money actively managed by an investment firm, with capital at risk but higher rewards than a term deposit. Sometimes, the fund is not actively managed but instead tracks an index. Traditionally, joining an investment fund required an initial capital investment that was too high for the average Joe.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/articles/basics/09/precious-metals-gold-silver-platinum.asp&quot;&gt;&lt;strong&gt;Buying gold/silver&lt;/strong&gt;&lt;/a&gt; and keeping it in a safe, because historically these appreciate over time.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;em&gt;Note: I’m ignoring other investment options like starting a small business, to focus on the more passive investment schemes, because I’m talking about retail investors’ savings investment strategy, not entrepreneurs and wealthier people.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;investing-nowadays&quot;&gt;Investing nowadays&lt;/h2&gt;
+
+&lt;p&gt;In the past few years, though, things have changed dramatically:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Financial institutions started offering no-minimum-investment (or very small) funds, e.g. &lt;a href=&quot;https://www.fidelity.com/mutual-funds/investing-ideas/index-funds&quot;&gt;Fidelity&lt;/a&gt;, &lt;a href=&quot;https://investor.vanguard.com/investment-products/etfs/etf-fees&quot;&gt;Vanguard&lt;/a&gt;, &lt;a href=&quot;https://www.moneyfarm.com/uk/ppc-see-more/?gclid=Cj0KCQjwuuKXBhCRARIsAC-gM0jJa3e6SH-kUP2DCV0maQtHgQfL3zofqWerKiwv9FE7_AC9-sKU_RQaArTwEALw_wcB&quot;&gt;MoneyFarm&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Platforms that allow anyone to directly invest in things like stocks and currency exchange (forex) without a broker have become widespread, e.g. &lt;a href=&quot;https://www.etoro.com&quot;&gt;eToro&lt;/a&gt;, &lt;a href=&quot;https://www.plus500.com&quot;&gt;Plus500&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Cryptocurrencies&lt;/strong&gt;, as speculative assets, also became a thing that anybody can invest in, with only a few clicks on your phone, e.g. &lt;a href=&quot;https://www.binance.com&quot;&gt;Binance&lt;/a&gt;, &lt;a href=&quot;https://www.coinbase.com&quot;&gt;Coinbase&lt;/a&gt;, &lt;a href=&quot;https://crypto.com/&quot;&gt;Crypto.com&lt;/a&gt; and probably even your bank’s phone app.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;cryptocurrencies-as-an-investment-option&quot;&gt;Cryptocurrencies as an investment option&lt;/h2&gt;
+
+&lt;p&gt;Cryptocurrencies like &lt;a href=&quot;https://en.wikipedia.org/wiki/Bitcoin&quot;&gt;Bitcoin&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Ethereum&quot;&gt;Ethereum&lt;/a&gt; and a few others are &lt;strong&gt;particularly attractive as speculative assets&lt;/strong&gt; because:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;In terms of &lt;strong&gt;long-term yield&lt;/strong&gt;: they have consistently appreciated at a ridiculously high rate, dwarfing other options.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In terms of &lt;strong&gt;taxation&lt;/strong&gt;: there are still plenty of ways to avoid paying any tax when “cashing out”, whereas taxation is a big concern in all other investment options.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In terms of &lt;strong&gt;accessibility&lt;/strong&gt;: investing in cryptocurrencies is quicker and easier than any other method; just install an app or sign up to a website, give them money, choose what you want to buy and you’re done. Selling, transferring and withdrawing are quick and easy too.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In terms of &lt;strong&gt;economic outlook&lt;/strong&gt;: a wide range of established institutional leaders agree that cryptocurrency is not “just” a &lt;a href=&quot;https://en.wikipedia.org/wiki/Ponzi_scheme&quot;&gt;Ponzi scheme&lt;/a&gt; and it’s not going away very soon, although it is heavily disputed where does it go from what it is now.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;However, there are also important risks&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Unregulated, uninsured!&lt;/strong&gt;: traditional finance has insurance schemes like &lt;a href=&quot;https://www.fdic.gov/&quot;&gt;FDIC&lt;/a&gt;, and regulates financial institutions, establishing harsh penalties as deterrents against fraud. In the cryptocurrency economy none of this exists, so your “bank” can potentially run away with your money unscathed.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Unprecedented volatility&lt;/strong&gt;: The value fluctuation of even the most established cryptocurrencies is concerningly volatile in the short term. Bitcoin has lost more than &lt;a href=&quot;https://www.cnbc.com/2018/11/26/bitcoin-nears-its-worst-ever-bear-market-down-more-than-80percent-from-the-high.html&quot;&gt;80% of its value from its previous highs&lt;/a&gt; in a relatively short term more than once, including a &lt;a href=&quot;https://www.cnbc.com/2022/06/30/bitcoin-just-had-its-worst-month-in-more-than-a-year.html&quot;&gt;massive downturn recently&lt;/a&gt;. This is unnerving, and something unheard of in traditional finance, for the most part.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Risk of ruin&lt;/strong&gt;: With cryptocurrencies, there is a very real risk of losing everything for more than one reason:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;The company you rely on to keep your “money” &lt;a href=&quot;https://www.investopedia.com/terms/m/mt-gox.asp&quot;&gt;could be hacked and the funds stolen&lt;/a&gt;, no matter how established.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Even if you keep your own wallet, you could be hacked too. Why wouldn’t I hack you? I likely won’t go to jail.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;You could make poor investment decisions into higher-risk/higher-yield currencies &lt;a href=&quot;https://www.forbes.com/sites/jonmarkman/2022/05/16/cryptos-luna-catastrophe-threatens-conventional-assets/?sh=1ba77d3043cb&quot;&gt;that go all the way from market top #10 to ZERO&lt;/a&gt;.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Governments can decide one day that &lt;a href=&quot;https://www.investopedia.com/articles/forex/042015/why-governments-are-afraid-bitcoin.asp&quot;&gt;cryptocurrencies are dangerous and they should outlaw them&lt;/a&gt;, leading to a collapse of the whole ecosystem.&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;millennials--gen-z-choose-cryptocurrency-investments&quot;&gt;Millennials &amp;amp; Gen Z choose cryptocurrency investments&lt;/h2&gt;
+
+&lt;p&gt;If you ask the new generation to weigh the pros and cons stated above, most people will invest in cryptocurrencies.&lt;/p&gt;
+
+&lt;p&gt;Even the least reckless people can see the potential to get on this boat:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Keep to the most reputable platforms&lt;/strong&gt; (and diversify by having 1/3 of the assets on the top 3 platforms)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Buy only the safest currencies&lt;/strong&gt; (and diversify by having 1/3 of the assets on the top 3 currencies)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Keep them for a very long term&lt;/strong&gt; (5+ years) and they should multiplicate their value &lt;a href=&quot;https://www.nasdaq.com/articles/bitcoin-vastly-outperformed-gold-and-sp-500-over-the-past-decade&quot;&gt;by a very large factor&lt;/a&gt;, maybe even 100 times!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Read the news, and &lt;strong&gt;make minimal adjustments&lt;/strong&gt; necessary as the outlook for platforms &amp;amp; currencies change over time&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Keep some money in the traditional system&lt;/strong&gt;, because there’s always the danger of losing everything&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_bitcoin_vs_gold_vs_sp500.png&quot; alt=&quot;Bitcoin vs Gold vs S&amp;amp;P500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;What is the alternative&lt;/strong&gt; here? Work until you’re 65-70 and by the end you &lt;em&gt;might&lt;/em&gt; own a house or a flat, and hope it’s in a decent neighbourhood, although nowadays it’s more likely than not that either the next economic collapse or a climate catastrophe will &lt;a href=&quot;https://www.theguardian.com/money/2022/jul/04/retirement-on-hold-for-uks-over-60s-as-cost-of-living-crisis-bites&quot;&gt;wash those dreams away&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;choosing-an-investment-strategy&quot;&gt;Choosing an investment strategy&lt;/h2&gt;
+
+&lt;p&gt;So, let’s say we’re one of these people. What do we buy? When do we sell? Who’s a good advisor here? Definitely not us. We don’t know anything about cryptocurrencies!&lt;/p&gt;
+
+&lt;p&gt;Disregarding the more reckless or ignorant, most reasonable people would either:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Research a lot, choose an investment strategy and stick with it&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Accept they won’t know better and trusts someone else to make the decisions for them&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Combine both&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But &lt;strong&gt;finding someone you can trust in the crypto community is a very challenging task&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In crypto, people can easily profit by giving you advice, which presents a &lt;strong&gt;conflict of interest&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Managed crypto funds are unregulated, so if you don’t choose a reputable one, more likely than not they’re gonna &lt;a href=&quot;https://www.cnbc.com/2022/07/12/founders-of-bankrupt-crypto-hedge-fund-three-arrows-go-missing.html&quot;&gt;disappear with your money&lt;/a&gt;. Sometimes, you can lose most of your money even if they don’t steal it!&lt;/p&gt;
+
+&lt;h2 id=&quot;enter-the-cryptocurrency-influencer&quot;&gt;Enter the “Cryptocurrency Influencer”&lt;/h2&gt;
+
+&lt;p&gt;Recently, social networks have enabled some popular individuals (i.e. “influencers”) to become trusted sources of cryptocurrency advice. Here are some example accounts:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://twitter.com/scottmelker&quot;&gt;Scott Melker&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://twitter.com/Nicholas_Merten&quot;&gt;Nicholas Merten&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://twitter.com/rovercrc&quot;&gt;Crypto Rover&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://twitter.com/TheMoonCarl&quot;&gt;The Moon&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://twitter.com/BigCheds&quot;&gt;Big Cheds&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These individuals provide frequent and timely news and advice on cryptocurrency investment that you can action immediately, and they are often correct.&lt;/p&gt;
+
+&lt;p&gt;Going deeper into the rabbit hole, there are monthly subscription services offered out there that go from giving you “professional, premium” advice for a fee, or even going as specific as giving you trading “signals”, promising &amp;gt;80% success rate.&lt;/p&gt;
+
+&lt;p&gt;Here are some, but I won’t link you to them for your own good:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Blockchain Whispers premium signals site&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Walsh Wealth Group&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Elite Crypto Signals&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-to-distinguish-good-advice-from-bad-advice&quot;&gt;How to distinguish good advice from bad advice?&lt;/h2&gt;
+
+&lt;p&gt;It’s very common for fraudsters to &lt;a href=&quot;https://twitter.com/zachxbt/status/1516129830873583617&quot;&gt;pay influencers to promote their schemes&lt;/a&gt;, and sometimes influencers can even &lt;a href=&quot;https://twitter.com/zachxbt/status/1443583283648872464&quot;&gt;be the fraudsters themselves&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;But not all actors are out there to harm you, and I’m not saying that the ones I mentioned are. There are a few reasons against harming you:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;If an influencer consistently gives poor advice, you’d expect them to lose influence.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If an influencer is exposed in a scam, they could get in trouble. Note that many influencers &lt;a href=&quot;https://twitter.com/BigCheds/status/1557865015411081219&quot;&gt;are anonymous&lt;/a&gt;: this is a red flag.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Morals, ethics, the desire to help people and wanting to keep a reputation do exist: some people, believe it or not, genuinely feel good by helping others and feel bad when hurting others, and they’d rather not be insanely rich if it means giving you bad advice.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So how do we tell a decent influencer from a scammy one?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Research for a few years until you’re so deep in the rabbit hole that you know better?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Trust what your friends follow?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Try them all and see which one is right most of the time?&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In traditional finance, there are &lt;a href=&quot;https://www.imf.org/external/np/leg/amlcft/eng/aml1.htm&quot;&gt;watchdogs&lt;/a&gt;, &lt;a href=&quot;https://am.jpmorgan.com/us/en/asset-management/adv/tools/portfolio-tools/investment-comparison/&quot;&gt;comparison studies&lt;/a&gt;, plenty of &lt;a href=&quot;https://www.investopedia.com/articles/07/ben_graham.asp&quot;&gt;books&lt;/a&gt;, articles and government-regulated advisors that can legally give you financial advice. So far, in the Cryptocurrency World, none of this exists.&lt;/p&gt;
+
+&lt;p&gt;There’s no answer to this section’s title question at the moment, but this needs to be resolved. And, to a degree, it can be.&lt;/p&gt;
+
+&lt;h2 id=&quot;i-propose-a-simple-strategy-a-track-record&quot;&gt;I propose a simple strategy: a track record!&lt;/h2&gt;
+
+&lt;p&gt;Influencers make predictions all the time, and some of these predictions are well-defined and specific enough that they are trackable, only no one is tracking them!&lt;/p&gt;
+
+&lt;p&gt;If influencers had a track record, it would be safer to trust them, and easier to spot bad actors.&lt;/p&gt;
+
+&lt;p&gt;This would benefit everyone:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Followers would have an objective way to evaluate if an influencer is reputable&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Influencers would have a way to build and demonstrate their reputation&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Influencers would be kept honest and would have a deterrent to making reckless predictions&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Tracking cryptocurrency predictions made on social networks and websites &lt;strong&gt;is not only possible but also quite efficient and reliable&lt;/strong&gt;, as long as those predictions are specific enough:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.investopedia.com/tech/190-cryptocurrency-exchanges-so-how-choose/&quot;&gt;Cryptocurrency market exchanges&lt;/a&gt; provide market data (recent and historical) promptly and free of charge &lt;a href=&quot;https://docs.ftx.com/#get-historical-prices&quot;&gt;via APIs&lt;/a&gt;; this data proves if a prediction became true or not.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Social network posts, such as Twitter tweets or Youtube videos are perfect as prediction evidence: they have a date, an owner, and mostly reasonably un-editable content.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_social_post.png&quot; alt=&quot;Social Network Posts&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;The process of turning these social network posts into structured predictions cannot be efficiently automated today, but it can easily be crowdsourced.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The cost of maintaining this whole process of tracking predictions can be cheap, as long as it’s implemented efficiently.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Here’s an example of how this system would work&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Someone spots a prediction made on the Internet, like the image above.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Upon inspecting that the prediction is specific enough, they input it into the system using some Back Office component.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_back_office.png&quot; alt=&quot;Back Office&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;The system then keeps track of it, by regularly looking at market data and letting time pass.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Eventually, the prediction becomes true or false, and the system notifies about this result, keeping a track record of each individual’s predictions.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_prediction_result.png&quot; alt=&quot;Prediction Result&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;limitations-of-this-idea&quot;&gt;Limitations of this idea&lt;/h2&gt;
+
+&lt;p&gt;Is this system a silver bullet for answering the question of who to trust? Absolutely not!&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Most advice and predictions out there today &lt;a href=&quot;https://twitter.com/CryptoKaleo/status/1557773251933249536&quot;&gt;are not specific enough to be tracked&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Predictions do not all weigh the same; some predictions are &lt;a href=&quot;https://twitter.com/CryptoKaleo/status/1558313838877057025&quot;&gt;very narrow in timeframe, scope and volume&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You can game the system to maximise prediction correctness&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It’s totally valid for a decent influencer to fail 10 predictions in a row&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some of these problems have solutions, and some do not. But it’s still much better to have some form of accountability than to be completely in the dark.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Warning&lt;/strong&gt;: even if this system was good enough, I still wouldn’t recommend simply relying on some &lt;a href=&quot;https://en.wikipedia.org/wiki/Shamanism&quot;&gt;shaman&lt;/a&gt; on the Internet to tell you how to invest. Do your research!&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I’ve spent the last 6 months building the engine behind the &lt;strong&gt;&lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;&lt;/strong&gt;, during my free time after work.&lt;/p&gt;
+
+&lt;p&gt;There’s much more to the engine behind the Twitter page that can be seen, and it could be extended to various use cases, and consumed in different ways to maximise its utility. I’m planning to write a technical blog post next on the architecture behind it.&lt;/p&gt;
+
+&lt;p&gt;I hope this utility is useful to you as you navigate your investment strategy, but if it isn’t, at least I hope this summary of the crypto &amp;amp; investment space gives you some answers. If nothing else, my journey in building this tool felt like a story worth sharing.&lt;/p&gt;
+
+&lt;p&gt;Good luck!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 14 Aug 2022 00:00:00 +0100</pubDate>
+        <link>https://marianogappa.github.io/software/2022/08/14/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2022/08/14/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</guid>
+      </item>
+    
+      <item>
         <title>10 Gotchas for building a universal crypto candlestick iterator in Go</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
@@ -2742,106 +3071,6 @@ a5b00328-564a-11e6-beb8-9e71128cae77
         <pubDate>Sat, 30 Jul 2016 00:00:00 +0100</pubDate>
         <link>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
-      </item>
-    
-      <item>
-        <title>jira-cli: a lightweight bash script for easily querying JIRA</title>
-        <description>&lt;h2 id=&quot;get-jira-cli-at&quot;&gt;Get jira-cli at&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/jira-cli&quot;&gt;https://github.com/MarianoGappa/jira-cli&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;why&quot;&gt;Why?&lt;/h2&gt;
-
-&lt;p&gt;JIRA is cool. But it’s slow! And it’s not composable. And devs/ops love the terminal.&lt;/p&gt;
-
-&lt;h2 id=&quot;use-cases&quot;&gt;Use cases&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Once I had this requirement to tell some business person about what tickets (JIRA issues) we deployed. We had the ticket numbers on the commit messages, so a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git diff ... | grep ... | sort | uniq&lt;/code&gt; between deploy tags was kind of enough to get them…only the guy wanted the ticket titles as well. With some clever Sublime multi-cursor hacking plus a terminal I would open all the tickets on Chrome and then copy-paste the titles from them one-by-one. So boring and slow!&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Then there’s looking for tickets. It’s easy enough on JIRA, with JQL and the UI tools. But it’s slow!&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Then there’s keeping a personal backlog on JIRA, which can also be achieved with JQL + bookmarks. That process is just fine as it is just using the UI, until you want to combine it with something (i.e. until you want to “pipe it to something”). For example, boss comes in: “can you do this?”. You: “I have these 3 tickets already. What’s the priority?”. What’s the fastest easiest way to get those 3 links so that your boss can prioritise? Or is it better to get ticket names and titles rather than links?&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Say you have a list of say 5 tickets you’re trying to finish by the end of the week. All you care about is those 5 tickets and their status; why should you load all that clunky UI, set up labels beforehand, etc, etc?&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;quick-start&quot;&gt;Quick start&lt;/h2&gt;
-
-&lt;p&gt;Please follow the instructions &lt;a href=&quot;https://github.com/MarianoGappa/jira-cli/blob/master/README.md&quot;&gt;in the readme&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Note that jira-cli requires the awesome &lt;a href=&quot;https://stedolan.github.io/jq/&quot;&gt;jq&lt;/a&gt; tool, which if you don’t have installed, you really should! jira-cli will remind you to install it if it doesn’t find it.&lt;/p&gt;
-
-&lt;p&gt;When you first run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira&lt;/code&gt;, it’ll open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt; on your default editor:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/jira-cli-first-run.png&quot; alt=&quot;Running jira-cli for the first time&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;After you configure your credentials you should be good to go. Try &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira ok&lt;/code&gt; one last time to double-check:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jira ok
-OK
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;tweaking-and-examples&quot;&gt;Tweaking and examples&lt;/h2&gt;
-
-&lt;p&gt;Personally, I like to go all the way with the tools I use the most, so I like these aliases:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;git&apos;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;subl .&apos;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;docker&apos;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;kubectl&apos;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;jira&apos;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;So if one morning I feel energetic enough to finish up all my backlog, I open all my assigned tickets in Chrome in one go!&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j o
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Which translates to:&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;table&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;
-        &lt;td&gt;jira “output all ticket numbers assigned to me”&lt;/td&gt;
-        &lt;td&gt;jira “open all tickets from STDIN on browser”)&lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;(To clarify: you don’t have to be so hacker: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira me | jira open&lt;/code&gt; works just as well.
-For more info just type: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jira&lt;/code&gt;.)&lt;/p&gt;
-
-&lt;p&gt;If the boss asks me to do something (like in the example use case), I can give him my backlog for him to prioritise with:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j me | j t
-ABC-123     Do some work
-DEF-456     Do some more work
-GHI-789     Do very urgent work
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;When I can’t remember what I was working on, I really like the search command. It shows up to 15 results ordered by last updated using JQL’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;text&lt;/code&gt; filter, all bound to the projects you configured on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.jiraconfig&lt;/code&gt;. You can then choose to open one by adding e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| j o 3&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s &lt;span class=&quot;nb&quot;&gt;cat
-&lt;/span&gt;JKL-012     Feed the &lt;span class=&quot;nb&quot;&gt;cat
-&lt;/span&gt;MNO-345     Buy a new &lt;span class=&quot;nb&quot;&gt;cat
-&lt;/span&gt;PQR-678     Take the &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;shopping
-
-~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;j s &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; | j o 3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;in-closing&quot;&gt;In closing&lt;/h2&gt;
-
-&lt;p&gt;Try it, it’s free and open source! It’s not the new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep&lt;/code&gt;, but it can be pretty useful once or twice a day. It’s been stable enough for me for a few months now. Please contribute with issues, PRs, etc! If you find it useful, let me know!&lt;/p&gt;
-</description>
-        <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2016/05/10/jira-cli/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/05/10/jira-cli/</guid>
       </item>
     
   </channel>
