@@ -7,6 +7,285 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Building Crypto Predictions Tracker: architecture and challenges</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;During the past year I’ve gotten exposure to the cryptocurrency scene from an investment perspective. A key frustrating aspect of it is that there’s no reliable source of investment advice. I describe this problem in detail on my previous blogpost: &lt;a href=&quot;https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/&quot;&gt;Cryptocurrency influencers are preying on millennials who found salvation in crypto&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I’ve been working on a Go-based project to automatically track cryptocurrency predictions made on social networks like &lt;a href=&quot;https://twitter.com/CryptoKaleo/status/1558313838877057025&quot;&gt;this one&lt;/a&gt; for the last 6 months, as a tool for accountability and influencer reputation. I think the resulting system ended up being pretty neat and it might interest you if you’re a backend engineer. In this blogpost, I’ll define this system and describe its architecture.&lt;/p&gt;
+
+&lt;p&gt;The backend system is available here: &lt;a href=&quot;https://github.com/marianogappa/crypto-predictions&quot;&gt;Crypto Predictions&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A frontend to this project is this Twitter account: &lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A key component of building this project was to consume cryptocurrency market data provided by exchanges. I’ve open sourced a library that facilitates this task in a simple and efficient manner. The crypto-candles library is available &lt;a href=&quot;https://github.com/marianogappa/crypto-candles&quot;&gt;on Github&lt;/a&gt; and its construction and features are described on my blogpost: &lt;a href=&quot;https://marianogappa.github.io/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/&quot;&gt;10 Gotchas for building a universal crypto candlestick iterator in Go&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
+
+&lt;p&gt;A fundamental problem of available cryptocurrency-related investment advice on the Internet is that there is no track-record anywhere. Consider other businesses:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Before making a hotel or restaurant booking, we can check their rating online on our phones.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Before making a decision on a rental flat or buying a house, we can compare neighbourhood prices and do inspections.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Before choosing an investment fund, we can check &lt;a href=&quot;https://am.jpmorgan.com/us/en/asset-management/adv/tools/portfolio-tools/investment-comparison/&quot;&gt;comparison studies&lt;/a&gt; as well as the historical ROI of the chosen fund itself.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now consider examples of advice given by cryptocurrency influencers, like this one:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tweet-example-0.png&quot; alt=&quot;Example Tweet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’m hoping most of you reading this right now will be thinking: “why would anyone in their right mind follow the investment advice of some dude on the Internet?”. I think so too. However, some of these influencers have more than a million followers! I think it’s fair to assume that advice is being followed galore. For a more exhaustive read of this problem, please read my blogpost: &lt;a href=&quot;https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/&quot;&gt;Cryptocurrency influencers are preying on millennials who found salvation in crypto&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I don’t think all advice is malintentioned, and even if it was, I don’t think it should be banned or made illegal, the same way that I don’t think smoking, drinking and drugs should be illegal either. However, some form of warning should be available for them, the same way that there are warnings on cigarette packs and ratings on restaurants and hotels. Then, influencers would have a track-record that keeps them honest, and individuals can make informed decisions. But is that possible?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tobacco-warning.jpg&quot; alt=&quot;Social Network Posts&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;key-insights-on-feasibility&quot;&gt;Key Insights on feasibility&lt;/h2&gt;
+
+&lt;p&gt;Note how social network posts are particularly well-suited for keeping a track record:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_social_post.png&quot; alt=&quot;Social Network Posts&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;They have:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;a date&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;an owner&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;mostly reasonably un-editable content&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Provided that the content is specific enough, as in the above example, then one could manually go to the exchange’s website every now and then and check the market pair’s last value against the prediction. In most cases, it’s important that the prediction has some deadline: otherwise either we could be checking forever, and besides there’s little value on a prediction that can only become true eventually, but never times out and becomes false.&lt;/p&gt;
+
+&lt;p&gt;If this can be done manually, can it be automated?&lt;/p&gt;
+
+&lt;p&gt;Yes! All exchanges (mostly) provide free APIs to consume current and historical market pair data. Social networks also &lt;del&gt;have free APIs to consume public post metadata&lt;/del&gt; (thank you &lt;a href=&quot;https://techcrunch.com/2023/02/01/twitter-to-end-free-access-to-its-api/&quot;&gt;Twitter&lt;/a&gt; &amp;amp; &lt;a href=&quot;https://techcrunch.com/2023/04/18/reddit-will-begin-charging-for-access-to-its-api/&quot;&gt;Reddit&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;automating-the-system&quot;&gt;Automating the system&lt;/h2&gt;
+
+&lt;p&gt;At a high level, automating tracking for one prediction looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-system-diagram.png&quot; alt=&quot;Crypto Predictions System Diagram&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Manually input the prediction metadata (e.g. who predicts, which market pair, by when, prediction condition) as an object/struct in memory.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Every minute or so, ask the exchange for the current last price of the market pair.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Upon receiving the new price, check if the prediction condition was met.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If condition met, prediction became true!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If condition stays false until deadline, prediction became false!&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;a-million-caveats&quot;&gt;A million caveats&lt;/h2&gt;
+
+&lt;p&gt;While the above looks very simple, every bullet point is trickier than it looks, even before introducing architectural considerations.&lt;/p&gt;
+
+&lt;p&gt;Here are some illustrative examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;A prediction should ideally specify which exchange it is for. There is no one value for a given market pair, that is, the last price of Bitcoin against Tether can differ between the Binance exchange and the Coinbase exchange at the same timestamp, because the last price is defined by the order book, and different exchanges have different order books! This causes two problems: (1) this system must implement ALL exchange APIs, and (2) predictions that don’t specify exchange cannot really be tracked accurately, although in practice some assumptions are reasonable.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Social networks don’t reveal the timezone of post authors, authors don’t specify which timezones they make their predictions for, and cryptocurrency influencers typically travel around a lot, so prediction deadlines are imprecise. The closer the deadline, the least precise is the tracking of the prediction.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In practice, &amp;gt;80% of predictions are surprisingly homogeneous and simple in structure, in the form: “Coin against Stablecoin will reach Value by Deadline”. But for some outliers, the discussed algorithm of a prediction being false until it becomes true or times out doesn’t work. For example, consider this one: “Ethereum won’t reach 3000 until December”.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It would be very lucky if the system would always catch fresh predictions made just now, but in practice the system will input predictions made some time in the past, so old predictions have to “catch up to the present” by checking the evolution of price since the start of the prediction timestamp, to now. The API endpoints for historical prices and current prices are separate.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The last price for a market pair changes with every filled order. On an exchange with a very high volume of transactions, several hundreds of orders could be filled every second. Checking the condition for every order would be the most accurate way to evaluate the prediction, because in theory there could be a very short period of very high price volatility in which the prediction briefly becomes true, and we might miss this fact in an averaged bucket of orders. In practice, this would be unfeasible, especially if we’re planning to do it for more than a single prediction.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;architectural-building-blocks&quot;&gt;Architectural building blocks&lt;/h2&gt;
+
+&lt;p&gt;At a minimum, these components are going to be required:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions -diagram-blogpost-1.png&quot; alt=&quot;Architecture&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Database: each prediction contains some metadata (e.g. who, what, when) and some state (e.g. last recorded price and when, status of prediction). This data should survive restarts and evolve in atomic steps.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Market requester: predictions evolve upon evaluating market data, so the system needs a component that knows how to talk to all Exchange APIs.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Social Network requester: predictions are created upon consuming social network post metadata (e.g. who, what, when), so the system needs a component that can request post metadata from e.g. Twitter.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Back Office: a minimal frontend to &lt;a href=&quot;https://en.wikipedia.org/wiki/Create,_read,_update_and_delete&quot;&gt;CRUD&lt;/a&gt; predictions, and to see what happens to them.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Cron: a process that will evolve active predictions at regular intervals, with the newest market data.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If we want the system to be useful to a larger population than just its creator, two extra components become relevant:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Frontend: some UI to display the information created, like a website. It could also be some report export function.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;API: since now there are three components reading data (Cron, Back Office and Frontend), and potentially the Frontend could be consumed by untrusted clients, it becomes important to have a unified interface for managing access to that data.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;architectural-challenges&quot;&gt;Architectural challenges&lt;/h2&gt;
+
+&lt;h4 id=&quot;implementing-support-for-arbitrary-predictions&quot;&gt;Implementing support for arbitrary predictions&lt;/h4&gt;
+
+&lt;p&gt;A prediction post can be as simple as “Bitcoin will be worth 100K in 2022!” which can be normalized (with some assumptions) to: “BTC against USDT (Tether) in the Binance exchange (spot market as opposed to some other derivatives market) will be greater than or equal to $100,000 within the post’s timestamp and the first second of Jan 1st, 2023”. That prediction cannot become false before end of year.&lt;/p&gt;
+
+&lt;p&gt;As it turns out, 80% or more of the predictions are as simple as that example. Considering the most popular cryptocurrency influencers, there are mostly only a few prediction patterns in total.&lt;/p&gt;
+
+&lt;p&gt;Sometimes, an influencer will make their “next run predictions” like so:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tweet-example-1.png&quot; alt=&quot;Example Tweet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If we want to support that, we need to add boolean operator support over the initial implementation.&lt;/p&gt;
+
+&lt;p&gt;It’s quite common to see a pattern of “If a cryptocurrency falls below X, it will go all the way down to Y”. For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tweet-example-2.png&quot; alt=&quot;Example Tweet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This prediction has two steps: a “prerequisite” which “enables” the prediction, and the prediction itself. If the “prerequisite” is not met, then the prediction is not false but “annulled”. Often, these predictions cannot be input because they lack specific deadlines.&lt;/p&gt;
+
+&lt;p&gt;Finally, some predictions become true if a condition is true until a deadline, like this one:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tweet-example-3.png&quot; alt=&quot;Example Tweet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This prediction breaks the model in which a prediction is false unless it becomes true before some deadline.&lt;/p&gt;
+
+&lt;p&gt;There are more edge cases, but they are less common, so I won’t mention them here. I’ve implemented support for many of these patterns and others, and in my experience the problem is not at all the coding &amp;amp; testing involved: the real issue is the UI for inputting and for showing the status of predictions. Rather than providing so much flexibility, it works a lot better to offer a few pre-baked templates, and enable UI support for those.&lt;/p&gt;
+
+&lt;h4 id=&quot;requesting-market-data&quot;&gt;Requesting market data&lt;/h4&gt;
+
+&lt;p&gt;Predictions posted online tend to follow market trends, so the most popular cryptocurrencies get the most predictions, somewhat following the &lt;a href=&quot;https://en.wikipedia.org/wiki/Pareto_principle&quot;&gt;80/20 Pareto principle&lt;/a&gt;. This means that, if we have 100 predictions and we evolve them every minute, we’re gonna be making a lot of identical requests to the exchange’s APIs. This is not just very inefficient but also unlikely to last long, because as the number of predictions grow, very soon the exchange’s APIs will ban our IPs and ask us to enhance our calm.&lt;/p&gt;
+
+&lt;p&gt;The simplest solution to this problem is to cache market responses. In theory, this makes perfect sense, since one wouldn’t expect historical market data to change. In practice, this is almost true, but one should be careful to consider some received data point “final”, since very recent data might be “still getting aggregated”, and exchanges do not clarify if a data point is final or not. A mitigation is to not consume very recent data points.&lt;/p&gt;
+
+&lt;p&gt;Note that the caching component is very valuable, but in a very small window of time. It’s not common to need to request old data, because most predictions are about future deadlines. Thus, it’s not necessary to build a full-fledged solution for caching.&lt;/p&gt;
+
+&lt;h4 id=&quot;storing-predictions-and-evolving-them&quot;&gt;Storing predictions and evolving them&lt;/h4&gt;
+
+&lt;p&gt;Predictions are esentially state machines, and they have two parts: metadata (e.g. author, deadline, conditions), and state (e.g. last timestamp requested for each market pair, status of condition(s) that compose the prediction).&lt;/p&gt;
+
+&lt;p&gt;Only the state part evolves over time. On each evolution step, one needs to request the latest data points for the involved market pairs, re-evaluate the prediction condition(s) and possibly change the status of it to “correct”/”incorrect”.&lt;/p&gt;
+
+&lt;p&gt;Further, out of the database of predictions, only a subset evolves: the active predictions. However, the state part of all active predictions must be updated every time. This write pattern suggests using some in-memory layer before reaching the durable store to alleviate disk pressure and latency, although then if someone kicks the power cable progress is lost.&lt;/p&gt;
+
+&lt;p&gt;Of course, for a small project that is just starting up and where cost is a major concern, a batch update statement on a small Postgres instance is more than enough. In order to set up the project for growth, we can just hide the storage layer implementation details behind a simple interface.&lt;/p&gt;
+
+&lt;h4 id=&quot;predictions-tend-to-have-a-common-deadline&quot;&gt;Predictions tend to have a common deadline&lt;/h4&gt;
+
+&lt;p&gt;End of year, end of month, or whenever a big event will take place (e.g. whenever the &lt;a href=&quot;https://www.investopedia.com/terms/c/consumerpriceindex.asp&quot;&gt;CPI&lt;/a&gt; is going to be announced, whenever &lt;a href=&quot;https://www.investopedia.com/bitcoin-halving-4843769&quot;&gt;the halving&lt;/a&gt; happens) are very common instants for predictions. This is absolutely fine in terms of evolving the predictions, but if one plans to trigger some actions like sending out notifications, instant hotspots could be problematic.&lt;/p&gt;
+
+&lt;p&gt;Possible mitigations are to buffer and aggregate notifications, or to cap the amount of notifications that can be sent in a given time period.&lt;/p&gt;
+
+&lt;h2 id=&quot;takeaways-from-tracking-predictions-for-the-last-few-months&quot;&gt;Takeaways from tracking predictions for the last few months&lt;/h2&gt;
+
+&lt;p&gt;A key criticism for this project is that it is pointless to track what influencers say, because no one in their right mind should take their advice when they make their investment decisions. If you share this point of view (like me!), wouldn’t it be useful to be able to answer how often predictions become correct?&lt;/p&gt;
+
+&lt;h4 id=&quot;how-often-do-predictions-become-correct&quot;&gt;How often do predictions become correct?&lt;/h4&gt;
+
+&lt;p&gt;Well, thanks to this project, I can answer that! Results have caveats (e.g. some influencers make more specific predictions than others, averaging results compares apples &amp;amp; oranges because some predictions are bolder than others), but they are definitely not meaningless. Insights will be vague, because the sample is less than a thousand predictions, and it simply hasn’t been that long since I started tracking them.&lt;/p&gt;
+
+&lt;p&gt;Here are the takeaways:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Predictions become correct reliably about 25% of the time.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Deadline matters: prediction correctness drops to 20% when deadline is 4 days or less in the future or more than a month, sweet spot being about two weeks.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;80% of all predictions are made for a deadline earlier than or equal to a month in the future.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Some influencers are definitely more reliable than others.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I don’t want to be thought of as endorsing influencers and I also don’t want to talk without sufficient data, but I can say preliminarly that you should probably ignore specific predictions given by:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;rovercrc&lt;/li&gt;
+  &lt;li&gt;trader1sz&lt;/li&gt;
+  &lt;li&gt;profit8lue&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And you could listen to (but don’t delegate your financial decisions!!!) specific predictions given by:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CryptoCapo_&lt;/li&gt;
+  &lt;li&gt;IncomeSharks&lt;/li&gt;
+  &lt;li&gt;CredibleCrypto&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There are plenty of others, but either they make vague predictions or don’t make enough to make statistically significant conclusions (in a 6 month timeframe).&lt;/p&gt;
+
+&lt;h2 id=&quot;is-there-any-more-value-out-of-this-project&quot;&gt;Is there any more value out of this project?&lt;/h2&gt;
+
+&lt;p&gt;Evidently, the current state of this project is of little relevance to people. Otherwise, the Twitter account would have more followers and my blogs about it would generate more buzz. Personally, I think anyone following a crypto influencer with the intention of following their advice can only benefit from an impartial, automated track-record for them, but this thought-process makes the assumption that human decisions always makes sense. This has been refuted, and it is really confusing to me.&lt;/p&gt;
+
+&lt;p&gt;However, in order to take this project to production I had to build many components that could be used or adapted for other interesting uses.&lt;/p&gt;
+
+&lt;h4 id=&quot;evaluating-paid-subscriptions-that-offer-cryptocurrency-signals&quot;&gt;Evaluating paid subscriptions that offer “cryptocurrency signals”&lt;/h4&gt;
+
+&lt;p&gt;Many individuals or anonymous companies offer a monthly subscription of “cryptocurrency signals”, which are esentially specific predictions. Those services routinely claim that 80%+ of their signals are profitable.&lt;/p&gt;
+
+&lt;p&gt;The only difference between signals and predictions is that signals are not “boolean”, in that they are not “Correct” or “Incorrect”, but instead they have a Profit Margin Ratio, that is, if you action them, you earn or lose a percentage of your investment.&lt;/p&gt;
+
+&lt;p&gt;Nobody has ever done a reliable, transparent evaluation of a Cryptocurrency Signal site. It would be too tricky to build the infrastructure necessary to run it. With the tools I’ve built, it would be very simple to do this.&lt;/p&gt;
+
+&lt;h4 id=&quot;building-datasets-for-data-science-experiments&quot;&gt;Building datasets for data science experiments&lt;/h4&gt;
+
+&lt;p&gt;If you’ve ever reviewed any articles that do research based on market data, you’ll quickly realise that it’s very rare to see any research aggregating data from different exchanges. There is &lt;a href=&quot;https://messari.io/&quot;&gt;Messari&lt;/a&gt;, but I initially implemented it and ended up scrapping it, as I couldn’t get reliable results.&lt;/p&gt;
+
+&lt;p&gt;The library I open sourced for reading market data, &lt;a href=&quot;https://github.com/marianogappa/crypto-candles&quot;&gt;crypto-candles&lt;/a&gt;, is very efficient and has a very simple interface (it builds iterators), so I think it would be ideal for getting data for experiments.&lt;/p&gt;
+
+&lt;p&gt;In general, while there are very good freemium UIs for cryptocurrency data, most notably &lt;a href=&quot;tradingview.com&quot;&gt;TradingView&lt;/a&gt;, there isn’t any good free API for getting market data across exchanges. crypto-candles solves this issue as a library you can import, or a CLI you can call.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I think that &lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt; was a useful, free warning service for people thinking about following the advice of cryptocurrency influencers. But even if it’s not, I really enjoyed building &lt;a href=&quot;https://github.com/marianogappa/crypto-predictions&quot;&gt;its backend&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, &lt;a href=&quot;https://help.heroku.com/RSBRUH58/removal-of-heroku-free-product-plans-faq&quot;&gt;Heroku shut down the dynos&lt;/a&gt; I was using to power the cron and the API (switched to Render which &lt;a href=&quot;https://render.com/pricing&quot;&gt;has a free plan with DB &amp;amp; Cron&lt;/a&gt;), and &lt;a href=&quot;https://techcrunch.com/2023/02/01/twitter-to-end-free-access-to-its-api/&quot;&gt;Twitter restricted their API access&lt;/a&gt;, so it got too cumbersome to support it. I think there’s value that can be repurposed in an eventual iteration.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading, and I hope you can benefit from the tools and services I created. Good luck!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 17 Jun 2023 00:00:00 +0100</pubDate>
+        <link>https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</guid>
+      </item>
+    
+      <item>
         <title>Cryptocurrency influencers are preying on millennials who found salvation in crypto</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
@@ -2850,227 +3129,6 @@ This blogpost has received a lot of attention since it’s been published, inclu
         <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
         <link>https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
-      </item>
-    
-      <item>
-        <title>Diffing streams on the terminal</title>
-        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
-
-&lt;p&gt;In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I’ve developed, &lt;a href=&quot;https://github.com/MarianoGappa/sd&quot;&gt;sd&lt;/a&gt;, to address some of these limitations.&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-
-&lt;p&gt;Recently, I had this situation at work where I had to come up with a list of unprocessed transactions, identified by some &lt;a href=&quot;https://en.wikipedia.org/wiki/Universally_unique_identifier&quot;&gt;UUID&lt;/a&gt;. I had the transaction queue somewhere, and the transaction results somewhere else. Just a “set diff”, right? Well, my case was not so straightforward.&lt;/p&gt;
-
-&lt;h2 id=&quot;basic-stream-diffing&quot;&gt;Basic stream diffing&lt;/h2&gt;
-
-&lt;p&gt;The most common way to do “set diffs” on the terminal is using &lt;a href=&quot;https://en.wikipedia.org/wiki/Comm&quot;&gt;comm&lt;/a&gt;; and it’s also the fastest tool I’ve found. Just remember that the streams need to be sorted.&lt;/p&gt;
-
-&lt;p&gt;Diffing with comm&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-23&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100 | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 100 | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Another (slower but nevertheless popular) way to accomplish the same task is with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;. Note that in this case you don’t need to sort the streams, but you have to invert them as you pass them (it looks weird until you realise that the second argument is kind of on the left, because it’s often the piped STDIN).&lt;/p&gt;
-
-&lt;p&gt;Diffing with grep&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Fxvf&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 100&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I discourage the use of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt; for two good reasons:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;It’s slower; maybe not on these examples but it is on real-life examples.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;It doesn’t seem to work properly on the version of grep that comes with OS X  (BSD) for even diffs in the dozen lines. I’ve tried the same example on an Alpine container and it just works.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Alpine (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep 2.25-r0&lt;/code&gt;):&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Fxvf&lt;/span&gt; b a
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;OS X (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep (BSD grep) 2.5.1-FreeBSD&lt;/code&gt;):&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 20 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Fxvf&lt;/span&gt; b a
-1
-2
-3
-4
-5
-16
-17
-18
-19
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;what-about-infinite-streams&quot;&gt;What about infinite streams?&lt;/h2&gt;
-
-&lt;p&gt;The tools mentioned above work with streams that finish, like:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;files&lt;/li&gt;
-  &lt;li&gt;commands (provided they finish)&lt;/li&gt;
-  &lt;li&gt;sql queries&lt;/li&gt;
-  &lt;li&gt;curl requests (provided they finish or timeout)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Infinite streams are ok on the left side stream of the diff, but you can’t start diffing until the right side stream finishes.&lt;/p&gt;
-
-&lt;p&gt;Note that you can’t &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; an infinite stream, so if you plan to diff an infinite stream on the left side, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; is not an option; you have to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep -Fxvf&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Moreover, if you diff with an infinite stream on the left side, your diff will work but will still never finish. This is fine, unless you want your diff to be part of a script.&lt;/p&gt;
-
-&lt;h2 id=&quot;common-strategies-for-diffing-infinite-streams&quot;&gt;Common strategies for diffing infinite streams&lt;/h2&gt;
-
-&lt;p&gt;The two intuitive approaches are:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;to take the first &lt;em&gt;n&lt;/em&gt; items from the infinite stream&lt;/li&gt;
-  &lt;li&gt;to timeout the stream after some time.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Taking the first 10 lines from two “infinite” seqs&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-23&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;10000000000 | &lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; 10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;            &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 10000000000 | &lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; 10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;(for brevity, let’s assume that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seq 10000000000&lt;/code&gt; takes infinite time; to be fair it does take an impractical amount of time)&lt;/p&gt;
-
-&lt;p&gt;Then there is &lt;a href=&quot;http://man7.org/linux/man-pages/man1/timeout.1.html&quot;&gt;timeout&lt;/a&gt; in the Linux coreutils package for timing out a command after a specified duration. Note that it doesn’t come installed in OS X.&lt;/p&gt;
-
-&lt;p&gt;The following example is illustrative, because the command varies between systems&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-23&lt;/span&gt; &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;timeout &lt;/span&gt;1s &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;10000000000&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;            &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;timeout &lt;/span&gt;1s &lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;6 10000000000&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;If you want &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timeout&lt;/code&gt; on OS X, your best bet is to install coreutils from Homebrew, with:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;coreutils
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;and then all coreutils commands are available, with a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g&lt;/code&gt; prepended to their names (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gtimeout&lt;/code&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;the-problem-with-these-strategies&quot;&gt;The problem with these strategies&lt;/h2&gt;
-
-&lt;p&gt;Both approaches share a common defect: they don’t react to stream output.&lt;/p&gt;
-
-&lt;p&gt;There’s no way to express the following:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;time out after some time has passed with no received lines&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;As it turns out, it’s quite common to use tools that poll forever, stuck in some form of receive loop.&lt;/p&gt;
-
-&lt;p&gt;Examples:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A Kafka console consumer, like &lt;a href=&quot;https://github.com/fgeller/kt&quot;&gt;kt&lt;/a&gt; (my originating use case)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tail -f&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Any poll-forever scheme, e.g.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; TRUE &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
-  &lt;/span&gt;curl https://status.github.com/api/status.json
-  &lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;10
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;my-current-solution-sd-stream-differ&quot;&gt;My current solution: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; (stream differ)&lt;/h2&gt;
-
-&lt;p&gt;I developed a very simple, well-tested, modern and efficient tool for diffing two newline-separated streams, timing them out if necessary. It’s written in &lt;a href=&quot;https://golang.org/&quot;&gt;Go&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/sd&quot;&gt;sd repo @ Github&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;The initial example, with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100 | sd &lt;span class=&quot;s1&quot;&gt;&apos;seq 6 100&apos;&lt;/span&gt;
-2
-1
-3
-5
-4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Note that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; does not guarantee output order. This is because it violently parallelises work via goroutines. If input is sporadical, output should not come out out of order. If you need sorted output, just add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end.&lt;/p&gt;
-
-&lt;p&gt;If you do add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;| sort&lt;/code&gt; at the end, even though &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; will diff right away, you won’t see results until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; has finished; this is just how sorting works. Also, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sort&lt;/code&gt; will give you a natural sort (alphanumerical or numerical, and optionally reverse), but you would still lose the input order.&lt;/p&gt;
-
-&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-h&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--hard-timeout&lt;/code&gt; to timeout after a number of seconds&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;100 | sd &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 1 &lt;span class=&quot;s1&quot;&gt;&apos;tail -fn 100 &amp;lt;(seq 6 100)&apos;&lt;/span&gt;
-1
-2
-3
-4
-5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-t&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--timeout&lt;/code&gt; to timeout after a number of seconds of no new lines. Note that the two streams hold independent timeouts.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;uuids.txt | sd &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 10 &lt;span class=&quot;s1&quot;&gt;&apos;./kafka-consumer.sh uuids_topic&apos;&lt;/span&gt;
-a5aff766-564a-11e6-beb8-9e71128cae77
-a5affbd0-564a-11e6-beb8-9e71128cae77
-a5afff2c-564a-11e6-beb8-9e71128cae77
-a5b00328-564a-11e6-beb8-9e71128cae77
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Usually, tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt; or commit log consumers take some time to startup, or to run the query. It makes sense to have a longer timeout period for the first message. Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--patience&lt;/code&gt; for this.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;uuids.txt | sd &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 20 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 10 &lt;span class=&quot;s1&quot;&gt;&apos;./kafka-consumer.sh uuids_topic&apos;&lt;/span&gt;
-a5aff766-564a-11e6-beb8-9e71128cae77
-a5affbd0-564a-11e6-beb8-9e71128cae77
-a5afff2c-564a-11e6-beb8-9e71128cae77
-a5b00328-564a-11e6-beb8-9e71128cae77
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p 0&lt;/code&gt; for waiting indefinitely for the initial message.&lt;/p&gt;
-
-&lt;p&gt;If you’re sure the second stream will finish, use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--infinite&lt;/code&gt;; this way you can be confident that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; will wait until the second stream finishes to start diffing.&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is a nifty tool, and a useful addition for a dev’s toolbelt. It allows for automation scripts that involve infinite streams; something not readily available currently using GNU-style CLI tools.&lt;/p&gt;
-
-&lt;p&gt;It’s not perfect: I wouldn’t choose it over &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; for streams that finish, because even though &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is fast, it does have to check every line of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;STDIN&lt;/code&gt; against every line of the second stream where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comm&lt;/code&gt; does not. On very long streams, this can get impractically slow. Also, if output order is critical and it doesn’t follow a natural order criterion, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; can’t be used.&lt;/p&gt;
-
-&lt;p&gt;Please, consider &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; for your stream diffing needs. &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues&quot;&gt;Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/MarianoGappa/sd/issues#fork-destination-box&quot;&gt;PRs&lt;/a&gt; are welcome and encouraged: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sd&lt;/code&gt; is &lt;a href=&quot;https://github.com/MarianoGappa/sd/blob/master/LICENSE&quot;&gt;MIT licensed&lt;/a&gt;.&lt;/p&gt;
-</description>
-        <pubDate>Sat, 30 Jul 2016 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
       </item>
     
   </channel>
