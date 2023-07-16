@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Real life indirection is the root of all evil, and AI agents can fix it! &#8211; Mariano Gappa's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.">
+  <meta name="author" content="Mariano Gappa">
+  
+  <meta name="keywords" content="software">
+  <link rel="canonical" href="https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href=" /feed.xml" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href=" /css/pixyll.css?202307162037"
+    type="text/css">
+
+  <!-- Fonts -->
+  <link href='//fonts.googleapis.com/css?family=Roboto:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+  
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+  
+
+  <!-- Verifications -->
+  
+
+  <!-- Open Graph -->
+  <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:title"
+    content="Real life indirection is the root of all evil, and AI agents can fix it!">
+  <meta property="og:description"
+    content="Blog about Software Engineering and Music Production.">
+  <meta property="og:url" content="https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/">
+  <meta property="og:site_name" content="Mariano Gappa&apos;s Blog">
+  
+  <meta property="og:image" content="https://marianogappa.github.io/images/ai.png" />
+  
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  
+  <meta name="twitter:site" content="@MarianoGappa" />
+  
+  <meta name="twitter:title" content="Real life indirection is the root of all evil, and AI agents can fix it!" />
+  <meta name="twitter:description"
+    content="The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments." />
+  <meta name="twitter:url" content="https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/" />
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+  <!-- Added by Mariano for syntax highlighting -->
+  <!-- <link href="/css/syntax.css" rel="stylesheet"> -->
+
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-58930438-4', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body class="site animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://marianogappa.github.io" class="site-title">Mariano Gappa's Blog</a>
+      <nav class="site-nav">
+        <!-- <a href="/cv/">CV</a> -->
+<!-- <a href="/cv/cv.pdf">CV (pdf)</a> -->
+<a href="/about/">About</a>
+<!-- <a href="http://www.gappamixing.com">Mixing</a> -->
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-github" href="https://github.com/MarianoGappa"></a>
+    
+    
+    
+    <a class="fa fa-rss" href="/feed.xml"></a>
+    
+      <a class="fa fa-twitter" href="https://twitter.com/MarianoGappa"></a>
+    
+    
+    
+      <a class="fa fa-envelope" href="mailto:mariano.gappa@gmail.com"></a>
+    
+    
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Real life indirection is the root of all evil, and AI agents can fix it!</h1>
+  
+  <div><img src="https://marianogappa.github.io/images/ai.png" /></div><br>
+  
+  <span class="post-meta">Jul 16, 2023</span><br>
+  
+  <span class="post-meta small">
+    
+    9 minute read
+    
+  </span>
+</div>
+
+<article class="post-content">
+  <h2 id="tldr">TL;DR</h2>
+
+<p>This blogpost introduces the idea that there’s a concept called “indirection in the real World”, derived from a programming concept, which is good in principle, but also hides behind all evil. It then explores how the latest developments in AI might present an opportunity to challenge some of the adverse effects of it.</p>
+
+<h2 id="what-was-indirection">What was indirection?</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Indirection">Indirection</a>, for the uninitiated, is a computer programming principle.</p>
+
+<p>Examples:</p>
+<ul>
+  <li>A <a href="https://en.wikipedia.org/wiki/Pointer_(computer_programming)#Formal_description">pointer</a> to a value indirectly references a value.</li>
+  <li>An <a href="https://en.wikipedia.org/wiki/Interface_(computing)">interface</a> indirects the implementation details of some function from its consumers.</li>
+  <li><a href="https://en.wikipedia.org/wiki/High-level_programming_language">Higher-level languages</a> like Python or Swift indirect memory management, nested call stacks and other low-level details.</li>
+</ul>
+
+<p>Indirection is not inherently bad and it’s necessary to implement good <a href="https://en.wikipedia.org/wiki/Abstraction_principle_(computer_programming)">abstractions</a>: we don’t want to go back to <a href="https://en.wikipedia.org/wiki/Assembly_language">Assembly</a> 😱!</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-assembly.png" alt="Assembly" /></p>
+
+<p>The popular negative connotation around indirection comes from the difficulty of reading through code when there are too many nested “jump to definition” hops (indirection hops!) to get to some relevant section, as opposed to a linear sequence of actions.</p>
+
+<p>Often, one can draw a parallel between a codebase and a tricky book. But when there’s too much indirection, it feels more like reading an over-engineered <a href="https://en.wikipedia.org/wiki/Choose_Your_Own_Adventure">Choose your own adventure</a> gamebook, where you have to switch pages every 5 words!</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-choose-your-own-adventure.jpeg" alt="Choose your own adventure" /></p>
+
+<h2 id="what-does-indirection-in-the-real-world-look-like">What does “Indirection in the real World” look like?</h2>
+
+<p>For the most part, we no longer do anything end-to-end by ourselves.</p>
+
+<p>There was a time when humans didn’t <em>indirectly</em> depend on other humans for:</p>
+<ul>
+  <li><strong>Food</strong>: we don’t plant it, grow it, harvest it, package it. We don’t even know <em>how to</em>.</li>
+  <li><strong>Shelter</strong>: perhaps thousands of people involved in building a house, keeping it warm, lit, having a sewage system.</li>
+  <li><strong>Safety</strong>: an emergency service a call away that deploys police, firefighters or ambulances to your location in minutes!</li>
+</ul>
+
+<p><img src="https://marianogappa.github.io/images/ai-cavemen.png" alt="Cavemen" /></p>
+
+<p>We live in a much better World now, thanks to this gargantuan spider web of indirection we’ve built. Indirection is good!</p>
+
+<p>But sometimes it’s bad. Have you ever heard of these?</p>
+<ul>
+  <li>“responsibility can never be delegated”</li>
+  <li>“if you want something done right, do it yourself”</li>
+</ul>
+
+<p>Those are common proverbs for “indirection is bad”.</p>
+
+<h2 id="where-did-indirection-go-so-wrong">Where did indirection go so wrong?</h2>
+
+<p>If you make a list of the top things that are wrong with the World, you can find indirection creeping in:</p>
+
+<h3 id="war">War</h3>
+
+<ul>
+  <li>The American people wouldn’t on their own decide to invade Irak</li>
+  <li>The Russian people wouldn’t on their own decide to invade Ukraine</li>
+  <li>…and the same goes for all others</li>
+</ul>
+
+<p>War is only possible due to indirection.</p>
+
+<p>The governments &amp; powerful elites:</p>
+<ul>
+  <li>Make the decisions leveraging the indirection in <strong>representative democracy</strong>.</li>
+  <li>Persuade people that it’s the right decision leveraging the indirection in <strong>the media’s depictions of news &amp; facts</strong>.</li>
+</ul>
+
+<h3 id="extreme-social-inequality">Extreme social inequality</h3>
+<p>Extreme inequality is actually a fragile state and it leads to <a href="https://en.wikipedia.org/wiki/French_Revolution#Causes">guillotines</a>.</p>
+
+<p>To maintain order, diverse mechanisms of indirection are applied.</p>
+
+<p>A very simple one is <strong>distance</strong>: Michael Moore, despite whatever feelings you might have about him, puts it very eloquently <a href="https://youtu.be/XQ_agxK6fLs?t=327">in this excerpt</a>, when discussing how all schools in Finland are the same, so the rich parents have to make sure the public schools are great, and given that rich kids go to school with the rest and become friends, they have to think twice before they screw them over as wealthy adults.</p>
+
+<p>Ever wondered why you can hardly ever see or speak to rich, powerful people? The “thing” separating them from you is called indirection.</p>
+
+<h3 id="obesity-epidemic">Obesity epidemic</h3>
+<p>It’s great that we don’t have to plant, harvest, package and transport all our food by ourselves now. But those who do that for us have different priorities:</p>
+<ul>
+  <li>They add loads of preservatives and chemicals to the products so they last longer in the shelves, regardless of possible adverse effects.</li>
+  <li>They deliberately make unhealthy products incredibly tasty and market them to kids, then lie about the health effects, to make a profit.</li>
+</ul>
+
+<p><img src="https://marianogappa.github.io/images/ai-happy-meal.png" alt="Happy Meal" /></p>
+
+<p>You can clearly see how the hugely beneficial effects of delegation are unfortunately subverted by leveraging the indirection when objectives are not aligned.</p>
+
+<p>Often, well-off people opt to:</p>
+<ul>
+  <li>shop products that closely &amp; explicitly showcase the food origin &amp; process</li>
+  <li>shop direct from local farmers</li>
+  <li>grow food themselves</li>
+</ul>
+
+<p>What is this, effectively? 🤔 Removing/minimising indirection!</p>
+
+<h3 id="political-corruption">Political corruption</h3>
+<p>There’s a legit point to representative democracy! It would be really hard to have a debate with your whole city on every little aspect of government (and the <a href="https://en.wikipedia.org/wiki/Landsgemeinde">Landsgemeinde</a> doesn’t count).</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-landsgemeinde.png" alt="Landsgemeinde" /></p>
+
+<p>But representative democracy introduces indirection, and it gets out of hand quickly.</p>
+
+<p>Your elected officials:</p>
+<ul>
+  <li>Don’t know you</li>
+  <li>Largely don’t benefit from helping you</li>
+  <li>Often come from a different background or ethnicity, which comes with different values &amp; culture</li>
+  <li>Their priorities are very different from yours!</li>
+</ul>
+
+<p>An abyss of indirection separate you.</p>
+
+<p>All you get is a paper vote every few years, and you can protest on the street and argue online.</p>
+
+<p><strong>Indirection is the real reason why politics don’t scale.</strong></p>
+
+<h2 id="what-have-we-done-so-far-to-mitigate-these-evils">What have we done so far to mitigate these evils?</h2>
+
+<p>The word <strong>“transparency”</strong> comes up every time 🤔. Surprised?</p>
+
+<p>It’s not surprising:</p>
+<ul>
+  <li>The problem: indirection clouding the evil, making it opaque.</li>
+  <li>The solution: remove the indirection, revealing the evil.</li>
+</ul>
+
+<p>Examples are everywhere:</p>
+
+<ul>
+  <li>The <em>indirect</em> links between tobacco &amp; foods high in added sugar and adverse health effects like <a href="https://nida.nih.gov/publications/drugfacts/cigarettes-other-tobacco-products">lung cancer</a>, <a href="https://www.nhs.uk/live-well/eat-well/food-types/how-does-sugar-in-our-diet-affect-our-health/">obesity &amp; diabetes</a> have been widely established and agreed upon after decades of systematic attempts to deny and hide them (I say “indirect” because the effects take years to materialise). What do governments decide to do? Put health warnings in the packaging, thus removing the indirection.</li>
+</ul>
+
+<p><img src="https://marianogappa.github.io/images/crypto-predictions-tobacco-warning.jpg" alt="Tobacco Warning" /></p>
+
+<ul>
+  <li>
+    <p><a href="https://en.wikipedia.org/wiki/Panama_Papers">The Panama Papers</a>, <a href="https://en.wikipedia.org/wiki/Paradise_Papers">The Paradise Papers</a> &amp; <a href="https://en.wikipedia.org/wiki/Swiss_Leaks">The Swiss Leaks</a> are just a few examples of the long list of whistleblowing efforts to remove the indirection mechanisms allowing the filthy rich from evading taxes and hiding their wealth.</p>
+  </li>
+  <li>
+    <p>Vegans argue that animal farming is evil. If you agree, this is another good example. In order to increase efficiency, producers need to resort to and <strong>hide</strong> farms like this one 😱:</p>
+  </li>
+</ul>
+
+<p><img src="https://marianogappa.github.io/images/ai-chicken-farm.png" alt="Chicken Farm" /></p>
+
+<h2 id="brainstorming-can-we-do-better">Brainstorming: can we do better?</h2>
+
+<p>We can steal some ideas from great thinkers.</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-the-open-source-everything-manifesto.png" alt="The Open Source Everything Manifesto" /></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Robert_David_Steele">Robert David Steele</a>, although later quite a controversial figure, was an American CIA officer who wrote a book called <a href="https://www.goodreads.com/en/book/show/12998524-the-open-source-everything-manifesto">The Open-Source Everything Manifesto</a>. In it, he advocates for the transition from top-down secret command and control to a world of bottom-up, consensual, collective decision-making as a means to solve the major crises facing our world today.</p>
+
+<p>I read this book in 2014, and this idea resonated with me, because I interpreted it as “removing indirection from information-based decision-making”, and letting everyone collaboratively “audit” the World.</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-yuval-harari.png" alt="Yuval Harari" /></p>
+
+<p>Very recently, historian <a href="https://en.wikipedia.org/wiki/Yuval_Noah_Harari">Yuval Harari</a> echoed a thought from a <a href="https://archive.org/details/yuval-noah-harari-at-the-world-economic-forum-in-davos-2020-the-rise-of-digital-">2020 talk he made at Davos</a> in a short <a href="https://www.youtube.com/watch?v=JV9tzdYT5FU&amp;pp=ygUVeXV2YWwgZGljdGF0b3JzaGlwIGFp">interview with Piers Morgan</a>, along the lines of: “Alongside inequality, the other major danger we face is the rise of digital dictatorships, that will monitor everyone all the time”.</p>
+
+<p>This idea of having a self-replicating <a href="https://en.wikipedia.org/wiki/Agent_Smith">Agent Smith</a> keeping every human under control resonated with me as well: if we can use these agents for mind control, can we use them to keep them free from these evils too?</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-cypherpunk.png" alt="Cypherpunk" /></p>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Cypherpunk">Cypherpunk</a> movement was a loosely coupled group of computer scientist activists originated in San Francisco in the mid 80s who advocated the use of cryptography and privacy-enhancing technologies to challenge state surveillance and censorship and promote social and political change. Bitcoin and cryptocurrencies came from this movement, or so <a href="https://en.wikipedia.org/wiki/Arvind_Narayanan">Arvind Narayanan</a> taught me in his <a href="https://www.coursera.org/learn/cryptocurrency">Bitcoin and Cryptocurrency Technologies</a> MOOC.</p>
+
+<p>What a fantastic dream (for a software engineer at least), that a few nerds can team up and have a realistic shot at fixing the World 😍!</p>
+
+<p>But we need bolder tools 🤔.</p>
+
+<h2 id="how-about-leveraging-ai-agents">How about leveraging <a href="https://en.wikipedia.org/wiki/Intelligent_agent">AI agents</a>?</h2>
+
+<p>Every day I wake up to a brand new <a href="https://news.ycombinator.com/">Hacker News</a> front page looking for these new activists, these AI-Powered Transparency Warriors.</p>
+
+<p>How about having a swarm of anonymous AI agents hidden in all corners of the Internet, auditing the World, looking for wrongs to right?</p>
+
+<p>Sounding much like a <a href="https://en.wikipedia.org/wiki/The_Terminator">Terminator</a>-style dystopia?</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-terminator-dystopia.png" alt="Terminator Dystopia" /></p>
+
+<p>Only that these agents could be open source and community-maintained, and their collaborators could remain anonymous if necessary, much like <a href="https://en.wikipedia.org/wiki/Satoshi_Nakamoto">Satoshi Nakamoto</a>.</p>
+
+<p>Not quite viable today, but I’d argue it’s <strong>unavoidable in the long term anyway</strong>, in one form or another.</p>
+
+<p>Anybody can sue, publicly denounce or file a complaint against anyone else if they have a good case, so why can’t computers do it? They’ll be better than us at it 🤷‍♂️.</p>
+
+<h2 id="cancel-culture-put-to-good-use">Cancel culture put to good use</h2>
+
+<p>The recent <a href="https://en.wikipedia.org/wiki/Cancel_culture">Cancel Culture</a> phenomenon has been widely criticised and with good reasons, but it did bring something new to the table that I hadn’t seen before: <strong>the rich &amp; powerful held accountable and brought down</strong>.</p>
+
+<p>Call it <em>vigilante justice</em>, I don’t care: even if there are false positives, the idea that no army of lawyers nor unlimited bribery resources can save you if you do bad deeds is a deterrent <strong>we all wish existed</strong>, no?</p>
+
+<p>This dream is within reach now. I dream of AI Agents keeping the <a href="https://en.wikipedia.org/wiki/Animal_Farm#Pigs">Animal Farm pigs</a> honest.</p>
+
+<p>How about the Supreme Court judges? The billionaire class? The people who wield tremendous power over others should be held at a higher standard, and if they don’t like it, then they shouldn’t hold it.</p>
+
+<p><img src="https://marianogappa.github.io/images/ai-thomas-clarence.png" alt="Thomas Clarence" /></p>
+
+<p>I’d argue that an AI Agent monitoring, discovering &amp; exposing <a href="https://en.wikipedia.org/wiki/Clarence_Thomas">Clarence Thomas</a>’s <a href="https://en.wikipedia.org/wiki/Clarence_Thomas#Nondisclosure_of_gifts,_real_estate_sale,_and_wife's_income">gifts</a>, assuming they are bribes, could potentially be just as life-saving as <a href="https://www.youtube.com/watch?v=bUhFfunT2ds">FSD</a>, both at scale.</p>
+
+<p>Of course, like all else, how do we ensure it doesn’t target a specific agenda?</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The future I imagine in this post sounds very much like an unrealistic sci-fi musing. But is it, though?</p>
+
+<p>We can at least all agree that AI will have a growing presence in our daily lives, both at the individual and the societal level.</p>
+
+<p>Since it’s well-studied that <a href="https://www.imf.org/EXTERNAL/PUBS/FT/ISSUES6/INDEX.HTM">corruption affects a country’s economic output</a> and thus, long-term, everyone (unintuitively including the rich) benefits when there’s less corruption, wouldn’t it be in the best interest of governments to deploy these AI auditors?</p>
+
+<p>If I had to guess, I’d say the pioneering applications will more likely come from the private sector or from clandestinity. But I don’t know when, or what the form will be. I’m sure it’s coming, though. Soon.</p>
+
+</article>
+
+
+<div class="share-page">
+  
+
+  <div class="share-links">
+    
+
+    
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=Real life indirection is the root of all evil, and AI agents can fix it!&url=https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/&title=Real life indirection is the root of all evil, and AI agents can fix it!" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+    
+
+    
+
+    
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/&t=Real life indirection is the root of all evil, and AI agents can fix it!" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'marianogappasblog';
+  var disqus_identifier = '/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it';
+  var disqus_title = '';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+    Disqus.</a></noscript>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>

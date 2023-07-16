@@ -7,6 +7,226 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Real life indirection is the root of all evil, and AI agents can fix it!</title>
+        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;This blogpost introduces the idea that there’s a concept called “indirection in the real World”, derived from a programming concept, which is good in principle, but also hides behind all evil. It then explores how the latest developments in AI might present an opportunity to challenge some of the adverse effects of it.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-was-indirection&quot;&gt;What was indirection?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Indirection&quot;&gt;Indirection&lt;/a&gt;, for the uninitiated, is a computer programming principle.&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Pointer_(computer_programming)#Formal_description&quot;&gt;pointer&lt;/a&gt; to a value indirectly references a value.&lt;/li&gt;
+  &lt;li&gt;An &lt;a href=&quot;https://en.wikipedia.org/wiki/Interface_(computing)&quot;&gt;interface&lt;/a&gt; indirects the implementation details of some function from its consumers.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/High-level_programming_language&quot;&gt;Higher-level languages&lt;/a&gt; like Python or Swift indirect memory management, nested call stacks and other low-level details.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Indirection is not inherently bad and it’s necessary to implement good &lt;a href=&quot;https://en.wikipedia.org/wiki/Abstraction_principle_(computer_programming)&quot;&gt;abstractions&lt;/a&gt;: we don’t want to go back to &lt;a href=&quot;https://en.wikipedia.org/wiki/Assembly_language&quot;&gt;Assembly&lt;/a&gt; 😱!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-assembly.png&quot; alt=&quot;Assembly&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The popular negative connotation around indirection comes from the difficulty of reading through code when there are too many nested “jump to definition” hops (indirection hops!) to get to some relevant section, as opposed to a linear sequence of actions.&lt;/p&gt;
+
+&lt;p&gt;Often, one can draw a parallel between a codebase and a tricky book. But when there’s too much indirection, it feels more like reading an over-engineered &lt;a href=&quot;https://en.wikipedia.org/wiki/Choose_Your_Own_Adventure&quot;&gt;Choose your own adventure&lt;/a&gt; gamebook, where you have to switch pages every 5 words!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-choose-your-own-adventure.jpeg&quot; alt=&quot;Choose your own adventure&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what-does-indirection-in-the-real-world-look-like&quot;&gt;What does “Indirection in the real World” look like?&lt;/h2&gt;
+
+&lt;p&gt;For the most part, we no longer do anything end-to-end by ourselves.&lt;/p&gt;
+
+&lt;p&gt;There was a time when humans didn’t &lt;em&gt;indirectly&lt;/em&gt; depend on other humans for:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Food&lt;/strong&gt;: we don’t plant it, grow it, harvest it, package it. We don’t even know &lt;em&gt;how to&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Shelter&lt;/strong&gt;: perhaps thousands of people involved in building a house, keeping it warm, lit, having a sewage system.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Safety&lt;/strong&gt;: an emergency service a call away that deploys police, firefighters or ambulances to your location in minutes!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-cavemen.png&quot; alt=&quot;Cavemen&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We live in a much better World now, thanks to this gargantuan spider web of indirection we’ve built. Indirection is good!&lt;/p&gt;
+
+&lt;p&gt;But sometimes it’s bad. Have you ever heard of these?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;“responsibility can never be delegated”&lt;/li&gt;
+  &lt;li&gt;“if you want something done right, do it yourself”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Those are common proverbs for “indirection is bad”.&lt;/p&gt;
+
+&lt;h2 id=&quot;where-did-indirection-go-so-wrong&quot;&gt;Where did indirection go so wrong?&lt;/h2&gt;
+
+&lt;p&gt;If you make a list of the top things that are wrong with the World, you can find indirection creeping in:&lt;/p&gt;
+
+&lt;h3 id=&quot;war&quot;&gt;War&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The American people wouldn’t on their own decide to invade Irak&lt;/li&gt;
+  &lt;li&gt;The Russian people wouldn’t on their own decide to invade Ukraine&lt;/li&gt;
+  &lt;li&gt;…and the same goes for all others&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;War is only possible due to indirection.&lt;/p&gt;
+
+&lt;p&gt;The governments &amp;amp; powerful elites:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Make the decisions leveraging the indirection in &lt;strong&gt;representative democracy&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Persuade people that it’s the right decision leveraging the indirection in &lt;strong&gt;the media’s depictions of news &amp;amp; facts&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;extreme-social-inequality&quot;&gt;Extreme social inequality&lt;/h3&gt;
+&lt;p&gt;Extreme inequality is actually a fragile state and it leads to &lt;a href=&quot;https://en.wikipedia.org/wiki/French_Revolution#Causes&quot;&gt;guillotines&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To maintain order, diverse mechanisms of indirection are applied.&lt;/p&gt;
+
+&lt;p&gt;A very simple one is &lt;strong&gt;distance&lt;/strong&gt;: Michael Moore, despite whatever feelings you might have about him, puts it very eloquently &lt;a href=&quot;https://youtu.be/XQ_agxK6fLs?t=327&quot;&gt;in this excerpt&lt;/a&gt;, when discussing how all schools in Finland are the same, so the rich parents have to make sure the public schools are great, and given that rich kids go to school with the rest and become friends, they have to think twice before they screw them over as wealthy adults.&lt;/p&gt;
+
+&lt;p&gt;Ever wondered why you can hardly ever see or speak to rich, powerful people? The “thing” separating them from you is called indirection.&lt;/p&gt;
+
+&lt;h3 id=&quot;obesity-epidemic&quot;&gt;Obesity epidemic&lt;/h3&gt;
+&lt;p&gt;It’s great that we don’t have to plant, harvest, package and transport all our food by ourselves now. But those who do that for us have different priorities:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;They add loads of preservatives and chemicals to the products so they last longer in the shelves, regardless of possible adverse effects.&lt;/li&gt;
+  &lt;li&gt;They deliberately make unhealthy products incredibly tasty and market them to kids, then lie about the health effects, to make a profit.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-happy-meal.png&quot; alt=&quot;Happy Meal&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You can clearly see how the hugely beneficial effects of delegation are unfortunately subverted by leveraging the indirection when objectives are not aligned.&lt;/p&gt;
+
+&lt;p&gt;Often, well-off people opt to:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;shop products that closely &amp;amp; explicitly showcase the food origin &amp;amp; process&lt;/li&gt;
+  &lt;li&gt;shop direct from local farmers&lt;/li&gt;
+  &lt;li&gt;grow food themselves&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What is this, effectively? 🤔 Removing/minimising indirection!&lt;/p&gt;
+
+&lt;h3 id=&quot;political-corruption&quot;&gt;Political corruption&lt;/h3&gt;
+&lt;p&gt;There’s a legit point to representative democracy! It would be really hard to have a debate with your whole city on every little aspect of government (and the &lt;a href=&quot;https://en.wikipedia.org/wiki/Landsgemeinde&quot;&gt;Landsgemeinde&lt;/a&gt; doesn’t count).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-landsgemeinde.png&quot; alt=&quot;Landsgemeinde&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But representative democracy introduces indirection, and it gets out of hand quickly.&lt;/p&gt;
+
+&lt;p&gt;Your elected officials:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Don’t know you&lt;/li&gt;
+  &lt;li&gt;Largely don’t benefit from helping you&lt;/li&gt;
+  &lt;li&gt;Often come from a different background or ethnicity, which comes with different values &amp;amp; culture&lt;/li&gt;
+  &lt;li&gt;Their priorities are very different from yours!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;An abyss of indirection separate you.&lt;/p&gt;
+
+&lt;p&gt;All you get is a paper vote every few years, and you can protest on the street and argue online.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Indirection is the real reason why politics don’t scale.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what-have-we-done-so-far-to-mitigate-these-evils&quot;&gt;What have we done so far to mitigate these evils?&lt;/h2&gt;
+
+&lt;p&gt;The word &lt;strong&gt;“transparency”&lt;/strong&gt; comes up every time 🤔. Surprised?&lt;/p&gt;
+
+&lt;p&gt;It’s not surprising:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The problem: indirection clouding the evil, making it opaque.&lt;/li&gt;
+  &lt;li&gt;The solution: remove the indirection, revealing the evil.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Examples are everywhere:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The &lt;em&gt;indirect&lt;/em&gt; links between tobacco &amp;amp; foods high in added sugar and adverse health effects like &lt;a href=&quot;https://nida.nih.gov/publications/drugfacts/cigarettes-other-tobacco-products&quot;&gt;lung cancer&lt;/a&gt;, &lt;a href=&quot;https://www.nhs.uk/live-well/eat-well/food-types/how-does-sugar-in-our-diet-affect-our-health/&quot;&gt;obesity &amp;amp; diabetes&lt;/a&gt; have been widely established and agreed upon after decades of systematic attempts to deny and hide them (I say “indirect” because the effects take years to materialise). What do governments decide to do? Put health warnings in the packaging, thus removing the indirection.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-tobacco-warning.jpg&quot; alt=&quot;Tobacco Warning&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Panama_Papers&quot;&gt;The Panama Papers&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Paradise_Papers&quot;&gt;The Paradise Papers&lt;/a&gt; &amp;amp; &lt;a href=&quot;https://en.wikipedia.org/wiki/Swiss_Leaks&quot;&gt;The Swiss Leaks&lt;/a&gt; are just a few examples of the long list of whistleblowing efforts to remove the indirection mechanisms allowing the filthy rich from evading taxes and hiding their wealth.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Vegans argue that animal farming is evil. If you agree, this is another good example. In order to increase efficiency, producers need to resort to and &lt;strong&gt;hide&lt;/strong&gt; farms like this one 😱:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-chicken-farm.png&quot; alt=&quot;Chicken Farm&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;brainstorming-can-we-do-better&quot;&gt;Brainstorming: can we do better?&lt;/h2&gt;
+
+&lt;p&gt;We can steal some ideas from great thinkers.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-the-open-source-everything-manifesto.png&quot; alt=&quot;The Open Source Everything Manifesto&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Robert_David_Steele&quot;&gt;Robert David Steele&lt;/a&gt;, although later quite a controversial figure, was an American CIA officer who wrote a book called &lt;a href=&quot;https://www.goodreads.com/en/book/show/12998524-the-open-source-everything-manifesto&quot;&gt;The Open-Source Everything Manifesto&lt;/a&gt;. In it, he advocates for the transition from top-down secret command and control to a world of bottom-up, consensual, collective decision-making as a means to solve the major crises facing our world today.&lt;/p&gt;
+
+&lt;p&gt;I read this book in 2014, and this idea resonated with me, because I interpreted it as “removing indirection from information-based decision-making”, and letting everyone collaboratively “audit” the World.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-yuval-harari.png&quot; alt=&quot;Yuval Harari&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Very recently, historian &lt;a href=&quot;https://en.wikipedia.org/wiki/Yuval_Noah_Harari&quot;&gt;Yuval Harari&lt;/a&gt; echoed a thought from a &lt;a href=&quot;https://archive.org/details/yuval-noah-harari-at-the-world-economic-forum-in-davos-2020-the-rise-of-digital-&quot;&gt;2020 talk he made at Davos&lt;/a&gt; in a short &lt;a href=&quot;https://www.youtube.com/watch?v=JV9tzdYT5FU&amp;amp;pp=ygUVeXV2YWwgZGljdGF0b3JzaGlwIGFp&quot;&gt;interview with Piers Morgan&lt;/a&gt;, along the lines of: “Alongside inequality, the other major danger we face is the rise of digital dictatorships, that will monitor everyone all the time”.&lt;/p&gt;
+
+&lt;p&gt;This idea of having a self-replicating &lt;a href=&quot;https://en.wikipedia.org/wiki/Agent_Smith&quot;&gt;Agent Smith&lt;/a&gt; keeping every human under control resonated with me as well: if we can use these agents for mind control, can we use them to keep them free from these evils too?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-cypherpunk.png&quot; alt=&quot;Cypherpunk&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://en.wikipedia.org/wiki/Cypherpunk&quot;&gt;Cypherpunk&lt;/a&gt; movement was a loosely coupled group of computer scientist activists originated in San Francisco in the mid 80s who advocated the use of cryptography and privacy-enhancing technologies to challenge state surveillance and censorship and promote social and political change. Bitcoin and cryptocurrencies came from this movement, or so &lt;a href=&quot;https://en.wikipedia.org/wiki/Arvind_Narayanan&quot;&gt;Arvind Narayanan&lt;/a&gt; taught me in his &lt;a href=&quot;https://www.coursera.org/learn/cryptocurrency&quot;&gt;Bitcoin and Cryptocurrency Technologies&lt;/a&gt; MOOC.&lt;/p&gt;
+
+&lt;p&gt;What a fantastic dream (for a software engineer at least), that a few nerds can team up and have a realistic shot at fixing the World 😍!&lt;/p&gt;
+
+&lt;p&gt;But we need bolder tools 🤔.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-about-leveraging-ai-agents&quot;&gt;How about leveraging &lt;a href=&quot;https://en.wikipedia.org/wiki/Intelligent_agent&quot;&gt;AI agents&lt;/a&gt;?&lt;/h2&gt;
+
+&lt;p&gt;Every day I wake up to a brand new &lt;a href=&quot;https://news.ycombinator.com/&quot;&gt;Hacker News&lt;/a&gt; front page looking for these new activists, these AI-Powered Transparency Warriors.&lt;/p&gt;
+
+&lt;p&gt;How about having a swarm of anonymous AI agents hidden in all corners of the Internet, auditing the World, looking for wrongs to right?&lt;/p&gt;
+
+&lt;p&gt;Sounding much like a &lt;a href=&quot;https://en.wikipedia.org/wiki/The_Terminator&quot;&gt;Terminator&lt;/a&gt;-style dystopia?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-terminator-dystopia.png&quot; alt=&quot;Terminator Dystopia&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Only that these agents could be open source and community-maintained, and their collaborators could remain anonymous if necessary, much like &lt;a href=&quot;https://en.wikipedia.org/wiki/Satoshi_Nakamoto&quot;&gt;Satoshi Nakamoto&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Not quite viable today, but I’d argue it’s &lt;strong&gt;unavoidable in the long term anyway&lt;/strong&gt;, in one form or another.&lt;/p&gt;
+
+&lt;p&gt;Anybody can sue, publicly denounce or file a complaint against anyone else if they have a good case, so why can’t computers do it? They’ll be better than us at it 🤷‍♂️.&lt;/p&gt;
+
+&lt;h2 id=&quot;cancel-culture-put-to-good-use&quot;&gt;Cancel culture put to good use&lt;/h2&gt;
+
+&lt;p&gt;The recent &lt;a href=&quot;https://en.wikipedia.org/wiki/Cancel_culture&quot;&gt;Cancel Culture&lt;/a&gt; phenomenon has been widely criticised and with good reasons, but it did bring something new to the table that I hadn’t seen before: &lt;strong&gt;the rich &amp;amp; powerful held accountable and brought down&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Call it &lt;em&gt;vigilante justice&lt;/em&gt;, I don’t care: even if there are false positives, the idea that no army of lawyers nor unlimited bribery resources can save you if you do bad deeds is a deterrent &lt;strong&gt;we all wish existed&lt;/strong&gt;, no?&lt;/p&gt;
+
+&lt;p&gt;This dream is within reach now. I dream of AI Agents keeping the &lt;a href=&quot;https://en.wikipedia.org/wiki/Animal_Farm#Pigs&quot;&gt;Animal Farm pigs&lt;/a&gt; honest.&lt;/p&gt;
+
+&lt;p&gt;How about the Supreme Court judges? The billionaire class? The people who wield tremendous power over others should be held at a higher standard, and if they don’t like it, then they shouldn’t hold it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/ai-thomas-clarence.png&quot; alt=&quot;Thomas Clarence&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’d argue that an AI Agent monitoring, discovering &amp;amp; exposing &lt;a href=&quot;https://en.wikipedia.org/wiki/Clarence_Thomas&quot;&gt;Clarence Thomas&lt;/a&gt;’s &lt;a href=&quot;https://en.wikipedia.org/wiki/Clarence_Thomas#Nondisclosure_of_gifts,_real_estate_sale,_and_wife&apos;s_income&quot;&gt;gifts&lt;/a&gt;, assuming they are bribes, could potentially be just as life-saving as &lt;a href=&quot;https://www.youtube.com/watch?v=bUhFfunT2ds&quot;&gt;FSD&lt;/a&gt;, both at scale.&lt;/p&gt;
+
+&lt;p&gt;Of course, like all else, how do we ensure it doesn’t target a specific agenda?&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;The future I imagine in this post sounds very much like an unrealistic sci-fi musing. But is it, though?&lt;/p&gt;
+
+&lt;p&gt;We can at least all agree that AI will have a growing presence in our daily lives, both at the individual and the societal level.&lt;/p&gt;
+
+&lt;p&gt;Since it’s well-studied that &lt;a href=&quot;https://www.imf.org/EXTERNAL/PUBS/FT/ISSUES6/INDEX.HTM&quot;&gt;corruption affects a country’s economic output&lt;/a&gt; and thus, long-term, everyone (unintuitively including the rich) benefits when there’s less corruption, wouldn’t it be in the best interest of governments to deploy these AI auditors?&lt;/p&gt;
+
+&lt;p&gt;If I had to guess, I’d say the pioneering applications will more likely come from the private sector or from clandestinity. But I don’t know when, or what the form will be. I’m sure it’s coming, though. Soon.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 16 Jul 2023 00:00:00 +0100</pubDate>
+        <link>https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2023/07/16/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/</guid>
+      </item>
+    
+      <item>
         <title>Building Crypto Predictions Tracker: architecture and challenges</title>
         <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
 
@@ -14,7 +234,7 @@
 
 &lt;p&gt;I’ve been working on a Go-based project to automatically track cryptocurrency predictions made on social networks like &lt;a href=&quot;https://twitter.com/CryptoKaleo/status/1558313838877057025&quot;&gt;this one&lt;/a&gt; for the last 6 months, as a tool for accountability and influencer reputation. I think the resulting system ended up being pretty neat and it might interest you if you’re a backend engineer. In this blogpost, I’ll define this system and describe its architecture.&lt;/p&gt;
 
-&lt;p&gt;The backend system is available here: &lt;a href=&quot;https://github.com/marianogappa/crypto-predictions&quot;&gt;Crypto Predictions&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The backend system is available here: &lt;a href=&quot;https://github.com/marianogappa/crypto-predictions&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;A frontend to this project is this Twitter account: &lt;a href=&quot;https://twitter.com/crypto_preds&quot;&gt;Crypto Predictions Tracker&lt;/a&gt;.&lt;/p&gt;
 
@@ -2885,250 +3105,6 @@ code {
         <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
         <link>https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
-      </item>
-    
-      <item>
-        <title>Making the move from Scala to Go, and why we’re not going back</title>
-        <description>&lt;p&gt;NOTE: my original blogpost was published &lt;a href=&quot;https://movio.co/blog/migrate-Scala-to-Go/&quot;&gt;in the Movio blog&lt;/a&gt;. I’ve had to steal it because it went offline for a while, the link sometimes 404s, and they’ve broken some links. I don’t want it to be lost. The following content is unchanged from the original.&lt;/p&gt;
-
-&lt;p&gt;UPDATE:
-This blogpost has received a lot of attention since it’s been published, including on Hacker News, Golang Weekly and Scala Times; thank you! Unfortunately, some readers have considered it strictly an attack on the Scala community and/or a biased episode of language war. This was not the Red Squad’s intention. As explained within the text, Movio uses Scala; some squads use Scala as their main language. We have hosted Scala Downunder two years ago. The Scala community has taught us a lot during the past 4 years. Scala and Go coexist at Movio.&lt;/p&gt;
-
-&lt;p&gt;Here’s the story of why we chose to migrate from &lt;a href=&quot;https://www.scala-lang.org/&quot;&gt;Scala&lt;/a&gt; to &lt;a href=&quot;https://golang.org/&quot;&gt;Go&lt;/a&gt;, and gradually rewrote part of our Scala codebase to Go. As a whole, Movio hosts a much broader and diverse set of opinions, so the “we” in this post accounts for Movio Cinema’s Red Squad only. Scala remains the primary language for some Squads at Movio.&lt;/p&gt;
-
-&lt;h2 id=&quot;why-we-loved-scala-in-the-first-place&quot;&gt;Why we loved Scala in the first place&lt;/h2&gt;
-
-&lt;p&gt;What made Scala so attractive? This can easily be explained if you consider our backgrounds. Here’s the succession of favorite languages over time for some of us:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/scala_to_go_members_programming_languages.jpg&quot; alt=&quot;Favourite languages over time&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;As you can see, we largely came from the stateful procedural world.&lt;/p&gt;
-
-&lt;p&gt;With Scala coming onto the scene, functional programming gained hype and it really clicked with us. &lt;a href=&quot;https://en.wikipedia.org/wiki/Pure_function&quot;&gt;Pure functions&lt;/a&gt; made deterministic tests easy, and then &lt;a href=&quot;https://en.wikipedia.org/wiki/Test-driven_development&quot;&gt;TDD&lt;/a&gt; gained popularity and also spoke to our issues with software quality.&lt;/p&gt;
-
-&lt;p&gt;I think the first time I appreciated the positive aspects of having a strong type system was with Scala. Personally, coming from a myriad of PHP silent errors and whimsical behavior, it felt quite empowering to have the confidence that, supported by type-checking and a few well-thought-out tests, my code was doing what it was meant to. On top of that, it would keep doing what it was meant to do after refactoring, otherwise breaking the type-checking or the tests. Yes, Java gave you that as well but without the beauty of FP, and with all the baggage of the EE.&lt;/p&gt;
-
-&lt;p&gt;There are other elusive qualities that make Scala extremely sexy for nerds. It allows you to create your own operators or override existing ones, essentially being unary and binary functions with non-alphanumeric identifiers. You can also extend the compiler via macros (user-defined functions that are called by the compiler), and enrich a third-party library via implicit classes, also known as the “pimp my library” pattern.&lt;/p&gt;
-
-&lt;p&gt;But Scala wasn’t without its problems.&lt;/p&gt;
-
-&lt;h2 id=&quot;slow-compilation&quot;&gt;Slow compilation&lt;/h2&gt;
-
-&lt;p&gt;The slowness of the Scala compiler, an issue &lt;a href=&quot;http://stackoverflow.com/questions/3490383/java-compile-speed-vs-scala-compile-speed/3612212#3612212&quot;&gt;acknowledged and thoroughly described&lt;/a&gt; by Martin Odersky, was a source of constant frustration. Coupled with a big monolith and a complex dependency tree with a complicated resolving mechanism - and after years of great engineers babysitting it - adding a property on a model class in one of our core modules would still mean a coffee break, or a &lt;a href=&quot;https://xkcd.com/303/&quot;&gt;sword fight&lt;/a&gt;. Most importantly, it became rare to have acceptable coding feedback loop times (i.e. delays in between code-test-refactor iterations).&lt;/p&gt;
-
-&lt;h2 id=&quot;slow-deployments&quot;&gt;Slow deployments&lt;/h2&gt;
-
-&lt;p&gt;Slow compile times and a big monolith meant really slow CI and, in turn, lengthy deploys. Luckily, the smart engineers on Movio Cinema’s Blue Squad were able to parallelize module tests on different nodes, bringing the overall CI times from more than an hour to as little as 20 minutes. This was a great success, but still an issue for agile deployments.&lt;/p&gt;
-
-&lt;h2 id=&quot;tooling&quot;&gt;Tooling&lt;/h2&gt;
-
-&lt;p&gt;IDE support was poor. &lt;a href=&quot;https://github.com/ensime&quot;&gt;Ensime’s&lt;/a&gt; troubles with multiple Scala version projects (different versions on different modules) made it impractical to support optimize imports, non-grep-based jump to definition, and the like. This meant that all open-source and community-driven IDEs (e.g. vim, Emacs, atom) would have less-than-ideal feature sets. The language seems too complex to make tooling for!&lt;/p&gt;
-
-&lt;p&gt;Even the more ambitious attempts at Scala integration struggled on multiple project builds, most notably Jetbrains’ &lt;a href=&quot;https://confluence.jetbrains.com/display/SCA/Scala+Plugin+for+IntelliJ+IDEA&quot;&gt;Intellij Scala Plugin&lt;/a&gt;, with jump-to-definition taking us to outdated JARs rather than the modified files. We’ve seen broken highlighting on code using advanced language features, too.&lt;/p&gt;
-
-&lt;p&gt;On the lighter side of things, we were able to identify exactly whether a programmer was using &lt;a href=&quot;https://en.wikipedia.org/wiki/IntelliJ_IDEA&quot;&gt;IDEA&lt;/a&gt; or &lt;a href=&quot;http://www.scala-sbt.org/&quot;&gt;sbt&lt;/a&gt; based purely on the loudness of their laptop fans. On a MacBook Pro, this is a real problem for anyone hoping to embark on an extended programming session away from a power outlet.&lt;/p&gt;
-
-&lt;h2 id=&quot;developments-in-the-global-scala-community-and-non-scala&quot;&gt;Developments in the global Scala community (and non-Scala)&lt;/h2&gt;
-
-&lt;p&gt;Criticism for object-oriented programming had been lingering in the office for some time, but it hadn’t reached mainstream status until someone shared &lt;a href=&quot;http://www.smashcompany.com/technology/object-oriented-programming-is-an-expensive-disaster-which-must-end&quot;&gt;this blog post&lt;/a&gt; by &lt;a href=&quot;https://twitter.com/krubner&quot;&gt;Lawrence Krubner&lt;/a&gt;. Since then, it has become easier to float the idea of alternative non-OOP languages. For example, at one stage there were several of us learning Haskell, among other experiments.&lt;/p&gt;
-
-&lt;p&gt;Though old news, the famous 2011 “Yammer moving away from Scala” &lt;a href=&quot;https://codahale.com/downloads/email-to-donald.txt&quot;&gt;email from Coda Hale to the Scala team&lt;/a&gt; started to make a lot of sense once our mindset shifted. Consider this quote:&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;“A lot of this [complexity] has been waved away as something only library authors really need to know about, but when an library’s API bubbles all of this up to the top (and since most of these features resolve specifics at the call site, they do), engineers need to have an accurate mental model of how these libraries work or they shift into cargo-culting snippets of code as magic talismans of functionality.”&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Since then, bigger players have followed, Twitter and &lt;a href=&quot;https://www.quora.com/Is-LinkedIn-getting-rid-of-Scala/answer/Kevin-Scott&quot;&gt;LinkedIn&lt;/a&gt; being notable examples.&lt;/p&gt;
-
-&lt;p&gt;The following is a quote from Raffi Krikorian on Twitter:&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;“What I would have done differently four years ago is use Java and not used Scala as part of this rewrite. […] it would take an engineer two months before they’re fully productive and writing Scala code.”&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/paulp&quot;&gt;Paul Phillips’&lt;/a&gt; departure from Scala’s core team, and &lt;a href=&quot;https://www.youtube.com/watch?v=TS1lpKBMkgg&quot;&gt;his long talk&lt;/a&gt; discussing it, painted a disturbing picture of the state of the language - one of stark contrast to the image we had.&lt;/p&gt;
-
-&lt;p&gt;For further disturbing literature, you can find the whole vanguard of the Scala community in &lt;a href=&quot;https://github.com/scala/slip/pull/28&quot;&gt;this JSON AST debate&lt;/a&gt;. Reading this as it developed left some of us feeling like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://imgs.xkcd.com/comics/duty_calls.png&quot; alt=&quot;XKCD&apos;s Someone is wrong on the Internet&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://xkcd.com/386/&quot;&gt;https://xkcd.com/386/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;the-need-for-an-alternative&quot;&gt;The need for an alternative&lt;/h2&gt;
-
-&lt;p&gt;Until ‘Go’ came into the spotlight, though, there seemed to be no real alternative to Scala for us; there was simply no plausible option raising the bar. Consider this quote from the popular Coursera blog post ‘&lt;a href=&quot;https://building.coursera.org/blog/2014/02/18/why-we-love-scala-at-coursera/&quot;&gt;Why we love Scala at Coursera&lt;/a&gt;’:&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;“I personally found compilation and reload times pretty acceptable (not as tight as PHP’s edit-test loop, but acceptable given the type-checking and other niceties we get with Scala).”&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;And this other one from the same blog post:&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;“Yes, scalac is slow. On the other hand, dynamic languages require you to incessantly re-run or test your code until you work out all the type errors, syntax errors and null dereferencing. I’d rather have a sip of coffee while scalac does all this work for me.”&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;why-go-made-sense&quot;&gt;Why ‘Go’ made sense&lt;/h2&gt;
-
-&lt;h3 id=&quot;its-simple-to-learn&quot;&gt;It’s simple to learn&lt;/h3&gt;
-
-&lt;p&gt;It took some of us six months including some &lt;a href=&quot;https://www.coursera.org/learn/progfun1&quot;&gt;after hours MOOCs&lt;/a&gt;, to be able to get relatively comfortable with Scala. In contrast, we picked up ‘Go’ in two weeks. In fact, the first time I got to code some Go was at a &lt;a href=&quot;http://movio.co/blog/tech-digest-global-day-of-coderetreat-2016/&quot;&gt;Code Retreat&lt;/a&gt; about 10 months ago. I was able to code a very basic &lt;a href=&quot;https://github.com/MarianoGappa/gomario&quot;&gt;Mario-like platform game&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;We’ve also feared that a lower-level language would force us to deal with an unnecessary layer of complexity that was hidden by high-level abstractions in Scala e.g. &lt;a href=&quot;http://docs.scala-lang.org/overviews/core/futures.html&quot;&gt;Futures&lt;/a&gt; hiding threads. Interestingly, what we’ve had to review were things like &lt;a href=&quot;https://en.wikipedia.org/wiki/Unix_signal&quot;&gt;signals&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/System_call&quot;&gt;syscalls&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/Mutual_exclusion&quot;&gt;mutexes&lt;/a&gt;, which is actually not such a bad thing for so-called full-stack developers!&lt;/p&gt;
-
-&lt;p&gt;For the first time ever, we actually read &lt;a href=&quot;https://golang.org/ref/spec&quot;&gt;the language spec&lt;/a&gt; when we’re unsure of how something works. That’s how simple it is; the spec is readable! For my average-sized brain, this actually means a lot. Part of my frustration with Scala (and Java) was the feeling that I was never able to get the full context on a given problem domain, due to its complexity. An approachable and complete guide to the language strengthens my confidence in making assumptions while following a piece of code, and in justifying my decision-making rationale.&lt;/p&gt;
-
-&lt;h3 id=&quot;simpler-code-is-more-readable-code&quot;&gt;Simpler code is more readable code&lt;/h3&gt;
-
-&lt;p&gt;No map, no flatMap, no fold, no generics, no inheritance… Do we miss them? Perhaps we did, for about two weeks.&lt;/p&gt;
-
-&lt;p&gt;It’s hard to explain why it’s preferable to obtain expressiveness without actually ‘Go’ing through the experience yourself - pun intended. However, Russ Cox, Golang’s Tech Lead, does a good job of it in the “Go Balance” section of &lt;a href=&quot;https://www.youtube.com/watch?v=XvZOdpd_9tc&amp;amp;t=3m25s&quot;&gt;his 2015 keynote&lt;/a&gt; at GopherCon.&lt;/p&gt;
-
-&lt;p&gt;As it turned out, more flexibility led to devs writing code that others actually struggled to understand. It would be tough to decide if one should feel ashamed for not being smart enough to grasp the logic, or annoyed at the unnecessary complexity. On the flip side, on a few occasions one would feel “special” for understanding and applying concepts that would be hard for others. Having this smartness disparity between devs is really bad for team dynamics, and complexity leads invariably to this.&lt;/p&gt;
-
-&lt;p&gt;In terms of code complexity, this wasn’t just the case for our Squad; some very smart people have taken it (and continue to take it) to the extreme. The funny part is that, because dependency hell is so ubiquitous in Scala-land (which includes Java-land), we ended up using some of the projects that we deemed too complex for our codebase (e.g scalaz) via transitive dependencies.&lt;/p&gt;
-
-&lt;p&gt;Consider these randomly selected examples from some of the Scala libraries we’ve been using (and continue to maintain):&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/syntax/StrongSyntax.scala&quot;&gt;Strong Syntax&lt;/a&gt;
-(What is this file’s purpose, without being a theoretical physicist?)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/spray/spray/blob/master/spray-http/src/main/scala/spray/http/ContentType.scala&quot;&gt;Content Type&lt;/a&gt;
-(broke Github’s linter)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/slick/slick/blob/master/slick/src/main/scala/slick/lifted/AbstractTable.scala&quot;&gt;Abstract Table&lt;/a&gt;
-(Would you explain foreignKey’s signature to me?)&lt;/p&gt;
-
-&lt;p&gt;While still on the Scala happiness train, we read &lt;a href=&quot;http://126kr.com/article/8sx2b2nrcc7&quot;&gt;this post&lt;/a&gt; with great curiosity (originally posted &lt;a href=&quot;http://jimplush.com/talk/2015/12/19/moving-a-team-from-scala-to-golang/&quot;&gt;here&lt;/a&gt;, but site is now down). I find myself wholeheartedly agreeing with it today.&lt;/p&gt;
-
-&lt;h3 id=&quot;channels-and-goroutines-have-made-our-job-so-much-easier&quot;&gt;Channels and goroutines have made our job so much easier&lt;/h3&gt;
-
-&lt;p&gt;It’s not just the fact that channels and goroutines are &lt;a href=&quot;https://dave.cheney.net/2015/08/08/performance-without-the-event-loop&quot;&gt;cheaper in terms of resources&lt;/a&gt;, compared to threadpool-based Futures and Promises, resources being memory and CPU. They are also easier to reason about when coding.&lt;/p&gt;
-
-&lt;p&gt;To clarify this point, I think that both languages and their different approaches can basically do the same job, and you can reach a point where you are equally comfortable working with either. Perhaps the fact that makes it simpler in ‘Go’ is that there’s usually one limited set of tools to work with, which you use repeatedly and get a chance to master. With Scala, there are way too many options that evolve too frequently (and get superseded) to become proficient with.&lt;/p&gt;
-
-&lt;h3 id=&quot;case-study&quot;&gt;Case study&lt;/h3&gt;
-
-&lt;p&gt;Recently, we’ve been struggling with an issue where we had to process some billing information.&lt;/p&gt;
-
-&lt;p&gt;The data came through a stream, and had to be persisted to a MariaDB database. As persisting directly was impractical due to the high rate of data consumption, we had to buffer and aggregate, and persist on buffer full or after a timeout.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/scala_to_go_stream.jpg&quot; alt=&quot;Stream diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;First, we made the mistake of making the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;persist&lt;/code&gt; function &lt;a href=&quot;https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html&quot;&gt;synchronized&lt;/a&gt;. This guaranteed that buffer-full-based invocations would not run concurrently with timeout-based invocations. However, because the stream digest and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;persist&lt;/code&gt; functions did run concurrently and manipulated the buffer, we had to further synchronize those functions to each other!&lt;/p&gt;
-
-&lt;p&gt;In the end, we resorted to the &lt;a href=&quot;http://doc.akka.io/docs/akka/current/general/actor-systems.html&quot;&gt;Actor system&lt;/a&gt; as we had Akka in the module’s dependencies anyway, and it did the job. We just had to ensure that adding to the buffer and clearing the buffer were messages processed by the same Actor, and would never run concurrently. This is just fine, but to get there we needed to; learn the Actor System, teach it to the newcomers, import those dependencies, have Akka properly configured in the code and in the configuration files, etc. Furthermore, the stream came from a Kafka Consumer, and in our wrapper we needed to provide a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;digest&lt;/code&gt; function for each consumed message that ran in a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Future&lt;/code&gt;. Circumventing the issue of mixing Futures and Actors required extra head scratching time.&lt;/p&gt;
-
-&lt;p&gt;Enter channels.&lt;/p&gt;
-
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kafkaMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;bufferSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Millisecond&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kafkaMsg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kafkaMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bufferSize&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Done; Kafka sends to a channel. Consuming the stream and persisting the buffer never run concurrently, and a timer is reset to timeout 100 milliseconds after no messages received.&lt;/p&gt;
-
-&lt;p&gt;Further reading; a few more illustrative channel examples:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/MarianoGappa/a50c4a8a302b8378c08c4b0d947f0a33&quot;&gt;Parallel processing with ordered output&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/MarianoGappa/00b8235deffab51271ea4177369cfe2e&quot;&gt;A simple strategy for server-side backpressure&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;it-compiles-fast-and-runs-fast&quot;&gt;It compiles fast and runs fast&lt;/h3&gt;
-
-&lt;p&gt;Go runs &lt;a href=&quot;http://benchmarksgame.alioth.debian.org/u64q/go.html&quot;&gt;very fast&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Our Go microservices currently:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Build in 5 seconds or less&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Test in 1 or 2 seconds (including integration tests)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Run in our CI infrastructure in less than half a minute (and we’re looking into it, because that’s unacceptable!), outputting a Docker container&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Deploy (via Kubernetes) new containers in 10 seconds or less (key factor here being small images)&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;A feedback loop of one second on our daily struggle with computers has made us more productive and happy.&lt;/p&gt;
-
-&lt;h3 id=&quot;microservice-panacea-from-dev-done-to-deployed-in-less-than-a-minute-on-cheap-boxes&quot;&gt;Microservice panacea: from dev-done to deployed in less than a minute on cheap boxes&lt;/h3&gt;
-
-&lt;p&gt;We’ve found that Go microservices are a great fit for distributed systems.&lt;/p&gt;
-
-&lt;p&gt;Consider how well it fits with the requirements:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Tiny-sized containers: our average Go docker container is 16.5MB, vs 220MB for Scala&lt;/li&gt;
-  &lt;li&gt;Low-memory footprint: mileage may vary; recently, we’ve had a major success when rewriting a crucial µs from Scala to Go and going from 4G to 300M for the worst-case scenario usage&lt;/li&gt;
-  &lt;li&gt;Fast starts and fast shutdowns: just a binary; no need to start a VM&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For us, the fatter Scala images not only meant more money spent on cloud bills, but crucially container orchestration delays. Re-scheduling a container on a different Kubernetes node requires pulling the image from a registry; the bigger the image, the more time it takes. Not to mention, pulling the latest image locally on our laptops!&lt;/p&gt;
-
-&lt;h3 id=&quot;last-but-not-least-tooling&quot;&gt;Last but not least: tooling&lt;/h3&gt;
-
-&lt;p&gt;In the Red Squad, we have a very diverse choice of IDEs:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/scala_to_go_editors.jpg&quot; alt=&quot;Editors&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Go plays really well with all of them! Tools are also steadily improving over time, and new tools are created often.&lt;/p&gt;
-
-&lt;p&gt;My personal favourite item in our little ‘Go’ rebellion: for the first time ever, we make our own tooling!&lt;/p&gt;
-
-&lt;p&gt;Here’s a selection of our open source projects we’re currently using at work:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/fgeller/kt&quot;&gt;kt&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Kafka tool for consuming, producing and getting info about Kafka topics; composes nicely with jq.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mkokho/kubemrr&quot;&gt;kubemrr&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Kubernetes Mirror; bash/zsh autocompletion for kubectl parameters (e.g. pod names).&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/sql&quot;&gt;sql&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;MySQL pipe; sends queries to one, many or all your MySQL instances, local or remote, or behind SSH tunnels, and outputs conveniently for further processing. Composes nicely with chart; another tool we’ve written for quick ad-hoc charting.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/MarianoGappa/flowbro&quot;&gt;flowbro&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Real-time and after-the-fact visualization for Kafka-based distributed systems.&lt;/p&gt;
-
-&lt;h2 id=&quot;so-go-all-the-things&quot;&gt;So… Go all the things?&lt;/h2&gt;
-
-&lt;p&gt;Not so fast. There’s much we’re not wise enough to comment on yet. Movio’s use cases are only a subset of a very long and diverse list of requirements.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Choose based on your use case. For example, if your main focus is around data science you might be better off with the Python stack&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Depending on the ecosystem that you come from, a library that you’re using might not exist or not be as mature as in Java. For example, the Kafka maintainers are providing client libraries in Java, and the Go versions will naturally lag behind the JVM versions&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Our microservices generally do one tiny specific thing; when we reach a certain level of complexity we usually spawn new microservices. Complex logic might be cumbersome to express with the simple tools that Go provides. So far, this has not been a problem for us&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Golang is certainly a good fit for our squad! See how it “Goes” for you :P&lt;/p&gt;
-</description>
-        <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
-        <link>https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
       </item>
     
   </channel>
