@@ -317,6 +317,8 @@ em img { max-width: 100%; margin-left: 0; }
 
 body { box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
 
+strong { font-weight: 600; }
+
 a { color: #0076df; }
 
 a:hover, a:focus, a:active { border: 0; color: #005bac; text-decoration: none; }
