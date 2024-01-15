@@ -12,13 +12,13 @@
 
 &lt;p&gt;Two years ago, I delved into the cryptocurrency scene as an investor and encountered a frustrating lack of reliable investment advice. I detailed this issue in &lt;a href=&quot;https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/&quot;&gt;this blogpost&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Last year, I worked on a Go-based project aiming to automate the tracking of cryptocurrency predictions on social networks, as discussed in &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/07/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. While the system was mostly automated, a manual step of inputting predictions remained.&lt;/p&gt;
+&lt;p&gt;Last year, I worked on a Go-based project aiming to automate the tracking of cryptocurrency predictions on social networks, as discussed in &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. While the system was mostly automated, a manual step of inputting predictions remained.&lt;/p&gt;
 
 &lt;p&gt;Recently, the emergence of LLMs based on generative AI provided an opportunity to fully automate it. This blog post outlines the implementation of this automation.&lt;/p&gt;
 
 &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 
-&lt;p&gt;For a detailed understanding of the system, please refer to &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/07/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. Here’s a simplified explanation:&lt;/p&gt;
+&lt;p&gt;For a detailed understanding of the system, please refer to &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. Here’s a simplified explanation:&lt;/p&gt;
 
 &lt;p&gt;A prediction on a social network, like the example below, typically includes a date, an owner, and mostly uneditable content:&lt;/p&gt;
 
