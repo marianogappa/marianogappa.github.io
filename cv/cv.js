@@ -168,7 +168,10 @@ const cv = {
       "started": "2021-01",
       "ended": "Present",
       "bullets": [
-        "Implemented significant (up to 25x) performance improvements on critical features on their largest client that were timing out."
+        "Implemented significant (up to 25x) performance improvements on Pandas-based critical ETL features on their largest client that were timing out.",
+        "Migrated Django-based large-scale SaaS offering without downtime, involving multi-team and multi-vertical effort.",
+        "Transitioned from a fortnightly-release monolith exposing GraphQL endpoints to a CircleCI CI/CD SoA architecture exposing FastAPI-based REST endpoints without downtime.",
+        "Designed key real-time financial alert evaluation system based on SQLAlchemy-managed Postgres backend that allowed previously unfeasible live tinkering with alert rule creation."
       ],
       "stack": [
         { "id": 1, "text": "Python", "color": "red", "image": "images/python.svg" },
@@ -183,15 +186,17 @@ const cv = {
       "country": "images/uk.svg",
       "company_link": "https://fatllama.com",
       "started": "2019-01",
-      "ended": "2020-01",
+      "ended": "2021-01",
       "bullets": [
         "Senior engineer taking the startup from Series A to Series B.",
-        "Designed and implemented core business processes e.g. inventory, seller payouts, logistics integration, stateful microservices, optimised CI pipelines, partnerships integrations, payment platform test modes."
+        "Designed and implemented core business processes e.g. inventory, seller payouts, logistics integration, partnerships integrations, payment platform test modes.",
+        "Implemented stateful microservices feature and optimised CI pipelines."
       ],
       "stack": [
         { "id": 1, "text": "Typescript", "color": "red", "image": "images/typescript.png" },
         { "id": 2, "text": "Go", "color": "red", "image": "images/gopher.svg" },
         { "id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
+        { "id": 4, "text": "Python", "color": "red", "image": "images/python.svg" },
       ]
     },
     {
@@ -207,6 +212,7 @@ const cv = {
         { "id": 1, "text": "Spark", "color": "red", "image": "images/spark.png" },
         { "id": 2, "text": "Scala", "color": "red", "image": "images/scala.svg" },
         { "id": 3, "text": "AWS", "color": "yellow", "image": "images/aws.svg" },
+        { "id": 4, "text": "Python", "color": "red", "image": "images/python.svg" },
       ]
     },
     {
@@ -233,6 +239,7 @@ const cv = {
         { "id": 6, "text": "Kubernetes", "color": "blue", "image": "images/kubernetes.svg" },
         { "id": 7, "text": "Kafka", "color": "blue", "image": "images/kafka.svg" },
         { "id": 8, "text": "Cassandra", "color": "blue", "image": "images/cassandra.svg" },
+        { "id": 9, "text": "Python", "color": "red", "image": "images/python.svg" },
       ],
       "special": true
     },
