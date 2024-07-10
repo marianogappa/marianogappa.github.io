@@ -7,87 +7,16 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>How I fully automated my prediction tracking system using Generative AI</title>
-        <description>&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+        <title>A Joyful Tale of Golang Memory Profiling at CloudQuery</title>
+        <description>&lt;p&gt;Please find my original blogpost on the Cloudquery blog:&lt;/p&gt;
 
-&lt;p&gt;Two years ago, I delved into the cryptocurrency scene as an investor and encountered a frustrating lack of reliable investment advice. I detailed this issue in &lt;a href=&quot;https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/&quot;&gt;this blogpost&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery&quot;&gt;https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Last year, I worked on a Go-based project aiming to automate the tracking of cryptocurrency predictions on social networks, as discussed in &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. While the system was mostly automated, a manual step of inputting predictions remained.&lt;/p&gt;
-
-&lt;p&gt;Recently, the emergence of LLMs based on generative AI provided an opportunity to fully automate it. This blog post outlines the implementation of this automation.&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-
-&lt;p&gt;For a detailed understanding of the system, please refer to &lt;a href=&quot;https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/&quot;&gt;this blogpost&lt;/a&gt;. Here’s a simplified explanation:&lt;/p&gt;
-
-&lt;p&gt;A prediction on a social network, like the example below, typically includes a date, an owner, and mostly uneditable content:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto_social_post.png&quot; alt=&quot;Social Network Posts&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;At a high level, automating prediction tracking involves three main steps:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/crypto-predictions-system-diagram.png&quot; alt=&quot;Crypto Predictions System Diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;How can we automate the manual step of inputing predictions?&lt;/p&gt;
-
-&lt;h2 id=&quot;automating-input&quot;&gt;Automating input&lt;/h2&gt;
-
-&lt;p&gt;Automating the input part comprises three distinct parts:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Finding predictions&lt;/li&gt;
-  &lt;li&gt;Transforming prediction content into a structured form&lt;/li&gt;
-  &lt;li&gt;Inputting the structured prediction into the system&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;finding-predictions&quot;&gt;Finding predictions&lt;/h2&gt;
-
-&lt;p&gt;The manual process involves compiling a clever list of search terms on Twitter, running each one, analyzing resulting tweets, and inputting trackable predictions. Can this analysis be automated using, for instance, ChatGPT?&lt;/p&gt;
-
-&lt;p&gt;Examining &lt;a href=&quot;https://twitter.com/LoboRonin7/status/1746680040203452855&quot;&gt;this example tweet&lt;/a&gt;:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-example-tweet.png&quot; alt=&quot;Example Tweet&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A well-iterated prompt seems effective:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-prompt-1.png&quot; alt=&quot;Prompt 1&quot; /&gt;
-&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-prompt-2.png&quot; alt=&quot;Prompt 2&quot; /&gt;
-&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-prompt-3.png&quot; alt=&quot;Prompt 3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Ok, that works!&lt;/p&gt;
-
-&lt;p&gt;If we can do it for one tweet, we can certainly repeat it for a million of them. The only thing we need is a script that:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Keeps sniffing Tweets on the Internet&lt;/li&gt;
-  &lt;li&gt;Dedupes&lt;/li&gt;
-  &lt;li&gt;Feeds each unique tweet to this prompt on ChatGPT4’s API&lt;/li&gt;
-  &lt;li&gt;Sends the candidates to step 2 (transforming into structured prediction)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The only issue is that &lt;a href=&quot;https://developer.twitter.com/en/docs/twitter-api/getting-started/about-twitter-api&quot;&gt;Elon started charging $100/month&lt;/a&gt; to use their read API. The only solution I’ve found is to get a Twitter login, and then build a puppeteer script that logs in, runs the searches and extracts the tweets. Sorry, Elon, but this is unreasonable for a PoC; I’m not gonna DDoS your platform.&lt;/p&gt;
-
-&lt;h2 id=&quot;transforming-tweets-into-structured-predictions&quot;&gt;Transforming tweets into structured predictions&lt;/h2&gt;
-
-&lt;p&gt;Before LLMs, automating this step was impossible. The prompt for transforming tweets looks promising. Let’s try it on an example:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-prompt-4.png&quot; alt=&quot;Prompt 4&quot; /&gt;
-&lt;img src=&quot;https://marianogappa.github.io/images/automating-predictions-prompt-5.png&quot; alt=&quot;Prompt 5&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Perfect!&lt;/p&gt;
-
-&lt;h2 id=&quot;inputting-predictions-into-the-system&quot;&gt;Inputting predictions into the system&lt;/h2&gt;
-
-&lt;p&gt;This step should be trivial, since &lt;a href=&quot;https://github.com/marianogappa/crypto-predictions/blob/main/api/api.go&quot;&gt;I separated the API from the BackOffice&lt;/a&gt; anticipating other integration use cases.&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-
-&lt;p&gt;The practical applications of Generative AI have surpassed my initial expectations, opening doors to use cases I once deemed impossible. While I may not proclaim absolute trust in the system’s full automation capabilities at this point, it has reached a stage where I can comfortably perform a daily one-minute check, allowing me to efficiently review automated predictions.&lt;/p&gt;
-
-&lt;p&gt;The success of this project has ignited a sense of enthusiasm within me. I feel like integrating LLMs into all my future projects.&lt;/p&gt;
+&lt;p&gt;I’m afraid the content would be flagged as duplicate and be demoted by the algorithm, so I won’t repost it here at least for now. Sorry!&lt;/p&gt;
 </description>
-        <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
-        <link>https://marianogappa.github.io/software/2024/01/15/automate-predictions-with-generative-ai/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2024/01/15/automate-predictions-with-generative-ai/</guid>
+        <pubDate>Wed, 10 Jul 2024 00:00:00 +0100</pubDate>
+        <link>https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/</guid>
       </item>
     
       <item>
