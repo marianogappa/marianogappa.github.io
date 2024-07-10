@@ -162,11 +162,27 @@ const cv = {
     {
       "type": "work_experience",
       "role": "Software Engineer",
+      "company": "Cloudquery",
+      "country": "images/uk.svg",
+      "company_link": "https://www.cloudquery.io/",
+      "started": "2024-05",
+      "ended": "Present",
+      "bullets": [
+        "First memory profiling of main product, leading to <a href='https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery'>84% memory usage reduction</a>.",
+        "Implemented <a href='https://github.com/cloudquery/plugin-sdk-python/pull/198'>incremental sync feature</a>, enabling order of magnitude reduction in sync times.",
+      ],
+      "stack": [
+        { "id": 1, "text": "Go", "color": "red", "image": "images/gopher.svg" },
+      ]
+    },
+    {
+      "type": "work_experience",
+      "role": "Software Engineer",
       "company": "Oaknorth",
       "country": "images/uk.svg",
       "company_link": "https://www.oaknorth.co.uk/",
       "started": "2021-01",
-      "ended": "Present",
+      "ended": "2024-05",
       "bullets": [
         "Implemented significant (up to 25x) performance improvements on Pandas-based critical ETL features on their largest client that were timing out.",
         "Migrated Django-based large-scale SaaS offering without downtime, involving multi-team and multi-vertical effort.",
