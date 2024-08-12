@@ -60,6 +60,22 @@ const cv = {
       "special": true
     },
     {
+      "name": "Truco",
+      "short": "card game engine & UI",
+      "github": "https://github.com/marianogappa/truco",
+      "blogpost": "",
+      "bullets": [
+        "Game engine is transpiled to WebAssembly and runs in the browser (<a href='https://marianogappa.github.io/truco-argentino/'>Play here</a>)",
+        "Includes bot interface, React-based UI, terminal-based UI, multi-human player support",
+      ],
+      "stack": [
+        { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
+        { "id": 2, "text": "React", "color": "light_blue", "image": "images/react.png" },
+        { "id": 3, "text": "WebAssembly", "color": "purple", "image": "images/webassembly.png" }
+      ],
+      "special": false,
+    },
+    {
       "name": "Signal Checker",
       "short": "crypto signal fact-checking",
       "github": "https://github.com/marianogappa/signal-checker",
@@ -70,7 +86,8 @@ const cv = {
       "stack": [
         { "id": 1, "text": "Go", "color": "light_blue", "image": "images/gopher.svg" },
       ],
-      "special": false
+      "special": false,
+      "hidable": true
     },
     {
       "name": "chart",
@@ -170,6 +187,7 @@ const cv = {
       "bullets": [
         "First memory profiling of main product, leading to <a href='https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery'>84% memory usage reduction</a>.",
         "Implemented <a href='https://github.com/cloudquery/plugin-sdk-python/pull/198'>incremental sync feature</a>, enabling order of magnitude reduction in sync times.",
+        "Implemented the main product's transformation plugin system (<a href='https://github.com/cloudquery/cloudquery/pull/18669'>PR</a> & <a href='https://www.cloudquery.io/blog/introducing-transformer-plugins'>blogpost</a>).",
       ],
       "stack": [
         { "id": 1, "text": "Go", "color": "red", "image": "images/gopher.svg" },
