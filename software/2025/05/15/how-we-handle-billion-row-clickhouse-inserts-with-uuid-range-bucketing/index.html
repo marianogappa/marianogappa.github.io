@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>A Joyful Tale of Golang Memory Profiling at CloudQuery &#8211; Mariano Gappa's Blog</title>
+  <title>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing &#8211; Mariano Gappa's Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
-    content="A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product.">
+    content="How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter.">
   <meta name="author" content="Mariano Gappa">
   
   <meta name="keywords" content="software">
-  <link rel="canonical" href="https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/">
+  <link rel="canonical" href="https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/">
   <link rel="alternate" type="application/rss+xml" title="RSS Feed for Mariano Gappa's Blog" href=" /feed.xml" />
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href=" /css/pixyll.css?202408122018"
+  <link rel="stylesheet" href=" /css/pixyll.css?202505152142"
     type="text/css">
 
   <!-- Fonts -->
@@ -34,13 +34,13 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="article">
   <meta property="og:title"
-    content="A Joyful Tale of Golang Memory Profiling at CloudQuery">
+    content="How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing">
   <meta property="og:description"
     content="Blog about Software Engineering and Music Production.">
-  <meta property="og:url" content="https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/">
+  <meta property="og:url" content="https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/">
   <meta property="og:site_name" content="Mariano Gappa&apos;s Blog">
   
-  <meta property="og:image" content="https://marianogappa.github.io/images/gopher_memory_profiling.jpeg" />
+  <meta property="og:image" content="https://marianogappa.github.io/images/gopher-clickhouse.png" />
   
 
   <!-- Twitter Card -->
@@ -48,10 +48,10 @@
   
   <meta name="twitter:site" content="@MarianoGappa" />
   
-  <meta name="twitter:title" content="A Joyful Tale of Golang Memory Profiling at CloudQuery" />
+  <meta name="twitter:title" content="How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing" />
   <meta name="twitter:description"
-    content="A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product." />
-  <meta name="twitter:url" content="https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/" />
+    content="How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter." />
+  <meta name="twitter:url" content="https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/" />
 
   <!-- Icons -->
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -140,11 +140,11 @@
 
 
 <div class="post-header mb2">
-  <h1>A Joyful Tale of Golang Memory Profiling at CloudQuery</h1>
+  <h1>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</h1>
   
-  <div><img src="https://marianogappa.github.io/images/gopher_memory_profiling.jpeg" /></div><br>
+  <div><img src="https://marianogappa.github.io/images/gopher-clickhouse.png" /></div><br>
   
-  <span class="post-meta">Jul 10, 2024</span><br>
+  <span class="post-meta">May 15, 2025</span><br>
   
   <span class="post-meta small">
     
@@ -154,9 +154,9 @@
 </div>
 
 <article class="post-content">
-  <p>Please find my original blogpost on the Cloudquery blog:</p>
+  <p>Please find my original blogpost on the CloudQuery blog:</p>
 
-<p><a href="https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery">https://www.cloudquery.io/blog/a-very-happy-golang-memory-profiling-story-at-cloudquery</a></p>
+<p><a href="https://www.cloudquery.io/blog/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing">https://www.cloudquery.io/blog/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing</a></p>
 
 <p>I’m afraid the content would be flagged as duplicate and be demoted by the algorithm, so I won’t repost it here at least for now. Sorry!</p>
 
@@ -170,7 +170,7 @@
     
 
     
-      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=A Joyful Tale of Golang Memory Profiling at CloudQuery&url=https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
+      <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?text=How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing&url=https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/" rel="nofollow" target="_blank" title="Share on Twitter"></a>
     
 
     
@@ -182,13 +182,13 @@
     
 
     
-      <a class="fa fa-reddit" href="http://reddit.com/submit?url=https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/&title=A Joyful Tale of Golang Memory Profiling at CloudQuery" rel="nofollow" target="_blank" title="Share on Reddit"></a>
+      <a class="fa fa-reddit" href="http://reddit.com/submit?url=https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/&title=How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing" rel="nofollow" target="_blank" title="Share on Reddit"></a>
     
 
     
 
     
-      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/&t=A Joyful Tale of Golang Memory Profiling at CloudQuery" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
+      <a class = "fa fa-hacker-news" onclick="parent.postMessage('submit','*')" href="https://news.ycombinator.com/submitlink?u=https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/&t=How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing" rel="nofollow" target="_blank" title="Share on Hacker News"></a>
     
 
 

@@ -7,6 +7,19 @@
     <atom:link href="https://marianogappa.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</title>
+        <description>&lt;p&gt;Please find my original blogpost on the CloudQuery blog:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cloudquery.io/blog/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing&quot;&gt;https://www.cloudquery.io/blog/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I’m afraid the content would be flagged as duplicate and be demoted by the algorithm, so I won’t repost it here at least for now. Sorry!&lt;/p&gt;
+</description>
+        <pubDate>Thu, 15 May 2025 00:00:00 +0400</pubDate>
+        <link>https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</guid>
+      </item>
+    
+      <item>
         <title>A Joyful Tale of Golang Memory Profiling at CloudQuery</title>
         <description>&lt;p&gt;Please find my original blogpost on the Cloudquery blog:&lt;/p&gt;
 
@@ -14,9 +27,9 @@
 
 &lt;p&gt;I’m afraid the content would be flagged as duplicate and be demoted by the algorithm, so I won’t repost it here at least for now. Sorry!&lt;/p&gt;
 </description>
-        <pubDate>Wed, 10 Jul 2024 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query/</guid>
+        <pubDate>Wed, 10 Jul 2024 00:00:00 +0400</pubDate>
+        <link>https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query-copy/</link>
+        <guid isPermaLink="true">https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloud-query-copy/</guid>
       </item>
     
       <item>
@@ -112,7 +125,7 @@
 
 &lt;p&gt;Where do you draw the line?&lt;/p&gt;
 </description>
-        <pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate>
+        <pubDate>Thu, 28 Dec 2023 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/ethics/2023/12/28/on-being-parasitical/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/ethics/2023/12/28/on-being-parasitical/</guid>
       </item>
@@ -340,7 +353,7 @@
 
 &lt;p&gt;If I had to guess, I’d say the pioneering applications will more likely come from the private sector or from clandestinity. But I don’t know when, or what the form will be. I’m sure it’s coming, though. Soon.&lt;/p&gt;
 </description>
-        <pubDate>Fri, 28 Jul 2023 00:00:00 +0100</pubDate>
+        <pubDate>Fri, 28 Jul 2023 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</guid>
       </item>
@@ -619,7 +632,7 @@
 
 &lt;p&gt;Thanks for reading, and I hope you can benefit from the tools and services I created. Good luck!&lt;/p&gt;
 </description>
-        <pubDate>Sat, 17 Jun 2023 00:00:00 +0100</pubDate>
+        <pubDate>Sat, 17 Jun 2023 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</guid>
       </item>
@@ -948,7 +961,7 @@
 
 &lt;p&gt;Good luck!&lt;/p&gt;
 </description>
-        <pubDate>Thu, 25 Aug 2022 00:00:00 +0100</pubDate>
+        <pubDate>Thu, 25 Aug 2022 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</guid>
       </item>
@@ -1342,7 +1355,7 @@
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/KISS_principle&quot;&gt;K.I.S.S.&lt;/a&gt;!&lt;/p&gt;
 </description>
-        <pubDate>Wed, 27 Jul 2022 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 27 Jul 2022 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</guid>
       </item>
@@ -1781,7 +1794,7 @@ Ok, I don’t know. But if you get this, the workaround is to add the &lt;code c
 Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly&lt;/a&gt; for pointing me in the right direction while getting started with WebAssembly.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 01 Apr 2020 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 01 Apr 2020 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
       </item>
@@ -1830,7 +1843,7 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;p&gt;Despite the many lost weekends and the long nights figuring out obscure technical issues, this has been a unique and exciting 5-year experience, and I’m very proud of sharing the unlikely story of how an American aerospace engineer in his 80s and an Argentine software engineer in his 30s with a common passion found each other on the Internet and published a chess book together; a story worth sharing.&lt;/p&gt;
 </description>
-        <pubDate>Fri, 03 Jan 2020 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 03 Jan 2020 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2020/01/03/chess-story/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2020/01/03/chess-story/</guid>
       </item>
@@ -2110,254 +2123,9 @@ Also, thanks to &lt;a href=&quot;https://twitter.com/_myitcv&quot;&gt;Paul Jolly
 
 &lt;p&gt;I hope this can be that tutorial for you. &lt;a href=&quot;https://en.wikipedia.org/wiki/KISS_principle&quot;&gt;KISS!&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Wed, 05 Jun 2019 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 05 Jun 2019 00:00:00 +0400</pubDate>
         <link>https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</link>
         <guid isPermaLink="true">https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid>
-      </item>
-    
-      <item>
-        <title>We saved $50k/y with a tiny Go microservice coded in a Hackathon</title>
-        <description>&lt;p&gt;NOTE: my original blogpost was published &lt;a href=&quot;https://movio.co/en/blog/saving-money-with-Hackathon-project/&quot;&gt;in the Movio blog&lt;/a&gt;. I’ve had to steal it because it went offline for a while, the link sometimes 404s, and they’ve broken some links. I don’t want it to be lost. The following content is unchanged from the original.&lt;/p&gt;
-
-&lt;p&gt;In the past few weeks we’ve rolled out a Go microservice called “KIB” to production, which reduced a huge portion of the infrastructure necessary for &lt;a href=&quot;https://movio.co/en/movio-cinema/&quot;&gt;Movio Cinema&lt;/a&gt;’s core tools: Group Builder and Campaign Execution. In doing this, we saved considerable AWS bills, after-hours and office-hours support bills, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.&lt;/p&gt;
-
-&lt;p&gt;Despite the fact that the domain-specific components of this post don’t apply to every dev team, the success of applying the &lt;a href=&quot;https://go-proverbs.github.io/&quot;&gt;guiding principles&lt;/a&gt; of simplicity and pragmatism driving our decision-making process felt like a story worth sharing.&lt;/p&gt;
-
-&lt;h2 id=&quot;group-builder&quot;&gt;Group Builder&lt;/h2&gt;
-
-&lt;p&gt;Movio Cinema’s core functionality is to send targeted marketing campaigns to a cinema chain’s loyalty members. If you’re a member of a big cinema chain’s loyalty program, wherever you are in the world, chances are the emails you’re getting from it come from us.&lt;/p&gt;
-
-&lt;p&gt;Group Builder facilitates the segmentation of loyalty members by the construction of groups of filters of varying complexity over the cinema’s loyalty member base.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/kib_group_builder.png&quot; alt=&quot;Group Builder screenshot&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://movio.co/en/blog/category/case-studies/&quot;&gt;Marketing teams around the world&lt;/a&gt; build the perfect audiences for their marketing campaigns using this tool.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-group-builder-algorithm&quot;&gt;The Group Builder algorithm&lt;/h2&gt;
-
-&lt;p&gt;By using this algorithm, an arbitrarily complex set of filters can be solved with a single SQL query. Note that it’s domain-agnostic; you can use this strategy for filtering any set of elements.&lt;/p&gt;
-
-&lt;h3 id=&quot;constraints&quot;&gt;Constraints&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;A Group Builder group can have any number of filters.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Filters can be grouped together in an arbitrary number of sub-groups.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Strictly for UI/UX reasons, sub-groups can be nested only once (i.e. up to sub-sub-groups).&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Filters and groups operate against each other using &lt;a href=&quot;https://en.wikipedia.org/wiki/Algebra_of_sets&quot;&gt;Algebra of Sets&lt;/a&gt;.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Each filter can either include or exclude set elements, set elements being loyalty members. The UI shows filters as green when they include members, and red when it excludes members.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Here’s the SQL strategy&lt;/p&gt;
-
-&lt;p&gt;This would be the final query for the Group Builder UI image above; note that the 3 filter subqueries represent the 3 filters shown in the image:&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loyaltyMemberID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;CASE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHEN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;THEN&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ELSE&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;CASE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHEN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;THEN&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ELSE&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;CASE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHEN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;THEN&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ELSE&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f3&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                       &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loyaltyMemberID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;…&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Gender&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;UNION&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ALL&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                       &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loyaltyMemberID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;…&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;UNION&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ALL&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                       &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loyaltyMemberID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;…&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Censor&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;GROUP&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loyaltyMemberID&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;HAVING&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;means&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;“&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Include&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;”&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;means&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;“&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;”&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;OR&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;f3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Parens&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;equate&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subgroups&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UI&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Each sub-query in the UNION section selects the set of loyalty members after applying each filter in the group. The result set of the UNION (before the GROUP BY) will have one row per member per filter. The GROUP BY together with the AGGREGATE FUNCTIONs in the main SELECT section provide a very simple way to replicate the set algebra specified in the Group Builder UI, which you can see cleanly separated in the HAVING section.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-limits-of-mysql&quot;&gt;The limits of MySQL&lt;/h2&gt;
-
-&lt;p&gt;The Group Builder algorithm worked really well in the beginning, but after some customers reached more than 5 million members (and 100 million sales transactions) the queries simply became way too slow to be able to provide timely feedback.&lt;/p&gt;
-
-&lt;p&gt;We needed an option that was fast but didn’t require re-architecting our whole product. That option was &lt;a href=&quot;https://en.wikipedia.org/wiki/InfiniDB&quot;&gt;InfiniDB&lt;/a&gt;. This was 2014.&lt;/p&gt;
-
-&lt;h2 id=&quot;infinidb-a-magic-drop-in-replacement&quot;&gt;InfiniDB: a magic drop-in replacement&lt;/h2&gt;
-
-&lt;p&gt;InfiniDB was a MySQL almost-drop-in replacement that stored data in &lt;a href=&quot;https://en.wikipedia.org/wiki/Column-oriented_DBMS&quot;&gt;columnar format&lt;/a&gt;. As such, and given our queries were rarely involving many fields, our InfiniDB implementation was a big success. We didn’t stop using MySQL; instead we replicated data to InfiniDB in near real-time.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/kib_infinidb_diagram.png&quot; alt=&quot;InfiniDB diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Super-slow groups were fast again! We rolled out our InfiniDB implementation to all big customers and saved the day.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-cons-of-our-implementation-of-infinidb&quot;&gt;The cons of our implementation of InfiniDB&lt;/h2&gt;
-
-&lt;p&gt;Despite the success of our solution, it wasn’t without significant costs:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;The InfiniDB instances &lt;a href=&quot;https://github.com/infinidb/infinidb/issues/21&quot;&gt;required a lot of memory and CPU&lt;/a&gt; to function properly, so we had to put them on &lt;a href=&quot;https://aws.amazon.com/ec2/instance-types/i3/&quot;&gt;i3.2xlarge&lt;/a&gt; EC2 instances. This was &lt;a href=&quot;https://www.ec2instances.info/?cost_duration=annually&amp;amp;selected=i3.2xlarge&quot;&gt;very expensive&lt;/a&gt; (~$7k per annum), considering we didn’t charge extra for InfiniDB-powered Movio Cinema consoles.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;InfiniDB didn’t have a master-slave scheme for replication (except for &lt;a href=&quot;https://dba.stackexchange.com/questions/174133/infinidb-replication-and-failover&quot;&gt;this&lt;/a&gt;), so we had to build our own custom one. Unfortunately, table name-swapping sometimes got some tables corrupted and we had to re-bootstrap the whole schema to come back up online, a process that could take several hours.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;We had a &lt;a href=&quot;https://github.com/infinidb/infinidb/issues/3&quot;&gt;recurring bug&lt;/a&gt; where some complex count queries would just return 0 results on InfiniDB, but the same query on MySQL wouldn’t. It was never resolved.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Even though InfiniDB was much faster than MySQL, we still saw some slow running groups for every big customer every week throughout 2017.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;The company behind InfiniDB sadly &lt;a href=&quot;http://infinidb.co/forum/important-announcement-infinidb&quot;&gt;had to shutdown&lt;/a&gt; and was eventually &lt;a href=&quot;https://mariadb.com/about-us/newsroom/press-releases/open-source-leader-mariadb-rockets-analytics-market&quot;&gt;incorporated into MariaDB&lt;/a&gt; (now &lt;a href=&quot;https://mariadb.com/products/technology/columnstore&quot;&gt;MariaDB ColumnStore&lt;/a&gt;); this meant no updates nor bugfixes.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;InfiniDB had no substantial community, so it was really hard to troubleshoot any issues. There were only &lt;a href=&quot;https://stackoverflow.com/search?q=infinidb&quot;&gt;120 questions&lt;/a&gt; on StackOverflow at the time of this writing.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;research-time&quot;&gt;Research time&lt;/h2&gt;
-
-&lt;p&gt;During the winter of 2017 we had an upcoming &lt;a href=&quot;https://movio.co/en/blog/Hackathon-August-2017/&quot;&gt;Hackathon&lt;/a&gt;, so three of us decided to do a little research on how to create an alternative solution for Group Builder.&lt;/p&gt;
-
-&lt;p&gt;We found that, even in slow-running groups, most of the filters were relatively simple and fast queries, and retrieving the resulting set of members was incredibly fast as well (~one million per second). The slowness was mostly in the final aggregation step, which could produce billions of intermediate rows on groups with many filters.&lt;/p&gt;
-
-&lt;p&gt;However, a few filters were slow no matter what. Even on fully indexed query execution plans they still had to scan over half a billion rows.&lt;/p&gt;
-
-&lt;p&gt;How could we circumvent these two issues with a simple solution achievable in a day?&lt;/p&gt;
-
-&lt;h2 id=&quot;hackathon-idea-the-kib-project&quot;&gt;Hackathon idea: the KIB project&lt;/h2&gt;
-
-&lt;p&gt;Our solution was:&lt;/p&gt;
-
-&lt;p&gt;1) Reviewing all slow filters for quick wins (e.g. adding/changing indexes, reworking queries)&lt;/p&gt;
-
-&lt;p&gt;2) Running every filter as a separate query against MySQL concurrently, and doing the aggregation programmatically using sparse bitsets&lt;/p&gt;
-
-&lt;p&gt;3) Caching filter results for a number of minutes to minimise the time recalculating long-running queries, given the repetitive usage pattern shown by our customers&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/kib_kib_diagram.png&quot; alt=&quot;KIB diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;After the Hackathon, we quickly added two planned features that covered outstanding problematic cases:&lt;/p&gt;
-
-&lt;p&gt;1) Refreshing caches automatically, to make most frequently used filters and slow-running ones very quick at all times.&lt;/p&gt;
-
-&lt;p&gt;2) Pre-caching on startup based on usage history.&lt;/p&gt;
-
-&lt;p&gt;We packed these features into a tiny Go microservice called KIB and shipped it onto a c4.xlarge EC2 instance (&amp;lt;$3k per annum). While before we had one InfiniDB instance on a i3.2xlarge for each customer, in this case we put all customers on the same single c4.xlarge instance.&lt;/p&gt;
-
-&lt;p&gt;We did add a second instance for fault tolerance, and it was a fortunate decision, because that very week our EC2 instance died. Thanks to our &lt;a href=&quot;https://movio.co/en/blog/6-months-kubernetes-production/&quot;&gt;Kubernetes cluster implementation&lt;/a&gt;, the KIB instance quickly restarted on the second healthy node and no customers were impacted. In contrast, when our InfiniDB nodes died, re-bootstrapping would sometimes take hours. Note, however, that this was not an intrinsic problem of InfiniDB itself, but of our custom replication implementation of it.&lt;/p&gt;
-
-&lt;h2 id=&quot;why-go&quot;&gt;Why Go?&lt;/h2&gt;
-
-&lt;p&gt;The long answer to that question is described in &lt;a href=&quot;https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/&quot;&gt;this blogpost&lt;/a&gt;. In short, we’ve been coding in Go for about a year, and it has noticeably reduced our estimations and workload, made our code much simpler, which in turn has indirectly improved our software quality, and in general has made our work more rewarding.&lt;/p&gt;
-
-&lt;p&gt;Here are the key bits of the KIB Go code with only a few details elided:&lt;/p&gt;
-
-&lt;p&gt;An endpoint request represents a Group Builder group to be run, and the group is represented as a tree of SQL queries. It looks somewhat like this:&lt;/p&gt;
-
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;N&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SQLNode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;node&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SQLNode&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;SQL&lt;/span&gt;        &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;sql&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Operator&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;operator&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Nodes&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SQLNode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;nodes&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This is the function that takes the request and resolves every SQL in the tree to a bitset:&lt;/p&gt;
-
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toBitsets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitsetWr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bitsetWr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;treeRoot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// runs all SQL concurrently&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// waits for all goroutines to finish&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This is the inner function that deals with the tree structure; running “solve” on every node:&lt;/p&gt;
-
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SQLNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// if leaf&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Operator&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SQL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// runs SQL; fills bitset&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// if group&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nodes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;And this is the inner function that runs the SQL (or loads from cache) concurrently:&lt;/p&gt;
-
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// returns immediately&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cacheMaybe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// runs SQL or uses cache&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;There are about 50 more lines for solving the algebra and 25 more for the basic caching, but these three snippets are a representative example of what the KIB code looks like.&lt;/p&gt;
-
-&lt;p&gt;The snippets show some intermediate concepts: tree traversal, green threads, bitset operations and caching. While not that uncommon, what I’ve rarely seen in practice is an implementation of all these things solving a real business problem within a day’s work. We don’t think we would have been able to pull this off in any other language. I’ll explain why we think so in the conclusion.&lt;/p&gt;
-
-&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
-
-&lt;p&gt;The results of our project were extremely gratifying.&lt;/p&gt;
-
-&lt;p&gt;In financial terms, we saved $31.000 yearly in AWS bills and $4.000 yearly in after-hours support.
-In-office support &amp;amp; maintenance probably costed more than the previous ones combined in the last year, but these are not easily quantifiable in dollar value.
-Note that our InfiniDB-based solution has undergone yearly rewrites (we’ve had to rewrite our InfiniDB solution in 2015 and again in 2016 since our original 2014 implementation).
-By my calculation, we will save more than $50,000 this year and a similar amount every year going forward.&lt;/p&gt;
-
-&lt;p&gt;In terms of speed, here’s a week-on-week table of results for 9 of our biggest customers (we’ve replaced the actual names with their countries of origin):&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/kib_results.png&quot; alt=&quot;Results&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;For some customers, this upgrade meant not waiting for Group Builder anymore, as it was the case for this USA customer:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://marianogappa.github.io/images/kib_usa_customer_elapsed_times.png&quot; alt=&quot;Results&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Globally, it was an 81% average improvement in group run times; an average constructed from every single Group Builder group ran on those weeks, not from a sample. That really exceeded our own expectations.&lt;/p&gt;
-
-&lt;p&gt;For us devs, replacing our complex custom replication implementation of InfiniDB that kept us up at night every other week with such a tiny and simple Go microservice we built on a Hackathon is the greatest gift.&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;
-
-&lt;p&gt;Throughout the Hackathon, we spent the day researching, designing and coding, and no more than half an hour debugging. We didn’t have dependency issues. We didn’t have issues understanding each other’s code, because it looked exactly the same and just as simple. We fully understood the tools we were using, because we have been using the same bare bone building blocks for a year. We didn’t struggle with debugging, because the only bugs we had were silly mistakes that were either found early by the IDE’s linter or clearly explained by the compiler with error messages written for humans. All of this was possible thanks to the Go language.&lt;/p&gt;
-
-&lt;p&gt;KIB is in production today on all major customers, and it’s barely using a few hundred MB of RAM per customer and sharing 4 vCPUs among all of them. Even though we aggressively parallelised SQL query execution and bitset operations, we had no issues at all related to this: no “too many connections” to MySQL, no bugs related to concurrency, etc; not even while writing it. We did have one pointer-related bug and one silly tree traversal edge case; we’re human.&lt;/p&gt;
-
-&lt;p&gt;What’s the lesson learned here? My lesson learned is the power and value of simplicity. Even within the simplicity of Go, we went with the simplest (not the easiest) possible subset of it: we didn’t use channels, interfaces, panics, named returns, iotas, mutexes (we did have one WaitGroup for the one set of goroutines). We only used goroutines and pointers where necessary.&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading this blogpost. KISS!&lt;/p&gt;
-</description>
-        <pubDate>Mon, 02 Apr 2018 00:00:00 +0100</pubDate>
-        <link>https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
-        <guid isPermaLink="true">https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
       </item>
     
   </channel>
