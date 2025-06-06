@@ -1,5 +1,6 @@
 ---
 title: "Projects"
+draft: true
 ---
 
 - **CloudQuery**: Open-source cloud asset inventory powered by SQL.
