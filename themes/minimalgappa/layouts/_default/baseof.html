@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Site.Title }}</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/chroma.css">
+  <link rel="icon" href="/favicon.ico">
+  {{ block "custom_css" . }}{{ end }}
+</head>
+
+<body>
+  <header class="header-flex">
+    <div class="site-title"><a href="/">{{ .Site.Title }}</a></div>
+    <nav>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        {{/* <li><a href="/projects/">Projects</a></li> */}}
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    {{ block "main" . }}{{ end }}
+  </main>
+</body>
+
+</html>

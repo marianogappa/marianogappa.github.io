@@ -1,0 +1,46 @@
+baseURL = "https://marianogappa.github.io/"
+languageCode = 'en-us'
+title = "Mariano Gappa's Blog"
+theme = "minimalgappa"
+
+[permalinks]
+software = "/software/:year/:month/:day/:slug/"
+ethics = "/ethics/:year/:month/:day/:slug/"
+
+[markup]
+  [markup.highlight]
+    noClasses = true
+    style = "monokai"
+
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.116.0"
+  
+  # Default Hugo mounts (needed when defining custom mounts)
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+  [[module.mounts]]
+    source = "data"
+    target = "data"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "i18n"
+    target = "i18n"
+  [[module.mounts]]
+    source = "archetypes"
+    target = "archetypes"
+    
+  # Custom mount for CV submodule
+  [[module.mounts]]
+    source = "cv"
+    target = "static/cv"
