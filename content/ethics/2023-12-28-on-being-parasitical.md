@@ -3,7 +3,6 @@ title: "On being parasitical"
 date: 2023-12-28
 summary: "An exploration of the concept of being parasitical, examining moral considerations, and ultimately questioning where individuals draw the line in accepting or rejecting such behavior."
 slug: "on-being-parasitical"
-published: true
 image: /images/posts/on-being-parasitical.jpeg
 ---
 
