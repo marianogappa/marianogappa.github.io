@@ -1,6 +1,6 @@
 ---
 title:      "Making Games in Go: 3 Months Without LLMs vs 3 Days With LLMs!"
-date:       2025-07-06
+date:       2025-08-24
 summary:    "I built two classic Argentinian card games in Go: one took 3 months without LLMs, the other just 3 days with them — and a step-by-step guide to make your own game."
 slug:       "i-made-two-card-games-in-go"
 image: /images/posts/i-made-two-card-games-in-go/made-2-games-cover.png
