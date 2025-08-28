@@ -7,3 +7,8 @@
   name = "Projects"
   url = "/projects/"
   weight = 2 
+
+[[main]]
+  name = "RSS"
+  url = "/index.xml"
+  weight = 3 

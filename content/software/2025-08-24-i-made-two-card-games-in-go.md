@@ -4,6 +4,11 @@ date:       2025-08-24
 summary:    "I built two classic Argentinian card games in Go: one took 3 months without LLMs, the other just 3 days with them — and a step-by-step guide to make your own game."
 slug:       "i-made-two-card-games-in-go"
 image: /images/posts/i-made-two-card-games-in-go/made-2-games-cover.png
+publications:
+    - icon: hacker_news
+      url: https://news.ycombinator.com/item?id=45004728
+      position: 1
+      position_link: http://hnrankings.info/45004728/
 ---
 
 ## Introduction

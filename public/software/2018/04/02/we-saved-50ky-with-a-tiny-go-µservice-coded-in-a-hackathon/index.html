@@ -1,70 +1,253 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Mariano Gappa's Blog</title>
-<link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/css/chroma.css><link rel=icon href=/favicon.ico></head><body><header class=header-flex><div class=site-title><a href=/>Mariano Gappa's Blog</a></div><nav><ul><li><a href=/about/>About</a></li></ul></nav></header><main class=container><article class=post><h1 class=post-title>We saved $50k/y with a tiny Go microservice coded in a Hackathon</h1><div class=post-meta><span class=post-date>Apr 2, 2018</span>
-<a href="https://news.ycombinator.com/item?id=16806388" target=_blank class=pill-link><div class=pill><img src=/images/icons/hacker_news.png alt=icon class=pill-icon>Hacker News
-(<a href=http://hnrankings.info/16806388/ target=_blank class=pill-link>peak #2</a>)</div></a><a href=http://golangweekly.com/issues/206 target=_blank class=pill-link><div class=pill><img src=/images/icons/golang_weekly.png alt=icon class=pill-icon>Golang Weekly
-206</div></a></div><div class=post-content><p>NOTE: my original blogpost was published <a href=https://movio.co/en/blog/saving-money-with-Hackathon-project/>in the Movio blog</a>. I&rsquo;ve had to steal it because it went offline for a while, the link sometimes 404s, and they&rsquo;ve broken some links. I don&rsquo;t want it to be lost. The following content is unchanged from the original.</p><p>In the past few weeks we&rsquo;ve rolled out a Go microservice called &ldquo;KIB&rdquo; to production, which reduced a huge portion of the infrastructure necessary for <a href=https://movio.co/en/movio-cinema/>Movio Cinema</a>&rsquo;s core tools: Group Builder and Campaign Execution. In doing this, we saved considerable AWS bills, after-hours and office-hours support bills, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.</p><p>Despite the fact that the domain-specific components of this post don&rsquo;t apply to every dev team, the success of applying the <a href=https://go-proverbs.github.io/>guiding principles</a> of simplicity and pragmatism driving our decision-making process felt like a story worth sharing.</p><h2 id=group-builder>Group Builder</h2><p>Movio Cinema&rsquo;s core functionality is to send targeted marketing campaigns to a cinema chain&rsquo;s loyalty members. If you&rsquo;re a member of a big cinema chain&rsquo;s loyalty program, wherever you are in the world, chances are the emails you&rsquo;re getting from it come from us.</p><p>Group Builder facilitates the segmentation of loyalty members by the construction of groups of filters of varying complexity over the cinema&rsquo;s loyalty member base.</p><p><img src=/images/posts/kib_group_builder.png alt="Group Builder screenshot"></p><p><a href=https://movio.co/en/blog/category/case-studies/>Marketing teams around the world</a> build the perfect audiences for their marketing campaigns using this tool.</p><h2 id=the-group-builder-algorithm>The Group Builder algorithm</h2><p>By using this algorithm, an arbitrarily complex set of filters can be solved with a single SQL query. Note that it&rsquo;s domain-agnostic; you can use this strategy for filtering any set of elements.</p><h3 id=constraints>Constraints</h3><ul><li><p>A Group Builder group can have any number of filters.</p></li><li><p>Filters can be grouped together in an arbitrary number of sub-groups.</p></li><li><p>Strictly for UI/UX reasons, sub-groups can be nested only once (i.e. up to sub-sub-groups).</p></li><li><p>Filters and groups operate against each other using <a href=https://en.wikipedia.org/wiki/Algebra_of_sets>Algebra of Sets</a>.</p></li><li><p>Each filter can either include or exclude set elements, set elements being loyalty members. The UI shows filters as green when they include members, and red when it excludes members.</p></li></ul><p>Here&rsquo;s the SQL strategy</p><p>This would be the final query for the Group Builder UI image above; note that the 3 filter subqueries represent the 3 filters shown in the image:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span>
-</span></span><span style=display:flex><span>   t.loyaltyMemberID,
-</span></span><span style=display:flex><span>   <span style=color:#66d9ef>MAX</span>(<span style=color:#66d9ef>CASE</span> <span style=color:#66d9ef>WHEN</span> t.filter <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>THEN</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>ELSE</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>END</span>) <span style=color:#66d9ef>AS</span> f1,
-</span></span><span style=display:flex><span>   <span style=color:#66d9ef>MAX</span>(<span style=color:#66d9ef>CASE</span> <span style=color:#66d9ef>WHEN</span> t.filter <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span> <span style=color:#66d9ef>THEN</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>ELSE</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>END</span>) <span style=color:#66d9ef>AS</span> f2,
-</span></span><span style=display:flex><span>   <span style=color:#66d9ef>MAX</span>(<span style=color:#66d9ef>CASE</span> <span style=color:#66d9ef>WHEN</span> t.filter <span style=color:#f92672>=</span> <span style=color:#ae81ff>3</span> <span style=color:#66d9ef>THEN</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>ELSE</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>END</span>) <span style=color:#66d9ef>AS</span> f3
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> (
-</span></span><span style=display:flex><span>       (
-</span></span><span style=display:flex><span>                       <span style=color:#66d9ef>SELECT</span> loyaltyMemberID, <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>AS</span> filter <span style=color:#66d9ef>FROM</span> <span style=color:#960050;background-color:#1e0010>…</span> <span style=color:#f92672>//</span> Gender
-</span></span><span style=display:flex><span>       ) <span style=color:#66d9ef>UNION</span> <span style=color:#66d9ef>ALL</span> (
-</span></span><span style=display:flex><span>                       <span style=color:#66d9ef>SELECT</span> loyaltyMemberID, <span style=color:#ae81ff>2</span> <span style=color:#66d9ef>AS</span> filter <span style=color:#66d9ef>FROM</span> <span style=color:#960050;background-color:#1e0010>…</span> <span style=color:#f92672>//</span> Age
-</span></span><span style=display:flex><span>       ) <span style=color:#66d9ef>UNION</span> <span style=color:#66d9ef>ALL</span> (
-</span></span><span style=display:flex><span>                       <span style=color:#66d9ef>SELECT</span> loyaltyMemberID, <span style=color:#ae81ff>3</span> <span style=color:#66d9ef>AS</span> filter <span style=color:#66d9ef>FROM</span> <span style=color:#960050;background-color:#1e0010>…</span> <span style=color:#f92672>//</span> Censor
-</span></span><span style=display:flex><span>       )
-</span></span><span style=display:flex><span>   ) <span style=color:#66d9ef>AS</span> t
-</span></span><span style=display:flex><span><span style=color:#66d9ef>GROUP</span> <span style=color:#66d9ef>BY</span> t.loyaltyMemberID
-</span></span><span style=display:flex><span><span style=color:#66d9ef>HAVING</span>
-</span></span><span style=display:flex><span>       f1 <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>//</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> means <span style=color:#e6db74>&#34;Include&#34;</span>
-</span></span><span style=display:flex><span>   <span style=color:#66d9ef>AND</span> (
-</span></span><span style=display:flex><span>       f2 <span style=color:#f92672>!=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>//</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>1</span> means <span style=color:#e6db74>&#34;exclude&#34;</span>
-</span></span><span style=display:flex><span>   <span style=color:#66d9ef>OR</span>
-</span></span><span style=display:flex><span>       f3 <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>   ) <span style=color:#f92672>//</span> Parens equate <span style=color:#66d9ef>to</span> subgroups <span style=color:#66d9ef>in</span> the UI
-</span></span></code></pre></div><p>Each sub-query in the UNION section selects the set of loyalty members after applying each filter in the group. The result set of the UNION (before the GROUP BY) will have one row per member per filter. The GROUP BY together with the AGGREGATE FUNCTIONs in the main SELECT section provide a very simple way to replicate the set algebra specified in the Group Builder UI, which you can see cleanly separated in the HAVING section.</p><h2 id=the-limits-of-mysql>The limits of MySQL</h2><p>The Group Builder algorithm worked really well in the beginning, but after some customers reached more than 5 million members (and 100 million sales transactions) the queries simply became way too slow to be able to provide timely feedback.</p><p>We needed an option that was fast but didn&rsquo;t require re-architecting our whole product. That option was <a href=https://en.wikipedia.org/wiki/InfiniDB>InfiniDB</a>. This was 2014.</p><h2 id=infinidb-a-magic-drop-in-replacement>InfiniDB: a magic drop-in replacement</h2><p>InfiniDB was a MySQL almost-drop-in replacement that stored data in <a href=https://en.wikipedia.org/wiki/Column-oriented_DBMS>columnar format</a>. As such, and given our queries were rarely involving many fields, our InfiniDB implementation was a big success. We didn&rsquo;t stop using MySQL; instead we replicated data to InfiniDB in near real-time.</p><p><img src=/images/posts/kib_infinidb_diagram.png alt="InfiniDB diagram"></p><p>Super-slow groups were fast again! We rolled out our InfiniDB implementation to all big customers and saved the day.</p><h2 id=the-cons-of-our-implementation-of-infinidb>The cons of our implementation of InfiniDB</h2><p>Despite the success of our solution, it wasn&rsquo;t without significant costs:</p><ul><li><p>The InfiniDB instances <a href=https://github.com/infinidb/infinidb/issues/21>required a lot of memory and CPU</a> to function properly, so we had to put them on <a href=https://aws.amazon.com/ec2/instance-types/i3/>i3.2xlarge</a> EC2 instances. This was <a href="https://www.ec2instances.info/?cost_duration=annually&amp;selected=i3.2xlarge">very expensive</a> (~$7k per annum), considering we didn&rsquo;t charge extra for InfiniDB-powered Movio Cinema consoles.</p></li><li><p>InfiniDB didn&rsquo;t have a master-slave scheme for replication (except for <a href=https://dba.stackexchange.com/questions/174133/infinidb-replication-and-failover>this</a>), so we had to build our own custom one. Unfortunately, table name-swapping sometimes got some tables corrupted and we had to re-bootstrap the whole schema to come back up online, a process that could take several hours.</p></li><li><p>We had a <a href=https://github.com/infinidb/infinidb/issues/3>recurring bug</a> where some complex count queries would just return 0 results on InfiniDB, but the same query on MySQL wouldn&rsquo;t. It was never resolved.</p></li><li><p>Even though InfiniDB was much faster than MySQL, we still saw some slow running groups for every big customer every week throughout 2017.</p></li><li><p>The company behind InfiniDB sadly <a href=http://infinidb.co/forum/important-announcement-infinidb>had to shutdown</a> and was eventually <a href=https://mariadb.com/about-us/newsroom/press-releases/open-source-leader-mariadb-rockets-analytics-market>incorporated into MariaDB</a> (now <a href=https://mariadb.com/products/technology/columnstore>MariaDB ColumnStore</a>); this meant no updates nor bugfixes.</p></li><li><p>InfiniDB had no substantial community, so it was really hard to troubleshoot any issues. There were only <a href="https://stackoverflow.com/search?q=infinidb">120 questions</a> on StackOverflow at the time of this writing.</p></li></ul><h2 id=research-time>Research time</h2><p>During the winter of 2017 we had an upcoming <a href=https://movio.co/en/blog/Hackathon-August-2017/>Hackathon</a>, so three of us decided to do a little research on how to create an alternative solution for Group Builder.</p><p>We found that, even in slow-running groups, most of the filters were relatively simple and fast queries, and retrieving the resulting set of members was incredibly fast as well (~one million per second). The slowness was mostly in the final aggregation step, which could produce billions of intermediate rows on groups with many filters.</p><p>However, a few filters were slow no matter what. Even on fully indexed query execution plans they still had to scan over half a billion rows.</p><p>How could we circumvent these two issues with a simple solution achievable in a day?</p><h2 id=hackathon-idea-the-kib-project>Hackathon idea: the KIB project</h2><p>Our solution was:</p><ol><li><p>Reviewing all slow filters for quick wins (e.g. adding/changing indexes, reworking queries)</p></li><li><p>Running every filter as a separate query against MySQL concurrently, and doing the aggregation programmatically using sparse bitsets</p></li><li><p>Caching filter results for a number of minutes to minimise the time recalculating long-running queries, given the repetitive usage pattern shown by our customers</p></li></ol><p><img src=/images/posts/kib_kib_diagram.png alt="KIB diagram"></p><p>After the Hackathon, we quickly added two planned features that covered outstanding problematic cases:</p><ol><li><p>Refreshing caches automatically, to make most frequently used filters and slow-running ones very quick at all times.</p></li><li><p>Pre-caching on startup based on usage history.</p></li></ol><p>We packed these features into a tiny Go microservice called KIB and shipped it onto a c4.xlarge EC2 instance (&lt;$3k per annum). While before we had one InfiniDB instance on a i3.2xlarge for each customer, in this case we put all customers on the same single c4.xlarge instance.</p><p>We did add a second instance for fault tolerance, and it was a fortunate decision, because that very week our EC2 instance died. Thanks to our <a href=https://movio.co/en/blog/6-months-kubernetes-production/>Kubernetes cluster implementation</a>, the KIB instance quickly restarted on the second healthy node and no customers were impacted. In contrast, when our InfiniDB nodes died, re-bootstrapping would sometimes take hours. Note, however, that this was not an intrinsic problem of InfiniDB itself, but of our custom replication implementation of it.</p><h2 id=why-go>Why Go?</h2><p>The long answer to that question is described in <a href=/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/>this blogpost</a>. In short, we&rsquo;ve been coding in Go for about a year, and it has noticeably reduced our estimations and workload, made our code much simpler, which in turn has indirectly improved our software quality, and in general has made our work more rewarding.</p><p>Here are the key bits of the KIB Go code with only a few details elided:</p><p>An endpoint request represents a Group Builder group to be run, and the group is represented as a tree of SQL queries. It looks somewhat like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>request</span> <span style=color:#66d9ef>struct</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>N</span> <span style=color:#a6e22e>SQLNode</span> <span style=color:#e6db74>`json:&#34;node&#34;`</span>
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SQLNode</span> <span style=color:#66d9ef>struct</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SQL</span>        <span style=color:#66d9ef>string</span>    <span style=color:#e6db74>`json:&#34;sql&#34;`</span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Operator</span>   <span style=color:#66d9ef>string</span>    <span style=color:#e6db74>`json:&#34;operator&#34;`</span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Nodes</span>      []<span style=color:#a6e22e>SQLNode</span> <span style=color:#e6db74>`json:&#34;nodes&#34;`</span>
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>This is the function that takes the request and resolves every SQL in the tree to a bitset:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>r</span> <span style=color:#a6e22e>request</span>) <span style=color:#a6e22e>toBitsets</span>(<span style=color:#a6e22e>solver</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>solver</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>bitsetWr</span>, <span style=color:#66d9ef>error</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>b</span> = <span style=color:#a6e22e>bitsetWr</span>{new(<span style=color:#a6e22e>tree</span>)}
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>root</span>.<span style=color:#a6e22e>fill</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>treeRoot</span>, <span style=color:#a6e22e>solver</span>) <span style=color:#75715e>// runs all SQL concurrently
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>solver</span>.<span style=color:#a6e22e>wait</span>() <span style=color:#75715e>// waits for all goroutines to finish
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>b</span>, <span style=color:#a6e22e>solver</span>.<span style=color:#a6e22e>err</span>
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>This is the inner function that deals with the tree structure; running &ldquo;solve&rdquo; on every node:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>t</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>tree</span>) <span style=color:#a6e22e>fill</span>(<span style=color:#a6e22e>n</span> <span style=color:#a6e22e>SQLNode</span>, <span style=color:#a6e22e>solver</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>solver</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>n</span>.<span style=color:#a6e22e>Nodes</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> { <span style=color:#75715e>// if leaf
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>op</span> = <span style=color:#a6e22e>n</span>.<span style=color:#a6e22e>Operator</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>solver</span>.<span style=color:#a6e22e>solve</span>(<span style=color:#a6e22e>n</span>.<span style=color:#a6e22e>SQL</span>, <span style=color:#a6e22e>t</span>) <span style=color:#75715e>// runs SQL; fills bitset
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>return</span>
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>nodes</span> = make([]<span style=color:#f92672>*</span><span style=color:#a6e22e>tree</span>, len(<span style=color:#a6e22e>n</span>.<span style=color:#a6e22e>Nodes</span>)) <span style=color:#75715e>// if group
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>nn</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>n</span>.<span style=color:#a6e22e>Nodes</span> {
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>nodes</span>[<span style=color:#a6e22e>i</span>] = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>tree</span>{}
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>nodes</span>[<span style=color:#a6e22e>i</span>].<span style=color:#a6e22e>fill</span>(<span style=color:#a6e22e>nn</span>, <span style=color:#a6e22e>solver</span>)
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>And this is the inner function that runs the SQL (or loads from cache) concurrently:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>  <span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>solver</span>) <span style=color:#a6e22e>solve</span>(<span style=color:#a6e22e>sql</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>b</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>tree</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#ae81ff>1</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>b</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>tree</span>) { <span style=color:#75715e>// returns immediately
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>cacheMaybe</span>(<span style=color:#a6e22e>sql</span>) <span style=color:#75715e>// runs SQL or uses cache
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>            <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>err</span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>bitset</span> = <span style=color:#a6e22e>res</span>
-</span></span><span style=display:flex><span>    }(<span style=color:#a6e22e>b</span>)
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>There are about 50 more lines for solving the algebra and 25 more for the basic caching, but these three snippets are a representative example of what the KIB code looks like.</p><p>The snippets show some intermediate concepts: tree traversal, green threads, bitset operations and caching. While not that uncommon, what I&rsquo;ve rarely seen in practice is an implementation of all these things solving a real business problem within a day&rsquo;s work. We don&rsquo;t think we would have been able to pull this off in any other language. I&rsquo;ll explain why we think so in the conclusion.</p><h2 id=results>Results</h2><p>The results of our project were extremely gratifying.</p><p>In financial terms, we saved $31.000 yearly in AWS bills and $4.000 yearly in after-hours support.
-In-office support & maintenance probably costed more than the previous ones combined in the last year, but these are not easily quantifiable in dollar value.
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMBH4M85HZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-SMBH4M85HZ');
+  </script>
+
+  <title>Mariano Gappa&#39;s Blog</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/chroma.css">
+  <link rel="icon" href="/favicon.ico">
+  
+</head>
+
+<body>
+  <header class="header-flex">
+    <div class="site-title"><a href="/">Mariano Gappa&#39;s Blog</a></div>
+    <nav>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/projects/">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    
+<article class="post">
+  <h1 class="post-title">We saved $50k/y with a tiny Go microservice coded in a Hackathon</h1>
+  <div class="post-meta">
+    
+    <span class="post-date">Apr 2, 2018</span>
+    
+    
+    
+    <a href="https://news.ycombinator.com/item?id=16806388" target="_blank" class="pill-link">
+      <div class="pill">
+        <img src="/images/icons/hacker_news.png" alt="icon" class="pill-icon">Hacker News
+
+        
+        (<a href="http://hnrankings.info/16806388/" target="_blank" class="pill-link">peak #2</a>)
+        
+      </div>
+    </a>
+    
+    <a href="http://golangweekly.com/issues/206" target="_blank" class="pill-link">
+      <div class="pill">
+        <img src="/images/icons/golang_weekly.png" alt="icon" class="pill-icon">Golang Weekly
+
+        
+        206
+        
+      </div>
+    </a>
+    
+    
+  </div>
+  
+  <div class="post-content">
+    <p>NOTE: my original blogpost was published <a href="https://movio.co/en/blog/saving-money-with-Hackathon-project/">in the Movio blog</a>. I&rsquo;ve had to steal it because it went offline for a while, the link sometimes 404s, and they&rsquo;ve broken some links. I don&rsquo;t want it to be lost. The following content is unchanged from the original.</p>
+<p>In the past few weeks we&rsquo;ve rolled out a Go microservice called &ldquo;KIB&rdquo; to production, which reduced a huge portion of the infrastructure necessary for <a href="https://movio.co/en/movio-cinema/">Movio Cinema</a>&rsquo;s core tools: Group Builder and Campaign Execution. In doing this, we saved considerable AWS bills, after-hours and office-hours support bills, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.</p>
+<p>Despite the fact that the domain-specific components of this post don&rsquo;t apply to every dev team, the success of applying the <a href="https://go-proverbs.github.io/">guiding principles</a> of simplicity and pragmatism driving our decision-making process felt like a story worth sharing.</p>
+<h2 id="group-builder">Group Builder</h2>
+<p>Movio Cinema&rsquo;s core functionality is to send targeted marketing campaigns to a cinema chain&rsquo;s loyalty members. If you&rsquo;re a member of a big cinema chain&rsquo;s loyalty program, wherever you are in the world, chances are the emails you&rsquo;re getting from it come from us.</p>
+<p>Group Builder facilitates the segmentation of loyalty members by the construction of groups of filters of varying complexity over the cinema&rsquo;s loyalty member base.</p>
+<p><img src="/images/posts/kib_group_builder.png" alt="Group Builder screenshot"></p>
+<p><a href="https://movio.co/en/blog/category/case-studies/">Marketing teams around the world</a> build the perfect audiences for their marketing campaigns using this tool.</p>
+<h2 id="the-group-builder-algorithm">The Group Builder algorithm</h2>
+<p>By using this algorithm, an arbitrarily complex set of filters can be solved with a single SQL query. Note that it&rsquo;s domain-agnostic; you can use this strategy for filtering any set of elements.</p>
+<h3 id="constraints">Constraints</h3>
+<ul>
+<li>
+<p>A Group Builder group can have any number of filters.</p>
+</li>
+<li>
+<p>Filters can be grouped together in an arbitrary number of sub-groups.</p>
+</li>
+<li>
+<p>Strictly for UI/UX reasons, sub-groups can be nested only once (i.e. up to sub-sub-groups).</p>
+</li>
+<li>
+<p>Filters and groups operate against each other using <a href="https://en.wikipedia.org/wiki/Algebra_of_sets">Algebra of Sets</a>.</p>
+</li>
+<li>
+<p>Each filter can either include or exclude set elements, set elements being loyalty members. The UI shows filters as green when they include members, and red when it excludes members.</p>
+</li>
+</ul>
+<p>Here&rsquo;s the SQL strategy</p>
+<p>This would be the final query for the Group Builder UI image above; note that the 3 filter subqueries represent the 3 filters shown in the image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>   t.loyaltyMemberID,
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">MAX</span>(<span style="color:#66d9ef">CASE</span> <span style="color:#66d9ef">WHEN</span> t.filter <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">THEN</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">ELSE</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">END</span>) <span style="color:#66d9ef">AS</span> f1,
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">MAX</span>(<span style="color:#66d9ef">CASE</span> <span style="color:#66d9ef">WHEN</span> t.filter <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">THEN</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">ELSE</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">END</span>) <span style="color:#66d9ef">AS</span> f2,
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">MAX</span>(<span style="color:#66d9ef">CASE</span> <span style="color:#66d9ef">WHEN</span> t.filter <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span> <span style="color:#66d9ef">THEN</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">ELSE</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">END</span>) <span style="color:#66d9ef">AS</span> f3
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span>       (
+</span></span><span style="display:flex;"><span>                       <span style="color:#66d9ef">SELECT</span> loyaltyMemberID, <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">AS</span> filter <span style="color:#66d9ef">FROM</span> <span style="color:#960050;background-color:#1e0010">…</span> <span style="color:#f92672">//</span> Gender
+</span></span><span style="display:flex;"><span>       ) <span style="color:#66d9ef">UNION</span> <span style="color:#66d9ef">ALL</span> (
+</span></span><span style="display:flex;"><span>                       <span style="color:#66d9ef">SELECT</span> loyaltyMemberID, <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">AS</span> filter <span style="color:#66d9ef">FROM</span> <span style="color:#960050;background-color:#1e0010">…</span> <span style="color:#f92672">//</span> Age
+</span></span><span style="display:flex;"><span>       ) <span style="color:#66d9ef">UNION</span> <span style="color:#66d9ef">ALL</span> (
+</span></span><span style="display:flex;"><span>                       <span style="color:#66d9ef">SELECT</span> loyaltyMemberID, <span style="color:#ae81ff">3</span> <span style="color:#66d9ef">AS</span> filter <span style="color:#66d9ef">FROM</span> <span style="color:#960050;background-color:#1e0010">…</span> <span style="color:#f92672">//</span> Censor
+</span></span><span style="display:flex;"><span>       )
+</span></span><span style="display:flex;"><span>   ) <span style="color:#66d9ef">AS</span> t
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> t.loyaltyMemberID
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">HAVING</span>
+</span></span><span style="display:flex;"><span>       f1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">//</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> means <span style="color:#e6db74">&#34;Include&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">AND</span> (
+</span></span><span style="display:flex;"><span>       f2 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">//</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> means <span style="color:#e6db74">&#34;exclude&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">OR</span>
+</span></span><span style="display:flex;"><span>       f3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>   ) <span style="color:#f92672">//</span> Parens equate <span style="color:#66d9ef">to</span> subgroups <span style="color:#66d9ef">in</span> the UI
+</span></span></code></pre></div><p>Each sub-query in the UNION section selects the set of loyalty members after applying each filter in the group. The result set of the UNION (before the GROUP BY) will have one row per member per filter. The GROUP BY together with the AGGREGATE FUNCTIONs in the main SELECT section provide a very simple way to replicate the set algebra specified in the Group Builder UI, which you can see cleanly separated in the HAVING section.</p>
+<h2 id="the-limits-of-mysql">The limits of MySQL</h2>
+<p>The Group Builder algorithm worked really well in the beginning, but after some customers reached more than 5 million members (and 100 million sales transactions) the queries simply became way too slow to be able to provide timely feedback.</p>
+<p>We needed an option that was fast but didn&rsquo;t require re-architecting our whole product. That option was <a href="https://en.wikipedia.org/wiki/InfiniDB">InfiniDB</a>. This was 2014.</p>
+<h2 id="infinidb-a-magic-drop-in-replacement">InfiniDB: a magic drop-in replacement</h2>
+<p>InfiniDB was a MySQL almost-drop-in replacement that stored data in <a href="https://en.wikipedia.org/wiki/Column-oriented_DBMS">columnar format</a>. As such, and given our queries were rarely involving many fields, our InfiniDB implementation was a big success. We didn&rsquo;t stop using MySQL; instead we replicated data to InfiniDB in near real-time.</p>
+<p><img src="/images/posts/kib_infinidb_diagram.png" alt="InfiniDB diagram"></p>
+<p>Super-slow groups were fast again! We rolled out our InfiniDB implementation to all big customers and saved the day.</p>
+<h2 id="the-cons-of-our-implementation-of-infinidb">The cons of our implementation of InfiniDB</h2>
+<p>Despite the success of our solution, it wasn&rsquo;t without significant costs:</p>
+<ul>
+<li>
+<p>The InfiniDB instances <a href="https://github.com/infinidb/infinidb/issues/21">required a lot of memory and CPU</a> to function properly, so we had to put them on <a href="https://aws.amazon.com/ec2/instance-types/i3/">i3.2xlarge</a> EC2 instances. This was <a href="https://www.ec2instances.info/?cost_duration=annually&amp;selected=i3.2xlarge">very expensive</a> (~$7k per annum), considering we didn&rsquo;t charge extra for InfiniDB-powered Movio Cinema consoles.</p>
+</li>
+<li>
+<p>InfiniDB didn&rsquo;t have a master-slave scheme for replication (except for <a href="https://dba.stackexchange.com/questions/174133/infinidb-replication-and-failover">this</a>), so we had to build our own custom one. Unfortunately, table name-swapping sometimes got some tables corrupted and we had to re-bootstrap the whole schema to come back up online, a process that could take several hours.</p>
+</li>
+<li>
+<p>We had a <a href="https://github.com/infinidb/infinidb/issues/3">recurring bug</a> where some complex count queries would just return 0 results on InfiniDB, but the same query on MySQL wouldn&rsquo;t. It was never resolved.</p>
+</li>
+<li>
+<p>Even though InfiniDB was much faster than MySQL, we still saw some slow running groups for every big customer every week throughout 2017.</p>
+</li>
+<li>
+<p>The company behind InfiniDB sadly <a href="http://infinidb.co/forum/important-announcement-infinidb">had to shutdown</a> and was eventually <a href="https://mariadb.com/about-us/newsroom/press-releases/open-source-leader-mariadb-rockets-analytics-market">incorporated into MariaDB</a> (now <a href="https://mariadb.com/products/technology/columnstore">MariaDB ColumnStore</a>); this meant no updates nor bugfixes.</p>
+</li>
+<li>
+<p>InfiniDB had no substantial community, so it was really hard to troubleshoot any issues. There were only <a href="https://stackoverflow.com/search?q=infinidb">120 questions</a> on StackOverflow at the time of this writing.</p>
+</li>
+</ul>
+<h2 id="research-time">Research time</h2>
+<p>During the winter of 2017 we had an upcoming <a href="https://movio.co/en/blog/Hackathon-August-2017/">Hackathon</a>, so three of us decided to do a little research on how to create an alternative solution for Group Builder.</p>
+<p>We found that, even in slow-running groups, most of the filters were relatively simple and fast queries, and retrieving the resulting set of members was incredibly fast as well (~one million per second). The slowness was mostly in the final aggregation step, which could produce billions of intermediate rows on groups with many filters.</p>
+<p>However, a few filters were slow no matter what. Even on fully indexed query execution plans they still had to scan over half a billion rows.</p>
+<p>How could we circumvent these two issues with a simple solution achievable in a day?</p>
+<h2 id="hackathon-idea-the-kib-project">Hackathon idea: the KIB project</h2>
+<p>Our solution was:</p>
+<ol>
+<li>
+<p>Reviewing all slow filters for quick wins (e.g. adding/changing indexes, reworking queries)</p>
+</li>
+<li>
+<p>Running every filter as a separate query against MySQL concurrently, and doing the aggregation programmatically using sparse bitsets</p>
+</li>
+<li>
+<p>Caching filter results for a number of minutes to minimise the time recalculating long-running queries, given the repetitive usage pattern shown by our customers</p>
+</li>
+</ol>
+<p><img src="/images/posts/kib_kib_diagram.png" alt="KIB diagram"></p>
+<p>After the Hackathon, we quickly added two planned features that covered outstanding problematic cases:</p>
+<ol>
+<li>
+<p>Refreshing caches automatically, to make most frequently used filters and slow-running ones very quick at all times.</p>
+</li>
+<li>
+<p>Pre-caching on startup based on usage history.</p>
+</li>
+</ol>
+<p>We packed these features into a tiny Go microservice called KIB and shipped it onto a c4.xlarge EC2 instance (&lt;$3k per annum). While before we had one InfiniDB instance on a i3.2xlarge for each customer, in this case we put all customers on the same single c4.xlarge instance.</p>
+<p>We did add a second instance for fault tolerance, and it was a fortunate decision, because that very week our EC2 instance died. Thanks to our <a href="https://movio.co/en/blog/6-months-kubernetes-production/">Kubernetes cluster implementation</a>, the KIB instance quickly restarted on the second healthy node and no customers were impacted. In contrast, when our InfiniDB nodes died, re-bootstrapping would sometimes take hours. Note, however, that this was not an intrinsic problem of InfiniDB itself, but of our custom replication implementation of it.</p>
+<h2 id="why-go">Why Go?</h2>
+<p>The long answer to that question is described in <a href="/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/">this blogpost</a>. In short, we&rsquo;ve been coding in Go for about a year, and it has noticeably reduced our estimations and workload, made our code much simpler, which in turn has indirectly improved our software quality, and in general has made our work more rewarding.</p>
+<p>Here are the key bits of the KIB Go code with only a few details elided:</p>
+<p>An endpoint request represents a Group Builder group to be run, and the group is represented as a tree of SQL queries. It looks somewhat like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">N</span> <span style="color:#a6e22e">SQLNode</span> <span style="color:#e6db74">`json:&#34;node&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">SQLNode</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SQL</span>        <span style="color:#66d9ef">string</span>    <span style="color:#e6db74">`json:&#34;sql&#34;`</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Operator</span>   <span style="color:#66d9ef">string</span>    <span style="color:#e6db74">`json:&#34;operator&#34;`</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Nodes</span>      []<span style="color:#a6e22e">SQLNode</span> <span style="color:#e6db74">`json:&#34;nodes&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is the function that takes the request and resolves every SQL in the tree to a bitset:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#a6e22e">request</span>) <span style="color:#a6e22e">toBitsets</span>(<span style="color:#a6e22e">solver</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">solver</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">bitsetWr</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">b</span> = <span style="color:#a6e22e">bitsetWr</span>{new(<span style="color:#a6e22e">tree</span>)}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">root</span>.<span style="color:#a6e22e">fill</span>(<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">treeRoot</span>, <span style="color:#a6e22e">solver</span>) <span style="color:#75715e">// runs all SQL concurrently
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">solver</span>.<span style="color:#a6e22e">wait</span>() <span style="color:#75715e">// waits for all goroutines to finish
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">solver</span>.<span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is the inner function that deals with the tree structure; running &ldquo;solve&rdquo; on every node:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">tree</span>) <span style="color:#a6e22e">fill</span>(<span style="color:#a6e22e">n</span> <span style="color:#a6e22e">SQLNode</span>, <span style="color:#a6e22e">solver</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">solver</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Nodes</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> { <span style="color:#75715e">// if leaf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">op</span> = <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Operator</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">solver</span>.<span style="color:#a6e22e">solve</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">SQL</span>, <span style="color:#a6e22e">t</span>) <span style="color:#75715e">// runs SQL; fills bitset
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">nodes</span> = make([]<span style="color:#f92672">*</span><span style="color:#a6e22e">tree</span>, len(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Nodes</span>)) <span style="color:#75715e">// if group
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">nn</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Nodes</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">tree</span>{}
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">fill</span>(<span style="color:#a6e22e">nn</span>, <span style="color:#a6e22e">solver</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And this is the inner function that runs the SQL (or loads from cache) concurrently:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>  <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">solver</span>) <span style="color:#a6e22e">solve</span>(<span style="color:#a6e22e">sql</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">tree</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">tree</span>) { <span style="color:#75715e">// returns immediately
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">cacheMaybe</span>(<span style="color:#a6e22e">sql</span>) <span style="color:#75715e">// runs SQL or uses cache
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">bitset</span> = <span style="color:#a6e22e">res</span>
+</span></span><span style="display:flex;"><span>    }(<span style="color:#a6e22e">b</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There are about 50 more lines for solving the algebra and 25 more for the basic caching, but these three snippets are a representative example of what the KIB code looks like.</p>
+<p>The snippets show some intermediate concepts: tree traversal, green threads, bitset operations and caching. While not that uncommon, what I&rsquo;ve rarely seen in practice is an implementation of all these things solving a real business problem within a day&rsquo;s work. We don&rsquo;t think we would have been able to pull this off in any other language. I&rsquo;ll explain why we think so in the conclusion.</p>
+<h2 id="results">Results</h2>
+<p>The results of our project were extremely gratifying.</p>
+<p>In financial terms, we saved $31.000 yearly in AWS bills and $4.000 yearly in after-hours support.
+In-office support &amp; maintenance probably costed more than the previous ones combined in the last year, but these are not easily quantifiable in dollar value.
 Note that our InfiniDB-based solution has undergone yearly rewrites (we&rsquo;ve had to rewrite our InfiniDB solution in 2015 and again in 2016 since our original 2014 implementation).
-By my calculation, we will save more than $50,000 this year and a similar amount every year going forward.</p><p>In terms of speed, here&rsquo;s a week-on-week table of results for 9 of our biggest customers (we&rsquo;ve replaced the actual names with their countries of origin):</p><p><img src=/images/posts/kib_results.png alt=Results></p><p>For some customers, this upgrade meant not waiting for Group Builder anymore, as it was the case for this USA customer:</p><p><img src=/images/posts/kib_usa_customer_elapsed_times.png alt=Results></p><p>Globally, it was an 81% average improvement in group run times; an average constructed from every single Group Builder group ran on those weeks, not from a sample. That really exceeded our own expectations.</p><p>For us devs, replacing our complex custom replication implementation of InfiniDB that kept us up at night every other week with such a tiny and simple Go microservice we built on a Hackathon is the greatest gift.</p><h2 id=conclusions>Conclusions</h2><p>Throughout the Hackathon, we spent the day researching, designing and coding, and no more than half an hour debugging. We didn&rsquo;t have dependency issues. We didn&rsquo;t have issues understanding each other&rsquo;s code, because it looked exactly the same and just as simple. We fully understood the tools we were using, because we have been using the same bare bone building blocks for a year. We didn&rsquo;t struggle with debugging, because the only bugs we had were silly mistakes that were either found early by the IDE&rsquo;s linter or clearly explained by the compiler with error messages written for humans. All of this was possible thanks to the Go language.</p><p>KIB is in production today on all major customers, and it&rsquo;s barely using a few hundred MB of RAM per customer and sharing 4 vCPUs among all of them. Even though we aggressively parallelised SQL query execution and bitset operations, we had no issues at all related to this: no &ldquo;too many connections&rdquo; to MySQL, no bugs related to concurrency, etc; not even while writing it. We did have one pointer-related bug and one silly tree traversal edge case; we&rsquo;re human.</p><p>What&rsquo;s the lesson learned here? My lesson learned is the power and value of simplicity. Even within the simplicity of Go, we went with the simplest (not the easiest) possible subset of it: we didn&rsquo;t use channels, interfaces, panics, named returns, iotas, mutexes (we did have one WaitGroup for the one set of goroutines). We only used goroutines and pointers where necessary.</p><p>Thanks for reading this blogpost. KISS!</p></div></article></main></body></html>
+By my calculation, we will save more than $50,000 this year and a similar amount every year going forward.</p>
+<p>In terms of speed, here&rsquo;s a week-on-week table of results for 9 of our biggest customers (we&rsquo;ve replaced the actual names with their countries of origin):</p>
+<p><img src="/images/posts/kib_results.png" alt="Results"></p>
+<p>For some customers, this upgrade meant not waiting for Group Builder anymore, as it was the case for this USA customer:</p>
+<p><img src="/images/posts/kib_usa_customer_elapsed_times.png" alt="Results"></p>
+<p>Globally, it was an 81% average improvement in group run times; an average constructed from every single Group Builder group ran on those weeks, not from a sample. That really exceeded our own expectations.</p>
+<p>For us devs, replacing our complex custom replication implementation of InfiniDB that kept us up at night every other week with such a tiny and simple Go microservice we built on a Hackathon is the greatest gift.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>Throughout the Hackathon, we spent the day researching, designing and coding, and no more than half an hour debugging. We didn&rsquo;t have dependency issues. We didn&rsquo;t have issues understanding each other&rsquo;s code, because it looked exactly the same and just as simple. We fully understood the tools we were using, because we have been using the same bare bone building blocks for a year. We didn&rsquo;t struggle with debugging, because the only bugs we had were silly mistakes that were either found early by the IDE&rsquo;s linter or clearly explained by the compiler with error messages written for humans. All of this was possible thanks to the Go language.</p>
+<p>KIB is in production today on all major customers, and it&rsquo;s barely using a few hundred MB of RAM per customer and sharing 4 vCPUs among all of them. Even though we aggressively parallelised SQL query execution and bitset operations, we had no issues at all related to this: no &ldquo;too many connections&rdquo; to MySQL, no bugs related to concurrency, etc; not even while writing it. We did have one pointer-related bug and one silly tree traversal edge case; we&rsquo;re human.</p>
+<p>What&rsquo;s the lesson learned here? My lesson learned is the power and value of simplicity. Even within the simplicity of Go, we went with the simplest (not the easiest) possible subset of it: we didn&rsquo;t use channels, interfaces, panics, named returns, iotas, mutexes (we did have one WaitGroup for the one set of goroutines). We only used goroutines and pointers where necessary.</p>
+<p>Thanks for reading this blogpost. KISS!</p>
+
+  </div>
+</article>
+
+  </main>
+</body>
+
+</html>

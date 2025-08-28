@@ -1,12 +1,106 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Mariano Gappa's Blog</title>
-<link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/css/chroma.css><link rel=icon href=/favicon.ico></head><body><header class=header-flex><div class=site-title><a href=/>Mariano Gappa's Blog</a></div><nav><ul><li><a href=/about/>About</a></li></ul></nav></header><main class=container><article class=post><h1 class=post-title>Fixing syntax highlighting issues in Sublime Text 3</h1><div class=post-meta><span class=post-date>Feb 27, 2016</span></div><div class=post-content><h2 id=introduction>Introduction</h2><p>My two main IDEs nowadays are <a href=https://www.jetbrains.com/idea/>Intellij Idea</a> and <a href=http://www.sublimetext.com/3>Sublime Text</a>. I basically like to use IDEA for strongly-typed languages and Sublime for weakly-typed languages. However, not long ago I found a bug on Sublime!</p><p>In version 5.4 of PHP, they <a href=http://php.net/manual/en/migration54.new-features.php>introduced a new syntax for arrays</a> that is reminiscent of the JSON notation:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#f92672>&lt;?</span><span style=color:#a6e22e>php</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// Old PHP Array syntax
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>$primes <span style=color:#f92672>=</span> <span style=color:#66d9ef>array</span>(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>7</span>);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// New PHP Array syntax
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>$primes <span style=color:#f92672>=</span> [<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>7</span>];
-</span></span></code></pre></div><p>Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I&rsquo;ve found a case where it&rsquo;s not. This case was probably not discovered because PHP people don&rsquo;t like type-hinting!</p><p><img src=/images/posts/sublime-highlighting-before.png alt="Highlighting Issue - Before"></p><h2 id=now-heres-how-to-fix-it>Now, here&rsquo;s how to fix it</h2><h3 id=context>Context</h3><ul><li><p>Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. <a href=https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax>This is the Language file for PHP</a>.</p></li><li><p>The syntax highlighting feature uses the <a href=https://en.wikipedia.org/wiki/Oniguruma>Oniguruma regular expression library</a>.</p></li><li><p>I recommend <a href="https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;ia=cheatsheet&amp;iax=1">this DuckDuckGo regex cheatsheet</a> if you need a quick reference; it&rsquo;s very good!</p></li><li><p>Also, I recommend using <a href=http://rubular.com/>this online regex parser</a> when you get into the regex hacking part. It&rsquo;s not my favourite one but it&rsquo;s Ruby-based.</p></li><li><p>Before we begin, you should skim through <a href=http://www.sublimetext.com/docs/3/syntax.html>this syntax guide</a> to familiarise yourself with the code we&rsquo;ll be editing.</p></li><li><p>Optionally, you might want to read <a href=http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition>this StackOverflow question</a>, as it was very insightful to understand the process.</p></li></ul><h3 id=opening-the-language-file>Opening the language file</h3><p>The first thing we need to do is to open the Language package (in this case the PHP one). For this, we need to <a href=https://packagecontrol.io/packages/PackageResourceViewer>install the PackageResourceViewer plugin</a>.</p><p>Within Sublime&rsquo;s Command Palette, type:</p><pre><code>PackageResouceViewer: Open Resource
-</code></pre><p>Then select the <code>PHP</code> resource and then finally <code>PHP.tmLanguage</code>.</p><p>You&rsquo;ll find a very scary xml file. This is the annoying part. The guides recommend that you use <a href=https://packagecontrol.io/packages/AAAPackageDev>the AAAPackageDev package</a> to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn&rsquo;t convert perfectly, and this defeats the purpose of using it! I did something different.</p><h3 id=editing-the-language-file>Editing the language file</h3><p>This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!</p><p>To make sense of the xml monster, just look up <a href=https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax>the yaml file on the Github repository</a>. Make sure your Sublime and the GH code are for the same version; otherwise you&rsquo;re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
-Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.</p><p>After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (<code>array</code> and <code>(</code>) or 1 group (<code>[</code>), so I needed a wrapping group with two cases (i.e. <code>(a|b)</code>) that wasn&rsquo;t actually capturing anything per se. The solution to this was <code>Passive (non-capturing) groups</code> (i.e. <code>(?:...)</code>). I mention this because you might need it; when you see how the classes are picked you&rsquo;ll understand why.</p><p><img src=/images/posts/sublime-highlighting-after.png alt="Highlighting Issue - Before"></p><h2 id=fun-fact>Fun fact</h2><p>Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. <code>?&lt;=</code>). When it didn&rsquo;t work I facepalmed: &ldquo;of course! it&rsquo;s xml; I have to escape it (i.e. <code>&amp;lt;</code>)&rdquo;. When it didn&rsquo;t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn&rsquo;t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (<a href=http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds>Javascript</a>, <a href="http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1">Ruby &lt; 1.9</a>).</p><h2 id=lastly>Lastly</h2><p>Once you are done and you&rsquo;re sure it works properly, share your contribution to the World!
-<a href=https://github.com/sublimehq/Packages/issues/98>This</a> was my Github issue for the PHP syntax fix.</p><p>Happy open sourcing!</p></div></article></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMBH4M85HZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-SMBH4M85HZ');
+  </script>
+
+  <title>Mariano Gappa&#39;s Blog</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/chroma.css">
+  <link rel="icon" href="/favicon.ico">
+  
+</head>
+
+<body>
+  <header class="header-flex">
+    <div class="site-title"><a href="/">Mariano Gappa&#39;s Blog</a></div>
+    <nav>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/projects/">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    
+<article class="post">
+  <h1 class="post-title">Fixing syntax highlighting issues in Sublime Text 3</h1>
+  <div class="post-meta">
+    
+    <span class="post-date">Feb 27, 2016</span>
+    
+    
+  </div>
+  
+  <div class="post-content">
+    <h2 id="introduction">Introduction</h2>
+<p>My two main IDEs nowadays are <a href="https://www.jetbrains.com/idea/">Intellij Idea</a> and <a href="http://www.sublimetext.com/3">Sublime Text</a>. I basically like to use IDEA for strongly-typed languages and Sublime for weakly-typed languages. However, not long ago I found a bug on Sublime!</p>
+<p>In version 5.4 of PHP, they <a href="http://php.net/manual/en/migration54.new-features.php">introduced a new syntax for arrays</a> that is reminiscent of the JSON notation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Old PHP Array syntax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$primes <span style="color:#f92672">=</span> <span style="color:#66d9ef">array</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// New PHP Array syntax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$primes <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>];
+</span></span></code></pre></div><p>Even though support for this new syntax within the Sublime codebase seems to be limited, oddly enough the colouring seems to be working properly. But I&rsquo;ve found a case where it&rsquo;s not. This case was probably not discovered because PHP people don&rsquo;t like type-hinting!</p>
+<p><img src="/images/posts/sublime-highlighting-before.png" alt="Highlighting Issue - Before"></p>
+<h2 id="now-heres-how-to-fix-it">Now, here&rsquo;s how to fix it</h2>
+<h3 id="context">Context</h3>
+<ul>
+<li>
+<p>Ever wondered how Sublime does the syntax highlighting magic? The answer is: lots and lots of regexes. <a href="https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax">This is the Language file for PHP</a>.</p>
+</li>
+<li>
+<p>The syntax highlighting feature uses the <a href="https://en.wikipedia.org/wiki/Oniguruma">Oniguruma regular expression library</a>.</p>
+</li>
+<li>
+<p>I recommend <a href="https://duckduckgo.com/?q=regex%20cheat%20sheet&amp;ia=cheatsheet&amp;iax=1">this DuckDuckGo regex cheatsheet</a> if you need a quick reference; it&rsquo;s very good!</p>
+</li>
+<li>
+<p>Also, I recommend using <a href="http://rubular.com/">this online regex parser</a> when you get into the regex hacking part. It&rsquo;s not my favourite one but it&rsquo;s Ruby-based.</p>
+</li>
+<li>
+<p>Before we begin, you should skim through <a href="http://www.sublimetext.com/docs/3/syntax.html">this syntax guide</a> to familiarise yourself with the code we&rsquo;ll be editing.</p>
+</li>
+<li>
+<p>Optionally, you might want to read <a href="http://stackoverflow.com/questions/25184605/cloning-a-sublime-text-3-highlighting-syntax-definition">this StackOverflow question</a>, as it was very insightful to understand the process.</p>
+</li>
+</ul>
+<h3 id="opening-the-language-file">Opening the language file</h3>
+<p>The first thing we need to do is to open the Language package (in this case the PHP one). For this, we need to <a href="https://packagecontrol.io/packages/PackageResourceViewer">install the PackageResourceViewer plugin</a>.</p>
+<p>Within Sublime&rsquo;s Command Palette, type:</p>
+<pre><code>PackageResouceViewer: Open Resource
+</code></pre>
+<p>Then select the <code>PHP</code> resource and then finally <code>PHP.tmLanguage</code>.</p>
+<p>You&rsquo;ll find a very scary xml file. This is the annoying part. The guides recommend that you use <a href="https://packagecontrol.io/packages/AAAPackageDev">the AAAPackageDev package</a> to convert this xml to yaml, thus making it an order of magnitude easier to work with it. Unfortunately, it also says that it doesn&rsquo;t convert perfectly, and this defeats the purpose of using it! I did something different.</p>
+<h3 id="editing-the-language-file">Editing the language file</h3>
+<p>This is the good news: you can edit this xml freely (please keep a copy of the original!), and the changes become instantly applied on PHP-syntax-enabled files upon save!</p>
+<p>To make sense of the xml monster, just look up <a href="https://github.com/sublimehq/Packages/blob/master/PHP/PHP%20Source.sublime-syntax">the yaml file on the Github repository</a>. Make sure your Sublime and the GH code are for the same version; otherwise you&rsquo;re not actually looking at the same code. Having the latest version of Sublime installed should be enough.
+Looking at the yaml file makes it much easier to spot the place where you need to make the regex change.</p>
+<p>After about half an hour of tinkering with regexes, I finally found a modification that worked for all cases I could think of. The problem that held me up was that I was trying to match either 2 groups (<code>array</code> and <code>(</code>) or 1 group (<code>[</code>), so I needed a wrapping group with two cases (i.e. <code>(a|b)</code>) that wasn&rsquo;t actually capturing anything per se. The solution to this was <code>Passive (non-capturing) groups</code> (i.e. <code>(?:...)</code>). I mention this because you might need it; when you see how the classes are picked you&rsquo;ll understand why.</p>
+<p><img src="/images/posts/sublime-highlighting-after.png" alt="Highlighting Issue - Before"></p>
+<h2 id="fun-fact">Fun fact</h2>
+<p>Before I came up with the idea of passive capturing groups I naturally thought of lookbehind assertions (i.e. <code>?&lt;=</code>). When it didn&rsquo;t work I facepalmed: &ldquo;of course! it&rsquo;s xml; I have to escape it (i.e. <code>&amp;lt;</code>)&rdquo;. When it didn&rsquo;t work again I started googling. It seems the guys gave up on lookbehinds altogether for this reason so they just didn&rsquo;t implement it, even though Oniguruma supports it :) Good idea though; lookbehinds are slow and not universally supported (<a href="http://stackoverflow.com/questions/24093540/why-doesnt-javascript-have-lookbehinds">Javascript</a>, <a href="http://stackoverflow.com/questions/7605615/regex-negative-lookbehind-in-ruby-doesnt-seem-to-work?rq=1">Ruby &lt; 1.9</a>).</p>
+<h2 id="lastly">Lastly</h2>
+<p>Once you are done and you&rsquo;re sure it works properly, share your contribution to the World!
+<a href="https://github.com/sublimehq/Packages/issues/98">This</a> was my Github issue for the PHP syntax fix.</p>
+<p>Happy open sourcing!</p>
+
+  </div>
+</article>
+
+  </main>
+</body>
+
+</html>

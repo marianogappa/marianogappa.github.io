@@ -1,2 +1,166 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mariano Gappa's Blog</title><link>https://marianogappa.github.io/</link><description>Recent content on Mariano Gappa's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 15 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://marianogappa.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</title><link>https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</link><pubDate>Thu, 15 May 2025 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</guid><description>How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter.</description></item><item><title>A Joyful Tale of Golang Memory Profiling at CloudQuery</title><link>https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/</guid><description>A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product.</description></item><item><title>On being parasitical</title><link>https://marianogappa.github.io/ethics/2023/12/28/on-being-parasitical/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/ethics/2023/12/28/on-being-parasitical/</guid><description>An exploration of the concept of being parasitical, examining moral considerations, and ultimately questioning where individuals draw the line in accepting or rejecting such behavior.</description></item><item><title>Real-life indirection is the root of all evil (and AI agents can fix it)</title><link>https://marianogappa.github.io/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</link><pubDate>Fri, 28 Jul 2023 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</guid><description>The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.</description></item><item><title>Building Crypto Predictions Tracker: architecture and challenges</title><link>https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</link><pubDate>Sat, 17 Jun 2023 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2023/06/17/building-crypto-predictions/</guid><description>A summary of my experience building a Go-based project that tracks cryptocurrency predictions on social media and evaluates their accuracy using publicly available market data.</description></item><item><title>Cryptocurrency influencers are preying on millennials who found salvation in crypto</title><link>https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</link><pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</guid><description>Blogpost on past &amp;amp; present of investing, focusing on the problem of the difficulty of finding reputable advice on cryptocurrency investments. Also presenting an engine I created to keep a track-record for cryptocurrency influencers, called the Crypto Predictions Tracker.</description></item><item><title>10 Gotchas for building a universal crypto candlestick iterator in Go</title><link>https://marianogappa.github.io/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</link><pubDate>Wed, 27 Jul 2022 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</guid><description>My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you&amp;rsquo;ll face working with crypto exchanges&amp;rsquo; APIs.</description></item><item><title>Running Golang on the browser with WebAssembly and TinyGo</title><link>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</link><pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2020/04/01/webassembly-tinygo-cheesse/</guid><description>This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server.</description></item><item><title>A chess story</title><link>https://marianogappa.github.io/software/2020/01/03/chess-story/</link><pubDate>Fri, 03 Jan 2020 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2020/01/03/chess-story/</guid><description>Not ready yet!</description></item><item><title>Let's build a SQL parser in Go!</title><link>https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</link><pubDate>Wed, 05 Jun 2019 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid><description>This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).</description></item><item><title>We saved $50k/y with a tiny Go microservice coded in a Hackathon</title><link>https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link><pubDate>Mon, 02 Apr 2018 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid><description>In the past few weeks we&amp;rsquo;ve rolled out a Go microservice called &amp;lsquo;KIB&amp;rsquo; to production, which reduced a huge portion of the infrastructure necessary for Movio&amp;rsquo;s main product, saving considerable AWS bills &amp;amp; maintenance, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.</description></item><item><title>How we improved our workflow by piping sql</title><link>https://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link><pubDate>Wed, 28 Jun 2017 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</guid><description>I&amp;rsquo;ve written a blogpost for Movio about two Go CLI tools we&amp;rsquo;ve created, sql and chart, to improve our data tinkering workflow</description></item><item><title>Ostinato: a chess engine written in Scala that runs on the browser, Docker and the REPL</title><link>https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link><pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid><description>A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites.</description></item><item><title>Making the move from Scala to Go, and why we’re not going back</title><link>https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link><pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid><description>I&amp;rsquo;ve written a blogpost for Movio about our squad&amp;rsquo;s decision to migrate part of our Scala codebase to Go.</description></item><item><title>Diffing streams on the terminal</title><link>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</link><pubDate>Sat, 30 Jul 2016 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2016/07/30/diffing-streams-on-the-terminal/</guid><description>In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&amp;rsquo;ve developed, sd, to address some of these limitations.</description></item><item><title>jira-cli: a lightweight bash script for easily querying JIRA</title><link>https://marianogappa.github.io/software/2016/05/10/jira-cli/</link><pubDate>Tue, 10 May 2016 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2016/05/10/jira-cli/</guid><description>Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use.</description></item><item><title>Fixing syntax highlighting issues in Sublime Text 3</title><link>https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link><pubDate>Sat, 27 Feb 2016 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid><description>A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found.</description></item><item><title>About</title><link>https://marianogappa.github.io/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://marianogappa.github.io/about/</guid><description>I&amp;rsquo;m a software engineer and studio mixer based in Dubai, UAE.
-All views, posts and opinions shared on this blog and on my tweets are my own.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mariano Gappa&#39;s Blog</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Mariano Gappa&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 24 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Making Games in Go: 3 Months Without LLMs vs 3 Days With LLMs!</title>
+      <link>http://localhost:1313/software/2025/08/24/i-made-two-card-games-in-go/</link>
+      <pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2025/08/24/i-made-two-card-games-in-go/</guid>
+      <description>I built two classic Argentinian card games in Go: one took 3 months without LLMs, the other just 3 days with them — and a step-by-step guide to make your own game.</description>
+    </item>
+    <item>
+      <title>Mind the gap!</title>
+      <link>http://localhost:1313/thoughts/mind-the-gap/</link>
+      <pubDate>Sat, 28 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/thoughts/mind-the-gap/</guid>
+      <description>A hand on the fire instantly teaches danger, but alcoholism’s harm unfolds slowly.&#xA;This latter indirection, or gap in feedback, is bridged with narratives: stories we adopt, often without noticing.&#xA;We underestimate how deeply the narratives we choose affect us. Mind the gap!</description>
+    </item>
+    <item>
+      <title>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</title>
+      <link>http://localhost:1313/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</link>
+      <pubDate>Thu, 15 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/</guid>
+      <description>How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter.</description>
+    </item>
+    <item>
+      <title>A Joyful Tale of Golang Memory Profiling at CloudQuery</title>
+      <link>http://localhost:1313/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/</link>
+      <pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/</guid>
+      <description>A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product.</description>
+    </item>
+    <item>
+      <title>On being parasitical</title>
+      <link>http://localhost:1313/ethics/2023/12/28/on-being-parasitical/</link>
+      <pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ethics/2023/12/28/on-being-parasitical/</guid>
+      <description>An exploration of the concept of being parasitical, examining moral considerations, and ultimately questioning where individuals draw the line in accepting or rejecting such behavior.</description>
+    </item>
+    <item>
+      <title>Real-life indirection is the root of all evil (and AI agents can fix it)</title>
+      <link>http://localhost:1313/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</link>
+      <pubDate>Fri, 28 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/</guid>
+      <description>The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.</description>
+    </item>
+    <item>
+      <title>Real-life indirection is the root of all evil (and AI agents can fix it)</title>
+      <link>http://localhost:1313/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/</link>
+      <pubDate>Fri, 28 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/</guid>
+      <description>The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.</description>
+    </item>
+    <item>
+      <title>Building Crypto Predictions Tracker: architecture and challenges</title>
+      <link>http://localhost:1313/software/2023/06/17/building-crypto-predictions/</link>
+      <pubDate>Sat, 17 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2023/06/17/building-crypto-predictions/</guid>
+      <description>A summary of my experience building a Go-based project that tracks cryptocurrency predictions on social media and evaluates their accuracy using publicly available market data.</description>
+    </item>
+    <item>
+      <title>Cryptocurrency influencers are preying on millennials who found salvation in crypto</title>
+      <link>http://localhost:1313/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/</guid>
+      <description>Blogpost on past &amp;amp; present of investing, focusing on the problem of the difficulty of finding reputable advice on cryptocurrency investments. Also presenting an engine I created to keep a track-record for cryptocurrency influencers, called the Crypto Predictions Tracker.</description>
+    </item>
+    <item>
+      <title>10 Gotchas for building a universal crypto candlestick iterator in Go</title>
+      <link>http://localhost:1313/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</link>
+      <pubDate>Wed, 27 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/</guid>
+      <description>My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you&amp;rsquo;ll face working with crypto exchanges&amp;rsquo; APIs.</description>
+    </item>
+    <item>
+      <title>Running Golang on the browser with WebAssembly and TinyGo</title>
+      <link>http://localhost:1313/software/2020/04/01/webassembly-tinygo-cheesse/</link>
+      <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2020/04/01/webassembly-tinygo-cheesse/</guid>
+      <description>This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server.</description>
+    </item>
+    <item>
+      <title>A chess story</title>
+      <link>http://localhost:1313/software/2020/01/03/chess-story/</link>
+      <pubDate>Fri, 03 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2020/01/03/chess-story/</guid>
+      <description>Not ready yet!</description>
+    </item>
+    <item>
+      <title>Let&#39;s build a SQL parser in Go!</title>
+      <link>http://localhost:1313/software/2019/06/05/lets-build-a-sql-parser-in-go/</link>
+      <pubDate>Wed, 05 Jun 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2019/06/05/lets-build-a-sql-parser-in-go/</guid>
+      <description>This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).</description>
+    </item>
+    <item>
+      <title>We saved $50k/y with a tiny Go microservice coded in a Hackathon</title>
+      <link>http://localhost:1313/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</link>
+      <pubDate>Mon, 02 Apr 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/</guid>
+      <description>In the past few weeks we&amp;rsquo;ve rolled out a Go microservice called &amp;lsquo;KIB&amp;rsquo; to production, which reduced a huge portion of the infrastructure necessary for Movio&amp;rsquo;s main product, saving considerable AWS bills &amp;amp; maintenance, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.</description>
+    </item>
+    <item>
+      <title>How we improved our workflow by piping sql</title>
+      <link>http://localhost:1313/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</link>
+      <pubDate>Wed, 28 Jun 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/</guid>
+      <description>I&amp;rsquo;ve written a blogpost for Movio about two Go CLI tools we&amp;rsquo;ve created, sql and chart, to improve our data tinkering workflow</description>
+    </item>
+    <item>
+      <title>Ostinato: a chess engine written in Scala that runs on the browser, Docker and the REPL</title>
+      <link>http://localhost:1313/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</link>
+      <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/</guid>
+      <description>A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites.</description>
+    </item>
+    <item>
+      <title>Making the move from Scala to Go, and why we’re not going back</title>
+      <link>http://localhost:1313/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</link>
+      <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/</guid>
+      <description>I&amp;rsquo;ve written a blogpost for Movio about our squad&amp;rsquo;s decision to migrate part of our Scala codebase to Go.</description>
+    </item>
+    <item>
+      <title>Diffing streams on the terminal</title>
+      <link>http://localhost:1313/software/2016/07/30/diffing-streams-on-the-terminal/</link>
+      <pubDate>Sat, 30 Jul 2016 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2016/07/30/diffing-streams-on-the-terminal/</guid>
+      <description>In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&amp;rsquo;ve developed, sd, to address some of these limitations.</description>
+    </item>
+    <item>
+      <title>jira-cli: a lightweight bash script for easily querying JIRA</title>
+      <link>http://localhost:1313/software/2016/05/10/jira-cli/</link>
+      <pubDate>Tue, 10 May 2016 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2016/05/10/jira-cli/</guid>
+      <description>Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use.</description>
+    </item>
+    <item>
+      <title>Fixing syntax highlighting issues in Sublime Text 3</title>
+      <link>http://localhost:1313/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</link>
+      <pubDate>Sat, 27 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/</guid>
+      <description>A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found.</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m a software engineer and studio mixer based in Dubai, UAE.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/posts/Mariano.png&#34; alt=&#34;Mariano&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;All views, posts and opinions shared on this blog and on my tweets are my own.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Projects</title>
+      <link>http://localhost:1313/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/</guid>
+      <description>&lt;h2 id=&#34;ostinato&#34;&gt;Ostinato&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/marianogappa/ostinato&#34;&gt;https://github.com/marianogappa/ostinato&lt;/a&gt;&lt;br&gt;&#xA;A chess library that runs on the server (Scala) and on the browser (ScalaJS).&#xA;Try the notation converter &lt;a href=&#34;https://marianogappa.github.io/ostinato-examples/convert.html&#34;&gt;here&lt;/a&gt;&#xA;&lt;img src=&#34;http://localhost:1313/images/projects/ostinato.png&#34; alt=&#34;Ostinato&#34;&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;cheesse&#34;&gt;Cheesse&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/marianogappa/cheesse&#34;&gt;https://github.com/marianogappa/cheesse&lt;/a&gt;&lt;br&gt;&#xA;Package, server, cli tool and WebAssembly binary for chess use cases.&#xA;&lt;img src=&#34;http://localhost:1313/images/projects/cheesse.png&#34; alt=&#34;Cheesse&#34;&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;truco&#34;&gt;Truco&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/marianogappa/truco&#34;&gt;https://github.com/marianogappa/truco&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;Truco argentino implementation, featuring:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;websocket-based client/server architecture&lt;/li&gt;&#xA;&lt;li&gt;example terminal-based frontend&lt;/li&gt;&#xA;&lt;li&gt;example React-based frontend, and a simple, documented interface for making your own frontend&lt;/li&gt;&#xA;&lt;li&gt;example bot, and a simple, documented interface for making your own&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://marianogappa.github.io/truco-argentino&#34;&gt;Play here&lt;/a&gt;&#xA;&lt;img src=&#34;http://localhost:1313/images/projects/truco.png&#34; alt=&#34;Truco&#34;&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

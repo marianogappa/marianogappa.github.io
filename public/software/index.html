@@ -1,2 +1,97 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Mariano Gappa's Blog</title>
-<link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/css/chroma.css><link rel=icon href=/favicon.ico></head><body><header class=header-flex><div class=site-title><a href=/>Mariano Gappa's Blog</a></div><nav><ul><li><a href=/about/>About</a></li></ul></nav></header><main class=container><h1>Softwares</h1><h2><a href=/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/>How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</a></h2>How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter.<h2><a href=/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/>A Joyful Tale of Golang Memory Profiling at CloudQuery</a></h2>A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product.<h2><a href=/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/>Real-life indirection is the root of all evil (and AI agents can fix it)</a></h2>The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.<h2><a href=/software/2023/06/17/building-crypto-predictions/>Building Crypto Predictions Tracker: architecture and challenges</a></h2>A summary of my experience building a Go-based project that tracks cryptocurrency predictions on social media and evaluates their accuracy using publicly available market data.<h2><a href=/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/>Cryptocurrency influencers are preying on millennials who found salvation in crypto</a></h2>Blogpost on past & present of investing, focusing on the problem of the difficulty of finding reputable advice on cryptocurrency investments. Also presenting an engine I created to keep a track-record for cryptocurrency influencers, called the Crypto Predictions Tracker.<h2><a href=/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/>10 Gotchas for building a universal crypto candlestick iterator in Go</a></h2>My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you&rsquo;ll face working with crypto exchanges&rsquo; APIs.<h2><a href=/software/2020/04/01/webassembly-tinygo-cheesse/>Running Golang on the browser with WebAssembly and TinyGo</a></h2>This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server.<h2><a href=/software/2020/01/03/chess-story/>A chess story</a></h2>Not ready yet!<h2><a href=/software/2019/06/05/lets-build-a-sql-parser-in-go/>Let's build a SQL parser in Go!</a></h2>This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).<h2><a href=/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/>We saved $50k/y with a tiny Go microservice coded in a Hackathon</a></h2>In the past few weeks we&rsquo;ve rolled out a Go microservice called &lsquo;KIB&rsquo; to production, which reduced a huge portion of the infrastructure necessary for Movio&rsquo;s main product, saving considerable AWS bills & maintenance, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.<h2><a href=/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/>How we improved our workflow by piping sql</a></h2>I&rsquo;ve written a blogpost for Movio about two Go CLI tools we&rsquo;ve created, sql and chart, to improve our data tinkering workflow<h2><a href=/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/>Ostinato: a chess engine written in Scala that runs on the browser, Docker and the REPL</a></h2>A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites.<h2><a href=/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/>Making the move from Scala to Go, and why we’re not going back</a></h2>I&rsquo;ve written a blogpost for Movio about our squad&rsquo;s decision to migrate part of our Scala codebase to Go.<h2><a href=/software/2016/07/30/diffing-streams-on-the-terminal/>Diffing streams on the terminal</a></h2>In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&rsquo;ve developed, sd, to address some of these limitations.<h2><a href=/software/2016/05/10/jira-cli/>jira-cli: a lightweight bash script for easily querying JIRA</a></h2>Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use.<h2><a href=/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/>Fixing syntax highlighting issues in Sublime Text 3</a></h2>A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found.</main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMBH4M85HZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-SMBH4M85HZ');
+  </script>
+
+  <title>Mariano Gappa&#39;s Blog</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/chroma.css">
+  <link rel="icon" href="/favicon.ico">
+  
+</head>
+
+<body>
+  <header class="header-flex">
+    <div class="site-title"><a href="/">Mariano Gappa&#39;s Blog</a></div>
+    <nav>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/projects/">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    
+  <h1>Softwares</h1>
+  
+  
+    <h2><a href="/software/2025/08/24/i-made-two-card-games-in-go/">Making Games in Go: 3 Months Without LLMs vs 3 Days With LLMs!</a></h2>
+    I built two classic Argentinian card games in Go: one took 3 months without LLMs, the other just 3 days with them — and a step-by-step guide to make your own game.
+  
+    <h2><a href="/software/2025/05/15/how-we-handle-billion-row-clickhouse-inserts-with-uuid-range-bucketing/">How We Handle Billion-Row ClickHouse Inserts With UUID Range Bucketing</a></h2>
+    How we solved OOM issues in ClickHouse using a simple UUID-range bucketing algorithm called InsertSplitter.
+  
+    <h2><a href="/software/2024/07/10/a-joyful-tale-of-golang-memory-profiling-at-cloudquery/">A Joyful Tale of Golang Memory Profiling at CloudQuery</a></h2>
+    A step-by-step approach on resolving memory issues I experienced at work, leading to an 84% reduction in memory usage with no adverse impacts on the product.
+  
+    <h2><a href="/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it-copy/">Real-life indirection is the root of all evil (and AI agents can fix it)</a></h2>
+    The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.
+  
+    <h2><a href="/software/2023/07/28/real-life-indirection-is-the-root-of-all-evil-and-ai-agents-can-fix-it/">Real-life indirection is the root of all evil (and AI agents can fix it)</a></h2>
+    The blogpost explores how the evil downsides of indirection, a programming principle that can be conceptualised in real life, can (and invariably will?) be challenged by the latest AI developments.
+  
+    <h2><a href="/software/2023/06/17/building-crypto-predictions/">Building Crypto Predictions Tracker: architecture and challenges</a></h2>
+    A summary of my experience building a Go-based project that tracks cryptocurrency predictions on social media and evaluates their accuracy using publicly available market data.
+  
+    <h2><a href="/software/2022/08/25/cryptocurrency-influencers-are-preying-on-millennials-who-found-salvation-in-crypto/">Cryptocurrency influencers are preying on millennials who found salvation in crypto</a></h2>
+    Blogpost on past &amp; present of investing, focusing on the problem of the difficulty of finding reputable advice on cryptocurrency investments. Also presenting an engine I created to keep a track-record for cryptocurrency influencers, called the Crypto Predictions Tracker.
+  
+    <h2><a href="/software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/">10 Gotchas for building a universal crypto candlestick iterator in Go</a></h2>
+    My journey building a universal crypto candlestick iterator in Go, with tips for all the challenges you&rsquo;ll face working with crypto exchanges&rsquo; APIs.
+  
+    <h2><a href="/software/2020/04/01/webassembly-tinygo-cheesse/">Running Golang on the browser with WebAssembly and TinyGo</a></h2>
+    This is the story of how I managed to expose my Golang chess backend project cheesse as a WebAssembly binary, compiled using TinyGo, so JavaScript could use it, without needing a server.
+  
+    <h2><a href="/software/2020/01/03/chess-story/">A chess story</a></h2>
+    Not ready yet!
+  
+    <h2><a href="/software/2019/06/05/lets-build-a-sql-parser-in-go/">Let&#39;s build a SQL parser in Go!</a></h2>
+    This article aims to be the simplest introduction to constructing an LL(1) parser in Go, in this case for parsing SQL queries. It assumes minimal programming competence (functions, structs, ifs and for-loops).
+  
+    <h2><a href="/software/2018/04/02/we-saved-50ky-with-a-tiny-go-%C2%B5service-coded-in-a-hackathon/">We saved $50k/y with a tiny Go microservice coded in a Hackathon</a></h2>
+    In the past few weeks we&rsquo;ve rolled out a Go microservice called &lsquo;KIB&rsquo; to production, which reduced a huge portion of the infrastructure necessary for Movio&rsquo;s main product, saving considerable AWS bills &amp; maintenance, significantly simplified our architecture and made our product 80% faster on average. We wrote KIB on a Hackathon.
+  
+    <h2><a href="/software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/">How we improved our workflow by piping sql</a></h2>
+    I&rsquo;ve written a blogpost for Movio about two Go CLI tools we&rsquo;ve created, sql and chart, to improve our data tinkering workflow
+  
+    <h2><a href="/software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/">Ostinato: a chess engine written in Scala that runs on the browser, Docker and the REPL</a></h2>
+    A chess engine that solves several use-cases that there are no good free online sources for, and a good candidate for AI research or for a backend for chess sites.
+  
+    <h2><a href="/software/2017/01/25/making-the-move-from-scala-to-go-and-why-were-not-going-back/">Making the move from Scala to Go, and why we’re not going back</a></h2>
+    I&rsquo;ve written a blogpost for Movio about our squad&rsquo;s decision to migrate part of our Scala codebase to Go.
+  
+    <h2><a href="/software/2016/07/30/diffing-streams-on-the-terminal/">Diffing streams on the terminal</a></h2>
+    In this blogpost, I describe the most popular tools currently used to diff streams on the terminal, their differences and limitations. Then I introduce a new tool I&rsquo;ve developed, sd, to address some of these limitations.
+  
+    <h2><a href="/software/2016/05/10/jira-cli/">jira-cli: a lightweight bash script for easily querying JIRA</a></h2>
+    Quick introduction to a bash-based tool for ops and devs to do JIRA-related read-only tasks that is easy to install, configure and use.
+  
+    <h2><a href="/software/2016/02/27/fixing-syntax-highlighting-in-sublime3/">Fixing syntax highlighting issues in Sublime Text 3</a></h2>
+    A straightforward guide to fixing syntax highlighting issues in Sublime Text 3 based on an actual issue I found.
+  
+
+  </main>
+</body>
+
+</html>
