@@ -9,6 +9,9 @@ publications:
       url: https://news.ycombinator.com/item?id=45004728
       position: 1
       position_link: http://hnrankings.info/45004728/
+    - icon: golang_weekly
+      issue: 568
+      url: http://golangweekly.com/issues/568
 ---
 
 ## Introduction
