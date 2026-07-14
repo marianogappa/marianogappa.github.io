@@ -260,3 +260,5 @@ But honestly, the tool is the least important part of this. What's worth holding
 *screpdb is open source (MIT) and lives [here](https://github.com/marianogappa/screpdb). Built on [icza/screp](https://github.com/icza/screp), without which none of this would exist.*
 
 *screpdb isn't a competitor to RepMastered or vespene.gg, it's complementary! Each do slightly different things. András helped me build screpdb through knowledge transfer, others helped betatesting too like 2Pacalypse- from TL.net. And I hope screpdb's most useful features are rightfully stolen and improved upon 👍*
+
+*Discuss on [TL.net](https://tl.net/forum/brood-war/645718-screpdb-new-starcraft-reporting-tool).*
