@@ -261,4 +261,4 @@ But honestly, the tool is the least important part of this. What's worth holding
 
 *screpdb isn't a competitor to RepMastered or vespene.gg, it's complementary! Each do slightly different things. András helped me build screpdb through knowledge transfer, others helped betatesting too like 2Pacalypse- from TL.net. And I hope screpdb's most useful features are rightfully stolen and improved upon 👍*
 
-*Discuss on [TL.net](https://tl.net/forum/brood-war/645718-screpdb-new-starcraft-reporting-tool).*
+*Discuss on [TL.net](https://tl.net/forum/brood-war/645718-screpdb-new-starcraft-reporting-tool) and [Reddit](https://www.reddit.com/r/broodwar/comments/1uw6rvi/9_months_building_an_advanced_starcraft_reporting/).*
