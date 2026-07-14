@@ -257,6 +257,49 @@ code {
   background-color: #f1f3f4;
 }
 
+/* Section permalinks (GitHub-style) */
+.heading-anchor {
+  position: relative;
+  scroll-margin-top: 1rem;
+}
+
+.heading-anchor .anchor-link {
+  position: absolute;
+  left: -1.4em;
+  top: 0;
+  height: 1.4em;
+  display: flex;
+  align-items: center;
+  color: #bbb;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.heading-anchor .anchor-link svg {
+  display: block;
+  width: 0.85em;
+  height: 0.85em;
+  fill: currentColor;
+}
+
+.heading-anchor:hover .anchor-link,
+.heading-anchor:focus-within .anchor-link {
+  opacity: 1;
+}
+
+.heading-anchor .anchor-link:hover {
+  color: #0076d1;
+}
+
+/* Keep the permalink discoverable on touch devices (gutter layout) */
+@media (hover: none) {
+  .heading-anchor .anchor-link {
+    opacity: 1;
+    color: #ddd;
+  }
+}
+
 /* Mobile responsiveness */
 @media screen and (max-width: 600px) {
   body {
@@ -318,5 +361,14 @@ code {
 
   .post-meta {
     font-size: 0.95rem;
+  }
+
+  .heading-anchor .anchor-link {
+    position: static;
+    display: inline-flex;
+    height: auto;
+    margin-left: 0.3em;
+    vertical-align: middle;
+    opacity: 0.4;
   }
 }

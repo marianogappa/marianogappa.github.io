@@ -4,6 +4,15 @@ title: "Projects"
 
 
 
+## screpdb
+[https://github.com/marianogappa/screpdb](https://github.com/marianogappa/screpdb)  
+An advanced StarCraft: Brood War replay reporting tool, built in Go. Turns replays into rich, queryable reports: build-order detection, skill proxies, semantic markers, alliance and team-stacking detection, and an MCP server to ask an AI about any game. Runs on Windows, macOS, and Linux.
+
+[Blog post](/thoughts/building-an-advanced-starcraft-reporting-tool/)
+![screpdb](/images/projects/screpdb.png)
+
+---
+
 ## Ostinato
 [https://github.com/marianogappa/ostinato](https://github.com/marianogappa/ostinato)  
 A chess library that runs on the server (Scala) and on the browser (ScalaJS).
