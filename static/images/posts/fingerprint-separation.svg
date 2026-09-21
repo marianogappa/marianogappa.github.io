@@ -1,0 +1,53 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="900" height="300" fill="#ffffff"/>
+
+  <text x="60" y="32" font-size="18" font-weight="700" fill="#0f172a">Unique enough: the two bands never touch</text>
+  <text x="60" y="54" font-size="13" fill="#64748b">Calibrated by splitting one account's own games in half, and by pairing random strangers.</text>
+
+  <!-- bands -->
+  <rect x="60"  y="80" width="234" height="34" fill="#fef2f2" stroke="#dc2626"/>
+  <rect x="294" y="80" width="321" height="34" fill="#fffbeb" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+  <rect x="615" y="80" width="225" height="34" fill="#ecfdf5" stroke="#059669"/>
+
+  <text x="177" y="102" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626">DIFFERENT PEOPLE</text>
+  <text x="454" y="102" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">WE SAY WE DON'T KNOW</text>
+  <text x="727" y="102" text-anchor="middle" font-size="12" font-weight="700" fill="#059669">SAME PERSON</text>
+
+  <!-- axis -->
+  <line x1="60" y1="130" x2="840" y2="130" stroke="#cbd5e1" stroke-width="1.5"/>
+  <g font-size="11" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#64748b">
+    <line x1="60" y1="130" x2="60" y2="137" stroke="#cbd5e1"/>
+    <text x="60" y="152" text-anchor="middle">&#8722;1</text>
+    <line x1="147" y1="130" x2="147" y2="136" stroke="#cbd5e1"/>
+    <text x="147" y="152" text-anchor="middle">0</text>
+    <line x1="294" y1="130" x2="294" y2="139" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="294" y="152" text-anchor="middle" font-weight="600" fill="#dc2626">1.7</text>
+    <line x1="407" y1="130" x2="407" y2="136" stroke="#cbd5e1"/>
+    <text x="407" y="152" text-anchor="middle">3</text>
+    <line x1="615" y1="130" x2="615" y2="139" stroke="#059669" stroke-width="1.5"/>
+    <text x="615" y="152" text-anchor="middle" font-weight="600" fill="#059669">5.4</text>
+    <line x1="840" y1="130" x2="840" y2="137" stroke="#cbd5e1"/>
+    <text x="840" y="152" text-anchor="middle">8</text>
+  </g>
+  <text x="450" y="174" text-anchor="middle" font-size="12" fill="#94a3b8">score between two piles of replays</text>
+
+  <!-- gap callout -->
+  <path d="M300 190 L300 198 L609 198 L609 190" fill="none" stroke="#b45309" stroke-width="1.5"/>
+  <text x="454" y="216" text-anchor="middle" font-size="12" fill="#b45309">3.7 points of daylight, and nothing legitimate lands in it</text>
+
+  <!-- stat strip -->
+  <line x1="60" y1="234" x2="840" y2="234" stroke="#e2e8f0" stroke-width="2"/>
+  <g font-size="13">
+    <text x="60" y="258" font-weight="700" font-size="17" fill="#0f172a">99.8%</text>
+    <text x="60" y="278" fill="#64748b">told apart from a</text>
+    <text x="60" y="292" fill="#64748b">stranger, one game</text>
+
+    <text x="290" y="258" font-weight="700" font-size="17" fill="#0f172a">99.95%</text>
+    <text x="290" y="278" fill="#64748b">same, given three</text>
+    <text x="290" y="292" fill="#64748b">games of evidence</text>
+
+    <text x="560" y="258" font-weight="700" font-size="17" fill="#0f172a">98.9%</text>
+    <text x="560" y="278" fill="#64748b">picked correctly out of</text>
+    <text x="560" y="292" fill="#64748b">68 candidates, one game</text>
+  </g>
+</svg>

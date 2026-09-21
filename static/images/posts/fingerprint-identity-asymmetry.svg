@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="900" height="500" fill="#ffffff"/>
+  <line x1="500" y1="20" x2="500" y2="478" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- LEFT -->
+  <text x="40" y="38" font-size="18" font-weight="700" fill="#0f172a">One Battle.net account, eight toons</text>
+
+  <text x="40" y="70" font-size="13" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#475569">aurora 18242965</text>
+  <text x="40" y="92" font-size="13" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#475569">battle tag &#44608;&#47749;&#50868;</text>
+  <text x="40" y="114" font-size="13" fill="#475569">the progamer <tspan font-weight="700" fill="#0f172a">Queen</tspan></text>
+
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">
+    <text x="40" y="150" font-size="11" font-weight="700" font-family="-apple-system, Segoe UI, sans-serif" fill="#64748b" letter-spacing="0.6">U.S. WEST</text>
+    <text x="52" y="172">lllllIlIIIlIl</text>
+    <text x="52" y="194">wooni222</text>
+
+    <text x="40" y="228" font-size="11" font-weight="700" font-family="-apple-system, Segoe UI, sans-serif" fill="#64748b" letter-spacing="0.6">U.S. EAST</text>
+    <text x="52" y="250">IIllIIIIIIIl</text>
+    <text x="52" y="272">lllIIllIIIIllII</text>
+    <rect x="44" y="284" width="290" height="24" rx="4" fill="#ecfdf5" stroke="#059669"/>
+    <text x="52" y="301" font-weight="700">lllIIllIIllIII</text>
+    <text x="186" y="301" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#059669">18 games last week</text>
+
+    <text x="40" y="342" font-size="11" font-weight="700" font-family="-apple-system, Segoe UI, sans-serif" fill="#64748b" letter-spacing="0.6">EUROPE</text>
+    <text x="52" y="364">wooni22222222</text>
+
+    <text x="40" y="398" font-size="11" font-weight="700" font-family="-apple-system, Segoe UI, sans-serif" fill="#64748b" letter-spacing="0.6">KOREA</text>
+    <rect x="44" y="410" width="290" height="24" rx="4" fill="#fef3c7" stroke="#d97706"/>
+    <text x="52" y="427" font-weight="700">Queennnnnn</text>
+    <text x="162" y="427" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#b45309">the searchable one</text>
+
+    <text x="40" y="466" font-size="11" font-weight="700" font-family="-apple-system, Segoe UI, sans-serif" fill="#64748b" letter-spacing="0.6">ASIA</text>
+    <text x="52" y="488">Queennnnnnnnn</text>
+  </g>
+
+  <!-- RIGHT -->
+  <text x="540" y="38" font-size="18" font-weight="700" fill="#0f172a">What his replay contains</text>
+
+  <rect x="540" y="60" width="320" height="80" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="556" y="86" font-size="11" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#64748b">rep.Header.Players[0]</text>
+  <text x="556" y="118" font-size="15" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#0f172a">Name: "lllIIllIIllIII"</text>
+
+  <text x="540" y="176" font-size="13" font-weight="700" fill="#64748b">Not in the file. At all.</text>
+  <g font-size="13" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#94a3b8">
+    <text x="540" y="202">aurora id</text>       <line x1="540" y1="198" x2="616" y2="198" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="540" y="226">battle tag</text>      <line x1="540" y1="222" x2="620" y2="222" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="540" y="250">gateway</text>         <line x1="540" y1="246" x2="600" y2="246" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="540" y="274">the other 7 toons</text><line x1="540" y1="270" x2="672" y2="270" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="540" y="298">any verification</text> <line x1="540" y1="294" x2="676" y2="294" stroke="#cbd5e1" stroke-width="1.5"/>
+  </g>
+
+  <rect x="540" y="330" width="320" height="130" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="556" y="358" font-size="13" font-weight="700" fill="#dc2626">Why the alias lists miss him</text>
+  <text x="556" y="384" font-size="13" fill="#7f1d1d">The name people know and track is</text>
+  <text x="556" y="404" font-size="13" fill="#7f1d1d">on Korea. The account he actually</text>
+  <text x="556" y="424" font-size="13" fill="#7f1d1d">plays is on U.S. East, under a</text>
+  <text x="556" y="444" font-size="13" fill="#7f1d1d">barcode nobody has written down.</text>
+</svg>

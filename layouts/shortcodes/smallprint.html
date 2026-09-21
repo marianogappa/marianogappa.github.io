@@ -1,0 +1,5 @@
+{{- /* Small print at the end of a post: attribution, caveats, footnotes, discussion links.
+       Usage:  {{< smallprint >}} markdown here {{< /smallprint >}}  */ -}}
+<aside class="post-smallprint">
+{{ .Inner | markdownify }}
+</aside>

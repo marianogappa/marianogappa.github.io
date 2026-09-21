@@ -1,0 +1,79 @@
+<svg viewBox="0 0 900 512" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="900" height="512" fill="#ffffff"/>
+
+  <text x="40" y="32" font-size="18" font-weight="700" fill="#0f172a">Two seconds of a replay, as the parser sees it</text>
+  <text x="40" y="54" font-size="13" fill="#64748b">No game state, no outcome, no score. Only the commands, each stamped to the frame. One frame is 42 ms.</text>
+
+  <!-- table header -->
+  <g font-size="10.5" font-weight="700" fill="#64748b" letter-spacing="0.7">
+    <text x="44" y="86">FRAME</text>
+    <text x="110" y="86">TIME</text>
+    <text x="185" y="86">PLAYER</text>
+    <text x="265" y="86">COMMAND</text>
+    <text x="392" y="86">DETAIL</text>
+  </g>
+  <line x1="40" y1="94" x2="540" y2="94" stroke="#0f172a" stroke-width="1.5"/>
+
+  <g font-size="12" font-family="ui-monospace, Menlo, Consolas, monospace">
+    <!-- row 1 -->
+    <text x="44" y="114" fill="#94a3b8">2891</text><text x="110" y="114" fill="#64748b">2:01.4</text>
+    <text x="185" y="114" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="114" fill="#0f172a">Hotkey Assign</text><text x="392" y="114" fill="#475569">group 4</text>
+    <!-- row 2 -->
+    <text x="44" y="137" fill="#94a3b8">2896</text><text x="110" y="137" fill="#64748b">2:01.6</text>
+    <text x="185" y="137" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="137" fill="#0f172a">Select</text><text x="392" y="137" fill="#475569">1 unit</text>
+    <!-- row 3 -->
+    <text x="44" y="160" fill="#94a3b8">2903</text><text x="110" y="160" fill="#64748b">2:01.9</text>
+    <text x="185" y="160" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="160" fill="#0f172a">Right Click</text><text x="392" y="160" fill="#94a3b8">(1472, 2016)</text>
+    <!-- row 4 -->
+    <text x="44" y="183" fill="#94a3b8">2911</text><text x="110" y="183" fill="#64748b">2:02.3</text>
+    <text x="185" y="183" fill="#b45309" font-weight="600">Light</text><text x="265" y="183" fill="#0f172a">Hotkey Select</text><text x="392" y="183" fill="#475569">group 1</text>
+    <!-- row 5 -->
+    <text x="44" y="206" fill="#94a3b8">2914</text><text x="110" y="206" fill="#64748b">2:02.4</text>
+    <text x="185" y="206" fill="#b45309" font-weight="600">Light</text><text x="265" y="206" fill="#0f172a">Select</text><text x="392" y="206" fill="#475569">12 units</text>
+    <!-- row 6 -->
+    <text x="44" y="229" fill="#94a3b8">2922</text><text x="110" y="229" fill="#64748b">2:02.7</text>
+    <text x="185" y="229" fill="#b45309" font-weight="600">Light</text><text x="265" y="229" fill="#0f172a">Right Click</text><text x="392" y="229" fill="#94a3b8">(2304, 1088)</text>
+    <!-- row 7 -->
+    <text x="44" y="252" fill="#94a3b8">2930</text><text x="110" y="252" fill="#64748b">2:03.1</text>
+    <text x="185" y="252" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="252" fill="#0f172a">Hotkey Select</text><text x="392" y="252" fill="#475569">group 4</text>
+    <!-- row 8 -->
+    <text x="44" y="275" fill="#94a3b8">2933</text><text x="110" y="275" fill="#64748b">2:03.2</text>
+    <text x="185" y="275" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="275" fill="#0f172a">Train</text><text x="392" y="275" fill="#475569">Zergling</text>
+    <!-- row 9 -->
+    <text x="44" y="298" fill="#94a3b8">2936</text><text x="110" y="298" fill="#64748b">2:03.3</text>
+    <text x="185" y="298" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="298" fill="#0f172a">Train</text><text x="392" y="298" fill="#475569">Zergling</text>
+    <!-- row 10 -->
+    <text x="44" y="321" fill="#94a3b8">2940</text><text x="110" y="321" fill="#64748b">2:03.5</text>
+    <text x="185" y="321" fill="#2563eb" font-weight="600">Soma</text><text x="265" y="321" fill="#0f172a">Hotkey Select</text><text x="392" y="321" fill="#475569">group 4</text>
+    <!-- row 11 -->
+    <text x="44" y="344" fill="#94a3b8">2948</text><text x="110" y="344" fill="#64748b">2:03.8</text>
+    <text x="185" y="344" fill="#b45309" font-weight="600">Light</text><text x="265" y="344" fill="#0f172a">Build</text><text x="392" y="344" fill="#475569">Supply Depot</text>
+    <!-- row 12 -->
+    <text x="44" y="367" fill="#94a3b8">2955</text><text x="110" y="367" fill="#64748b">2:04.1</text>
+    <text x="185" y="367" fill="#b45309" font-weight="600">Light</text><text x="265" y="367" fill="#0f172a">Hotkey Assign</text><text x="392" y="367" fill="#475569">group 3</text>
+  </g>
+  <line x1="40" y1="380" x2="540" y2="380" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- annotation brackets -->
+  <path d="M552 106 h10 v142 h-10" fill="none" stroke="#059669" stroke-width="1.5"/>
+  <text x="574" y="168" font-size="12.5" font-weight="700" fill="#047857">binds group 4, first uses</text>
+  <text x="574" y="185" font-size="12.5" font-weight="700" fill="#047857">it 39 frames later</text>
+  <text x="574" y="203" font-size="12" fill="#065f46">1.6 s. That delay is a habit.</text>
+
+  <path d="M552 258 h10 v66 h-10" fill="none" stroke="#059669" stroke-width="1.5"/>
+  <text x="574" y="288" font-size="12.5" font-weight="700" fill="#047857">taps group 4 again</text>
+  <text x="574" y="306" font-size="12" fill="#065f46">420 ms. So is that.</text>
+
+  <!-- bottom boxes -->
+  <rect x="40" y="400" width="400" height="94" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="56" y="424" font-size="13" font-weight="700" fill="#047857">What the fingerprint reads</text>
+  <text x="56" y="447" font-size="12.5" fill="#065f46">Which groups get bound, and in what order.</text>
+  <text x="56" y="466" font-size="12.5" fill="#065f46">Every gap between consecutive commands.</text>
+  <text x="56" y="485" font-size="12.5" fill="#065f46">Which command tends to follow which.</text>
+
+  <rect x="460" y="400" width="400" height="94" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="476" y="424" font-size="13" font-weight="700" fill="#64748b">What it throws away</text>
+  <text x="476" y="447" font-size="12.5" fill="#94a3b8">The coordinates. The map. The matchup.</text>
+  <text x="476" y="466" font-size="12.5" fill="#94a3b8">The units, the build, the strategy.</text>
+  <text x="476" y="485" font-size="12.5" fill="#94a3b8">Who won.</text>
+</svg>

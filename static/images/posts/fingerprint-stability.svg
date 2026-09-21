@@ -1,0 +1,52 @@
+<svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="900" height="330" fill="#ffffff"/>
+
+  <text x="60" y="32" font-size="18" font-weight="700" fill="#0f172a">Stable enough: split anyone's games in half and the halves still match</text>
+  <text x="60" y="54" font-size="13" fill="#64748b">Score each account's earlier games against its own later games. One human lands near 0.96.</text>
+
+  <!-- axis -->
+  <line x1="80" y1="196" x2="840" y2="196" stroke="#cbd5e1" stroke-width="1.5"/>
+  <g font-size="11" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#64748b">
+    <line x1="80"  y1="196" x2="80"  y2="203" stroke="#cbd5e1"/><text x="80"  y="218" text-anchor="middle">0.4</text>
+    <line x1="207" y1="196" x2="207" y2="203" stroke="#cbd5e1"/><text x="207" y="218" text-anchor="middle">0.5</text>
+    <line x1="333" y1="196" x2="333" y2="203" stroke="#cbd5e1"/><text x="333" y="218" text-anchor="middle">0.6</text>
+    <line x1="460" y1="196" x2="460" y2="203" stroke="#cbd5e1"/><text x="460" y="218" text-anchor="middle">0.7</text>
+    <line x1="587" y1="196" x2="587" y2="203" stroke="#cbd5e1"/><text x="587" y="218" text-anchor="middle">0.8</text>
+    <line x1="713" y1="196" x2="713" y2="203" stroke="#cbd5e1"/><text x="713" y="218" text-anchor="middle">0.9</text>
+    <line x1="840" y1="196" x2="840" y2="203" stroke="#cbd5e1"/><text x="840" y="218" text-anchor="middle">1.0</text>
+  </g>
+  <text x="460" y="240" text-anchor="middle" font-size="12" fill="#94a3b8">a player's first half of games, scored against their own second half</text>
+
+  <!-- enrollment bar -->
+  <line x1="650" y1="76" x2="650" y2="196" stroke="#475569" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="644" y="70" text-anchor="end" font-size="11" font-weight="700" fill="#475569">0.85 &#183; the bar to be enrolled</text>
+
+  <!-- healthy cluster -->
+  <g fill="#059669" fill-opacity="0.72">
+    <circle cx="727" cy="180" r="6"/><circle cx="742" cy="164" r="6"/><circle cx="755" cy="180" r="6"/>
+    <circle cx="762" cy="150" r="6"/><circle cx="771" cy="166" r="6"/><circle cx="778" cy="181" r="6"/>
+    <circle cx="784" cy="136" r="6"/><circle cx="789" cy="152" r="6"/><circle cx="793" cy="168" r="6"/>
+    <circle cx="797" cy="182" r="6"/><circle cx="801" cy="138" r="6"/><circle cx="805" cy="154" r="6"/>
+    <circle cx="808" cy="170" r="6"/><circle cx="812" cy="183" r="6"/><circle cx="816" cy="156" r="6"/>
+    <circle cx="820" cy="172" r="6"/><circle cx="824" cy="184" r="6"/><circle cx="811" cy="140" r="6"/>
+  </g>
+  <text x="800" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#047857">one human</text>
+  <text x="800" y="128" text-anchor="middle" font-size="11" fill="#065f46">the 82 enrolled players</text>
+
+  <!-- shared accounts -->
+  <g fill="#d97706" fill-opacity="0.8">
+    <circle cx="431" cy="180" r="6"/><circle cx="447" cy="180" r="6"/><circle cx="512" cy="180" r="6"/><circle cx="661" cy="180" r="6"/>
+  </g>
+  <text x="470" y="152" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">shared accounts</text>
+  <text x="470" y="168" text-anchor="middle" font-size="11" fill="#92400e">several humans, one name</text>
+
+  <!-- merged pair -->
+  <circle cx="131" cy="180" r="6" fill="#dc2626"/>
+  <text x="131" y="152" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626">0.44</text>
+  <text x="131" y="168" text-anchor="middle" font-size="11" fill="#7f1d1d">two players merged</text>
+
+  <!-- cross-era -->
+  <line x1="60" y1="264" x2="840" y2="264" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="60" y="290" font-size="13" font-weight="700" fill="#0f172a">And it holds across time, which is the part I did not expect:</text>
+  <text x="60" y="312" font-size="13" fill="#475569">fingerprints taken from replays 14 to 20 years old still rank their owner 1st out of 68 candidates today.</text>
+</svg>

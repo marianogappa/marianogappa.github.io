@@ -300,6 +300,55 @@ code {
   }
 }
 
+/* Small print at the end of a post: attribution, caveats, footnotes, discussion links.
+   Rendered by the `smallprint` shortcode. */
+.post-content .post-smallprint {
+  margin: 2.5rem 0 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #777;
+}
+
+.post-content .post-smallprint p {
+  margin: 0.75rem 0;
+  text-align: left;
+}
+
+.post-content .post-smallprint p:first-child {
+  margin-top: 0;
+}
+
+.post-content .post-smallprint p:last-child {
+  margin-bottom: 0;
+}
+
+.post-content .post-smallprint ul,
+.post-content .post-smallprint ol {
+  margin: 0.6rem 0;
+  padding-left: 1.3rem;
+}
+
+.post-content .post-smallprint li {
+  margin: 0.35rem 0;
+}
+
+.post-content .post-smallprint strong {
+  color: #555;
+}
+
+.post-content .post-smallprint h3,
+.post-content .post-smallprint h4 {
+  font-size: 0.95rem;
+  margin: 1.1rem 0 0.4rem 0;
+  color: #555;
+}
+
+.post-content .post-smallprint hr {
+  display: none;
+}
+
 /* Mobile responsiveness */
 @media screen and (max-width: 600px) {
   body {
