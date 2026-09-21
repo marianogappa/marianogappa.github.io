@@ -3,6 +3,11 @@ languageCode = 'en-us'
 title = "Mariano Gappa's Blog"
 theme = "minimalgappa"
 
+# Publish posts dated today in any timezone. CI builds with TZ=America/Los_Angeles,
+# which is behind the authoring timezone, so a post dated "today" would otherwise
+# be treated as future-dated and silently omitted. Drafts remain excluded.
+buildFuture = true
+
 [permalinks]
 software = "/software/:year/:month/:day/:slug/"
 ethics = "/ethics/:year/:month/:day/:slug/"
