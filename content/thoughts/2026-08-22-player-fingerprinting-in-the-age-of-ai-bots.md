@@ -1,5 +1,5 @@
 ---
-title: "Player fingerprinting in RTS games in the age of AI bots"
+title: "Player fingerprinting in StarCraft in the age of AI bots"
 date: 2026-09-22
 draft: false
 slug: "player-fingerprinting-in-the-age-of-ai-bots"
