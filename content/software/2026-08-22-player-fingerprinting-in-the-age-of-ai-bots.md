@@ -4,6 +4,8 @@ date: 2026-09-22
 draft: false
 slug: "player-fingerprinting-in-the-age-of-ai-bots"
 image: /images/posts/fingerprint-hero.jpg
+aliases:
+  - /thoughts/player-fingerprinting-in-the-age-of-ai-bots/
 summary: "Competitive e-sport athletes are full-time professionals, and the ones at the top earn around what corporate executives make. This month a bot turned up on the ladder good enough to beat them, so the question is no longer only which human played a game, but whether one did. So: is it possible to fingerprint a human by the way they play?"
 ---
 
