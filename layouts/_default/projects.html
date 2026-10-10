@@ -1,0 +1,34 @@
+{{ define "main" }}
+<article class="post">
+  <h1 class="post-title">{{ .Title }}</h1>
+  {{ $year := 0 }}
+  {{ $barShown := false }}
+  <div class="projects">
+    {{ range sort $.Site.Data.projects "date" "desc" }}
+    {{ $date := time .date }}
+    {{ if and (not $barShown) (lt $date.Year $.Params.handcraftedBefore) }}
+    {{ $barShown = true }}
+    <div class="handcrafted">Everything below this line was coded entirely by hand, with no AI involved.</div>
+    {{ end }}
+    {{ if ne $date.Year $year }}
+    {{ $year = $date.Year }}
+    <div class="project-year">{{ $year }}</div>
+    {{ end }}
+    {{ $repo := printf "https://github.com/marianogappa/%s" .repo }}
+    <div class="project">
+      <a class="project-thumb" href="{{ $repo }}">
+        {{ with .image }}<img src="/images/projects/{{ . }}" alt="" loading="lazy">{{ else }}<span>{{ substr .name 0 1 }}</span>{{ end }}
+      </a>
+      <div>
+        <h2><a href="{{ $repo }}">{{ .name }}</a> <a class="project-date" href="{{ $repo }}/commit/{{ .firstCommit }}" title="First commit">{{ $date.Format "Jan 2006" }}</a></h2>
+        <p>{{ .description }}</p>
+        <div class="project-links">
+          <a href="{{ $repo }}">code</a>
+          {{ range .links }} · <a href="{{ .url }}">{{ .label }}</a>{{ end }}
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</article>
+{{ end }}
