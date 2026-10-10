@@ -1,0 +1,129 @@
+- name: screpdb
+  repo: screpdb
+  firstCommit: 70a437bc65b24d3307683de7fe9a706fed9c014f
+  date: 2025-09-30
+  description: "Brood War replay reporting tool: build orders, skill proxies, team-stacking detection, and an MCP server to ask an AI about any game."
+  image: screpdb.png
+  links:
+    - { label: post, url: /thoughts/building-an-advanced-starcraft-reporting-tool/ }
+
+- name: Escoba de 15
+  repo: escoba
+  firstCommit: 5045b49766c9cb2f424c0cbfd1e007a9f9eabe94
+  date: 2025-07-01
+  description: The Spanish card game, in Go, with WebSocket multiplayer.
+  image: escoba-de-15.png
+  links:
+    - { label: play, url: "https://marianogappa.github.io/escoba-de-15" }
+
+- name: Truco
+  repo: truco
+  firstCommit: 80ad842f546ac5bdf0d680d105afc10b66626d0f
+  date: 2024-06-18
+  description: Argentine Truco with a websocket server, terminal and React frontends, and a pluggable bot interface.
+  image: truco.png
+  links:
+    - { label: play, url: "https://marianogappa.github.io/truco-argentino" }
+
+- name: Map
+  repo: map
+  firstCommit: 3f46058319b43ccf472c8741c76cd38f23e8e388
+  date: 2024-04-11
+  description: Open an in-browser world map with specified markers.
+  image: map.png
+
+- name: GPS
+  repo: gps
+  firstCommit: 29da3f3f5ecd56119002d5991f5bf206089b21a8
+  date: 2024-04-11
+  description: Query OpenStreetMap for lat-long coordinates.
+
+- name: I know kung foo
+  repo: iknowkungfoo
+  firstCommit: 9e6c91c349a9f18bfbaad50a74e162f06a05a58b
+  date: 2023-04-11
+  description: "Not an interview guide: a way to re-learn the harder things as quickly as possible."
+  image: iknowkungfoo.png
+  links:
+    - { label: site, url: "https://marianogappa.github.io/iknowkungfoo" }
+
+- name: Crypto Candles
+  repo: crypto-candles
+  firstCommit: 1dc7a11907bbc140d724ee409885435861f5001d
+  date: 2022-07-07
+  description: Universal crypto candlestick iterator library and CLI.
+  links:
+    - { label: post, url: /software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/ }
+
+- name: Crypto Predictions
+  repo: crypto-predictions
+  firstCommit: 9f29cb372045c6b966246bccbe5d6613c0a39467
+  date: 2022-02-19
+  description: State machine-based engine for tracking crypto predictions across social media posts.
+  image: crypto-predictions.png
+  links:
+    - { label: post, url: /software/2023/06/17/building-crypto-predictions/ }
+
+- name: Signal Checker
+  repo: signal-checker
+  firstCommit: ce6d9faddee7ff6e672d734b6eeb86abb63a5bd3
+  date: 2021-07-06
+  description: CLI, server and library to check crypto signals against an exchange's historical data.
+  image: signal-checker.png
+
+- name: Termserve
+  repo: termserve
+  firstCommit: cdb6400290022305fe518769ac638a22827a2bc6
+  date: 2021-03-18
+  description: Run terminal commands on the frontend.
+  image: termserve.gif
+
+- name: Chessboard Image Builder
+  repo: chessboard-image-builder
+  firstCommit: 4c6e8d9bcc4fa90982d8f24922378b54504efd40
+  date: 2020-03-20
+  description: Chessboard image generation utility.
+  image: chessboard-image-builder.png
+
+- name: Cheesse
+  repo: cheesse
+  firstCommit: 6f6ff6a9d2a9e3bf9d9f9fb97fb3555801e6e426
+  date: 2019-12-27
+  description: Package, server, CLI and WebAssembly binary for chess use cases.
+  image: cheesse.png
+
+- name: Simil
+  repo: simil
+  firstCommit: 7afa8be02dbca91fbd778bc69eb1d09fa091930e
+  date: 2017-07-16
+  description: String clustering for STDIN.
+
+- name: SQL
+  repo: sql
+  firstCommit: 603eae816e981b47be7dd94fcd899f8e6a00ba04
+  date: 2016-09-17
+  description: MySQL and PostgreSQL pipe.
+  image: sql.gif
+
+- name: Chart
+  repo: chart
+  firstCommit: f402b492d192653b063a84134654f7db7d8237ff
+  date: 2016-08-20
+  description: Quick and smart charting for STDIN.
+  image: chart.gif
+
+- name: Flowbro
+  repo: flowbro
+  firstCommit: e160945355f9524afa3bf6868ca24605495947d3
+  date: 2016-03-05
+  description: Real-time flowchart visualisation for Kafka-based distributed systems.
+  image: flowbro.gif
+
+- name: Ostinato
+  repo: ostinato
+  firstCommit: 3a1cc9ecc3fe7621671d3d13309e94d376cb774e
+  date: 2015-11-02
+  description: Chess library that runs on the server (Scala) and in the browser (ScalaJS).
+  image: ostinato.png
+  links:
+    - { label: demo, url: "https://marianogappa.github.io/ostinato-examples/convert.html" }
