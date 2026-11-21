@@ -5,7 +5,9 @@
   description: "Brood War replay reporting tool: build orders, skill proxies, team-stacking detection, and an MCP server to ask an AI about any game."
   image: screpdb.png
   links:
-    - { label: post, url: /thoughts/building-an-advanced-starcraft-reporting-tool/ }
+    - { label: website, url: "https://marianogappa.github.io/screpdb/" }
+    - { label: article, url: /thoughts/building-an-advanced-starcraft-reporting-tool/ }
+    - { label: article, url: /software/2026/09/22/player-fingerprinting-in-the-age-of-ai-bots/ }
 
 - name: Escoba de 15
   repo: escoba
@@ -15,6 +17,7 @@
   image: escoba-de-15.png
   links:
     - { label: play, url: "https://marianogappa.github.io/escoba-de-15" }
+    - { label: article, url: /software/2025/08/24/i-made-two-card-games-in-go/ }
 
 - name: Truco
   repo: truco
@@ -24,6 +27,7 @@
   image: truco.png
   links:
     - { label: play, url: "https://marianogappa.github.io/truco-argentino" }
+    - { label: article, url: /software/2025/08/24/i-made-two-card-games-in-go/ }
 
 - name: Map
   repo: map
@@ -45,7 +49,7 @@
   description: "Not an interview guide: a way to re-learn the harder things as quickly as possible."
   image: iknowkungfoo.png
   links:
-    - { label: site, url: "https://marianogappa.github.io/iknowkungfoo" }
+    - { label: website, url: "https://marianogappa.github.io/iknowkungfoo" }
 
 - name: Crypto Candles
   repo: crypto-candles
@@ -53,7 +57,7 @@
   date: 2022-07-07
   description: Universal crypto candlestick iterator library and CLI.
   links:
-    - { label: post, url: /software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/ }
+    - { label: article, url: /software/2022/07/27/10-gotchas-for-building-a-universal-crypto-candlestick-iterator-in-go/ }
 
 - name: Crypto Predictions
   repo: crypto-predictions
@@ -62,7 +66,7 @@
   description: State machine-based engine for tracking crypto predictions across social media posts.
   image: crypto-predictions.png
   links:
-    - { label: post, url: /software/2023/06/17/building-crypto-predictions/ }
+    - { label: article, url: /software/2023/06/17/building-crypto-predictions/ }
 
 - name: Signal Checker
   repo: signal-checker
@@ -91,6 +95,9 @@
   date: 2019-12-27
   description: Package, server, CLI and WebAssembly binary for chess use cases.
   image: cheesse.png
+  links:
+    - { label: website, url: "https://marianogappa.github.io/cheesse/" }
+    - { label: article, url: /software/2020/04/01/webassembly-tinygo-cheesse/ }
 
 - name: Simil
   repo: simil
@@ -104,6 +111,8 @@
   date: 2016-09-17
   description: MySQL and PostgreSQL pipe.
   image: sql.gif
+  links:
+    - { label: article, url: /software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/ }
 
 - name: Chart
   repo: chart
@@ -111,6 +120,8 @@
   date: 2016-08-20
   description: Quick and smart charting for STDIN.
   image: chart.gif
+  links:
+    - { label: article, url: /software/2017/06/28/how-we-improved-our-workflow-by-piping-sql/ }
 
 - name: Flowbro
   repo: flowbro
@@ -126,4 +137,7 @@
   description: Chess library that runs on the server (Scala) and in the browser (ScalaJS).
   image: ostinato.png
   links:
+    - { label: website, url: "https://marianogappa.github.io/ostinato/" }
     - { label: demo, url: "https://marianogappa.github.io/ostinato-examples/convert.html" }
+
+    - { label: article, url: /software/2017/03/24/ostinato-a-chess-engine-written-in-scala-that-runs-on-the-browser-docker-and-the-repl/ }
